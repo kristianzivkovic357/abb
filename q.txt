@@ -1,0 +1,22 @@
+﻿{
+"sitetype":"0",
+"type":"children().eq(4).children().eq(2).children().eq(0).children().eq(0).kk(Tip).text()",
+"websitename":"nekretnine",
+"nacinkupovine":"izdavanje",
+"images":"id(images)",
+"lokacija":"class(advert_info_holder fixed).children().eq(0).text()",
+"kvadratura":"children().eq(1).children().eq(2).children().eq(1).kk(m).text()",
+"cena":"children().eq(1).children().eq(2).children().eq(1).split(, 1).kk(E).text()",
+"naslov":"children().eq(1).children().eq(0).text()",
+"data":{"1":"class(fixed oglasData).children().eq(0).children().eq(1).html()","2":"class(fixed oglasData).children().eq(1).children().eq(0).html()","3":"class(fixed oglasData).children().eq(1).children().eq(1).html()"},
+"binders":{"Opis:":"!@#opis","Vrsta goriva:":"!@#vrsta_goriva","Tip (Stanovi):":"!@#tip_stana","Gradski prevoz:":"!@#prevoz*","Vrsta grejanja:":"!@#grejanje","Pomagala:":"!@#pomagala","ID:":"!@#ID","Objavljen:":"!@#datum", "Ažuriran:":"!@#Azuriran","Adresa:":"!@#adresa","Oglas od:":"!@#oglasavac","Sobe:":"!@#brojsoba","Na spratu:":"!@#br_sprat","Uknjiženo:":"!@#uknjizeno","Kupatila:":"!@#kupatila","Prateći objekti/ površine:":"!@#prateci_objekti*","Tehnička opremljenost:":"!@#tehnicka_opr*","Stanje objekta:":"!@#stanje_objekta","Ukupno Spratova:":"!@#ukupno_spratova","Godina izgradnje:":"!@#god_izgradnje"},
+"host":"www.nekretnine.rs",
+"link":"children().eq(0).attr(href)",
+"slika":"children().eq(0).children().eq(0).attr(src).text()",
+"path":{"1":{"nacin":"Izdavanje","tip":"stan","put":"/stambeni-objekti/stanovi/izdavanje-prodaja/izdavanje/lista/po_stranici/50/stranica/"},"2":{"nacin":"prodaja","tip":"stan","put":"/stambeni-objekti/stanovi/izdavanje-prodaja/prodaja/lista/po_stranici/50/stranica/"},"3":{"nacin":"Izdavanje","tip":"kuca","put":"/stambeni-objekti/kuce/izdavanje-prodaja/izdavanje/lista/po_stranici/50/stranica/"},"4":{"nacin":"prodaja","tip":"kuca","put":"/stambeni-objekti/kuce/izdavanje-prodaja/prodaja/lista/po_stranici/50/stranica/"}},
+"slikaadd":"http://www.nekretnine.rs",
+"class":{"1":".resultList.fixed"},
+"vrsta":{"putanja":"children().eq(0).children().eq(1).attr(class)","UkupanBroj":"2"},
+"FiksniBrojStrana":"1",
+"phantomSupport":"true"
+}

@@ -1,0 +1,53 @@
+$ node sender.js
+Sending request so time is out!
+Zavrsena Faza Uzimanja Jedne Branse sa jednog sajta
+Sending request so time is out!
+C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:55
+    var oldParent = node.parent || node.root,
+                        ^
+
+TypeError: Cannot read property 'parent' of null
+    at Function.exports.update (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:55:25)
+    at module.exports (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:17:11)
+    at Function.exports.load (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\static.js:22:14)
+    at C:\Users\Derman555\Desktop\scrap\sender.js:168:48
+    at ClientRequest.<anonymous> (C:\Users\Derman555\Desktop\scrap\sender.js:96:5)
+    at emitOne (events.js:96:13)
+    at ClientRequest.emit (events.js:188:7)
+    at TLSSocket.socketErrorListener (_http_client.js:309:9)
+    at emitOne (events.js:96:13)
+    at TLSSocket.emit (events.js:188:7)
+
+
+
+
+
+------------------
+
+$ node sender.js
+Sending request so time is out!
+Zavrsena Faza Uzimanja Jedne Branse sa jednog sajta
+Sending request so time is out!
+Zavrsena Faza Uzimanja Jedne Branse sa jednog sajta
+Pocinje ubacivanje u SQL
+Zavrseno Kompletno ubacivanje
+undefined
+PREKID
+KRECE FOR
+Sending request so time is out!
+C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:55
+    var oldParent = node.parent || node.root,
+                        ^
+
+TypeError: Cannot read property 'parent' of null
+    at Function.exports.update (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:55:25)
+    at module.exports (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\parse.js:17:11)
+    at Function.exports.load (C:\Users\Derman555\Desktop\scrap\node_modules\cheerio\lib\static.js:22:14)
+    at C:\Users\Derman555\Desktop\scrap\sender.js:168:48
+    at ClientRequest.<anonymous> (C:\Users\Derman555\Desktop\scrap\sender.js:96:5)
+    at emitOne (events.js:96:13)
+    at ClientRequest.emit (events.js:188:7)
+    at TLSSocket.socketErrorListener (_http_client.js:309:9)
+    at emitOne (events.js:96:13)
+    at TLSSocket.emit (events.js:188:7)
+

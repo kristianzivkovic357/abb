@@ -1,0 +1,577 @@
+!<DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.5.4/bootstrap-slider.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.5.4/css/bootstrap-slider.min.css">
+	<link rel="stylesheet" href="/css"> 
+	<style type="text/css">
+		/* enable absolute positioning */
+		.inner-addon {
+			position: relative;
+		}
+
+
+		/* style glyph */
+		.inner-addon .glyphicon {
+			position: absolute;
+			padding: 10px;
+			pointer-events: none;
+		}
+
+		/* align glyph */
+		.left-addon .glyphicon  { left:  0px;}
+		.right-addon .glyphicon { right: 0px;}
+
+		/* add padding  */
+		.left-addon input  { padding-left:  30px; }
+		.right-addon input { padding-right: 30px; }
+		.slider {
+			width: 100% !important;
+		}
+		.slider-selection {
+			background: #BABABA;
+		}
+		.switch
+		{
+			padding:20px;
+			background-color:rgba(0,0,0,.05);
+			margin-top:5px; 
+		}
+		.slider-handle{
+			background:#1ea167;
+		}
+	</style>
+</head>
+<body>
+      
+  
+	<div class="pretraga" id="Pretragaa">
+		<div class="navigacija">
+			<div id="nav-pretraga" class="nav-dugme-l" onclick="nav()">
+				<p>Pretraga</p>
+			</div>
+			<div id="nav-alert" class="nav-dugme-d" onclick="nav1()">
+				<p>Alert</p>
+			</div>
+		</div>
+		<div class="alert" id="alert">
+			<p>Alert</p>
+			<div id="allalerts">       	                
+			</div>
+		</div>
+		<div id="trazi">
+			<h3>Pretraga</h3>
+                      
+
+
+			<form id="pretraga" action="">
+				<div style="width: 100%"> 
+				   <div class="vrstaNek">				     
+				      <h4>Sta Trazite?</h4>
+				        <div class="soba">                                      
+                                    <div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox1" name="check" checked/>
+                                      <label for="checkbox1"></label>                                          
+                                    </div>
+                                    <label for="checkbox1">Stan</label>  
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox2" name="check" />
+                                      <label for="checkbox2"></label>                                          
+                                    </div>
+							<label for="checkbox2">Soba</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox3" name="check" />
+                                      <label for="checkbox3"></label>                                          
+                                    </div>
+							<label for="checkbox3">Kuća</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox4" name="check" />
+                                      <label for="checkbox4"></label>                                          
+                                    </div>
+							<label for="checkbox4">Garaža</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox5" name="check" />
+                                      <label for="checkbox5"></label>                                          
+                                    </div>
+							<label for="checkbox5">Zemljište</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="None" id="checkbox6" name="check" />
+                                      <label for="checkbox6"></label>                                          
+                                    </div>
+							<label for="checkbox6">Ostalo</label>
+						</div>
+                  </div>
+					
+
+					<div class="brSoba" > 
+					 <h4>Broj soba:</h4>
+                       <div class="brSoba-l">
+                         <div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="0.5" id="checkSoba1" name="check" />
+                                      <label for="checkSoba1"></label>                                          
+                                    </div>
+							<label for="checkSoba1">0.5</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="1.0" id="checkSoba2" name="check" />
+                                      <label for="checkSoba2"></label>                                          
+                                    </div>
+							<label for="checkbox2">1.0</label>
+						</div>
+                        <div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="1.5" id="checkSoba3" name="check" />
+                                      <label for="checkSoba3"></label>                                          
+                                    </div>
+							<label for="checkSoba3">1.5</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="2.0" id="checkSoba4" name="check" />
+                                      <label for="checkSoba4"></label>                                          
+                                    </div>
+							<label for="checkSoba4">2.0</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="2.5" id="checkSoba5" name="check" />
+                                      <label for="checkSoba5"></label>                                          
+                                    </div>
+							<label for="checkSoba5">2.5</label>
+						</div>
+					 
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="3.0" id="checkSoba6" name="check" />
+                                      <label for="checkSoba6"></label>                                          
+                                    </div>
+							<label for="checkSoba6">3.0</label>
+						</div>
+					  </div>
+					 <div class="brSoba-d">
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="3.5" id="checkSoba7" name="check" />
+                                      <label for="checkSoba7"></label>                                          
+                                    </div>
+							<label for="checkSoba7">3.5</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="4.0" id="checkSoba8" name="check" />
+                                      <label for="checkSoba8"></label>                                          
+                                    </div>
+							<label for="checkSoba8">4.0</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="4.5" id="checkSoba9" name="check" />
+                                      <label for="checkSoba9"></label>                                          
+                                    </div>
+							<label for="checkSoba9">4.5</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="5.0" id="checkSoba10" name="check" />
+                                      <label for="checkSoba10"></label>                                          
+                                    </div>
+							<label for="checkbox10">5.0</label>
+						</div>
+						<div class="soba">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="6" id="checkSoba11" name="check" />
+                                      <label for="checkSoba11"></label>                                          
+                             </div>
+							<label for="checkbox11">5+</label>
+						</div>						
+                     </div>
+
+						</br>
+
+
+					</div>
+				</div>
+				<br>
+				<div style="width: 100%;">                         
+					<div class="izdavanje">
+						<div class="rent">							
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="Izdavanje" id="check2" name="RentOrSale2" checked />
+                                      <label for="check2"></label>                                          
+                                    </div>
+							<label for="check2">Izdavanje</label>
+						</div>
+
+						<div class="sales">
+							<div class="roundedTwo">
+                                      <input type="checkbox" value="Prodaja" id="check1" name="RentOrSale2"  />
+                                      <label for="check1"></label>                                          
+                                    </div>
+							<label for="check1">Prodaja</label>
+						</div>
+
+					</div>
+
+					<div class="cena">				
+						<div style="width:80%;margin-left: 5%;">
+							<input id="ex2" type="text" class="span2" data-slider-handle="round" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[0,1000]"/><b>10€</b><b class="pull-right">1000€</b>
+						</div>
+					</div>
+					<div class="kvadratura">
+						<div style="width:80%;margin-left: 5%;">
+							<input style="widht:70%" id="ex3" type="text" class="span2" data-slider-handle="round" value="" data-slider-min="0" data-slider-max="500" data-slider-step="5" data-slider-value="[0,500]"/><b>0m<sup>2</sup></b><b class="pull-right">500m<sup>2</sup></b>		
+						</div>			
+					</div>                        
+				</div>
+				<div style="width:45%;margin-top:10px;display: inline-block;">
+					<select class="form-control" id="sortiranje" style="height: 34px;" value="">
+						<option name="grand-child-category" value="0">Sortiraj</option>
+						<option value="jeft">Prvo jeftinije</option>
+						<option value="skup">Prvo skuplje</option>
+						<option value="vece">Prvo vece</option>
+						<option value="manje">Prvo manje</option>
+						<option value="nov">Prvo novije</option>
+						<option value="star">Prvo starije</option>
+					</select>            
+				</div>
+				<div style="width: 45%;display: inline-block">
+						<input type="text" autocomplete="off" class="form-control" id="lokacija" list="json-datalist" >
+						<datalist id="json-datalist"></datalist>
+					</div>
+				<div class="zapamti">
+					<p id="save">Zapamti pretragu</p>
+				</div>
+				<button type="submit" class="dugme" onclick="pomeraj()" >Traži</button>
+			</div>
+		</form>             
+	</div>
+	<div id="pretraga_rezultat" class="rezultatPretraga">
+		<div class="container"></div>
+	</div>
+
+	
+</div>
+
+
+</body>
+<script type="text/javascript">
+
+
+var scrollIndex = 1;
+var formaStara = {};
+// With JQuery
+var swit=0;
+$("#ex2").slider({});
+$("#ex3").slider({});
+$("#ex21").slider({});
+$("#ex31").slider({});
+$("#regular").click(function()
+{
+	$("#pret").css("display","block");
+	$("#ale").css("display","none");
+})
+// Get the <datalist> and <input> elements.
+var dataList = document.getElementById('json-datalist');
+var input = document.getElementById('lokacija');
+
+// Create a new XMLHttpRequest.
+var request = new XMLHttpRequest();
+
+// Handle state changes for the request.
+request.onreadystatechange = function(response) {
+	if (request.readyState === 4) {
+		if (request.status === 200) {
+      // Parse the JSON
+      var jsonOptions = JSON.parse(request.responseText);
+
+      // Loop over the JSON array.
+      jsonOptions.forEach(function(item) {
+        // Create a new <option> element.
+        var option = document.createElement('option');
+        // Set the value using the item in the JSON array.
+        option.value = item;
+        // Add the <option> element to the <datalist>.
+        dataList.appendChild(option);
+    });
+      
+      // Update the placeholder text.
+      input.placeholder = "e.g. datalist";
+  } else {
+      // An error occured :(
+      input.placeholder = "Couldn't load datalist options :(";
+  }
+}
+};
+
+// Update the placeholder text.
+input.placeholder = "Loading options...";
+
+// Set up and make the request.
+request.open('GET', '/json', true);
+request.send();
+var x;
+ $(window).scroll(function() {   
+   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+   	scrollIndex++;
+   	formaStara.scroll = scrollIndex;
+       $.ajax({
+			type: 'POST',
+			data: JSON.stringify(formaStara),
+			contentType: 'application/json',
+			url: 'http://localhost:3030/endpoint',
+			success: function(data) {
+				data = JSON.parse(data);
+				//console.log(data)
+				for(var i = 0; i<20; i++) {
+					console.log(data[i])
+					if (i%4==0) {
+						$('#pretraga_rezultat .container').append('<div class="row"></div>');
+					}
+					$('#pretraga_rezultat .container .row:last-child').append("<div style='height: 355px' class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='thumbnail oglas'><div class='cena_text'>"+data[i].cena+"€</div><div class='kvadrat_text'>"+data[i].kvadratura+"m<sup>2</sup></div><a href=http://"+data[i].domain+data[i].link+"><div class='slike'><img class='img-responsive' style='width: 100%' src='"+data[i].slika+"' alt='Lights'><hr></div><div class='caption'>"+data[i].naslov+"<br>&#9673"+data[i].opstina+"&#9673"+data[i].mesto+"&#9673"+data[i].ulica+"</div></div><p><div class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='tumbnail'></div></div></p></div></a></div></div>");
+				}
+			}
+		});
+   }
+});
+$("#pretraga").submit(function(e) {
+	scrollIndex = 1;
+	e.preventDefault();
+	formaStara.vrsta = $('#vrsta').val();
+	formaStara.lokacija = $('#lokacija').val();
+	formaStara.brojsoba = $('#brojsoba>option:selected').text();
+	formaStara.namena = $('input[name=RentOrSale2]:checked').val();
+	formaStara.cena = $("#ex2").slider('getValue');
+	formaStara.kvadratura = $("#ex3").slider('getValue');
+	formaStara.sort = $('#sortiranje').val();
+	formaStara.scroll = scrollIndex;
+	
+	/*var djavi=
+	{
+		cena:['100','200'],
+		lokacija:'Beograd',
+		brojsoba:['1','1.5','2','2.5','3'];
+		namena:'Izdavanje',
+		//kvadratura:[30,200],
+		sort:'0',
+		scroll:'1',
+
+	};*/
+	formaStara.brojsoba=[1,2,2.5,3,3.5,4,4.5,5];
+	formaStara.lokacija='Beograd';
+	formaStara.vrsta='stan';
+	console.log(formaStara);
+	$('#pretraga_rezultat .container').html('<p style="margin: 0 auto; width:100px;"><img src="load" width="100"/></p>');
+	setTimeout(function(){ 	
+		$.ajax({
+			type: 'POST',
+			data: JSON.stringify(formaStara),
+			contentType: 'application/json',
+			url: 'http://localhost:3030/endpoint',						
+			success: function(data) {
+				//console.log(data);
+				data=JSON.parse(data);
+				console.log(data);
+				$('#pretraga_rezultat .container').html('');
+				for(var i = 0; i<20; i++) {
+
+					if (i%4==0) {
+
+						$('#pretraga_rezultat .container').append('<p>'+data.length+'</p><div class="row"></div>');
+					}
+					$('#pretraga_rezultat .container .row:last-child').append("<div style='height: 355px' class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='thumbnail oglas'><div class='cena_text'>"+data[i].cena+"€</div><div class='kvadrat_text'>"+data[i].kvadratura+"m<sup>2</sup></div><a href=http://"+data[i].domain+data[i].link+"><div class='slike'><img class='img-responsive' style='width: 100%' src='"+data[i].slika+"' alt='Lights'><hr></div><div class='caption'>"+data[i].naslov+"<br>&#9673"+data[i].opstina+"&#9673"+data[i].mesto+"&#9673"+data[i].ulica+"</div></div><p><div class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='tumbnail'></div></div></p></div></a></div></div>");
+				}
+			}
+		});
+	}, 500);
+});
+
+$("#save").click(function(e) {
+	var data = {};
+	data.vrsta = $('#vrsta').val();
+	data.lokacija = $('#lokacija').val();
+	data.brojsoba = $('#brojsoba>option:selected').text();
+	data.namena = $('input[name=RentOrSale2]:checked').val();
+	data.cena = $("#ex2").slider('getValue');
+	data.kvadratura = $("#ex3").slider('getValue');
+	data.sort = $('#sortiranje').val();
+	console.log(data);
+	$.ajax({
+		xhrFields: {
+			withCredentials: true
+		},
+		type: 'POST',
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+		url: 'http://localhost:3030/alertpoint',						
+		success: function(data) {
+			//console.log(data);
+			$('#pretraga_rezultat').html('<p>'+data.length+'</p>');
+			for(var i = 0; i<data.length; i++) {
+				// console.log(data[i]);
+				//if (i%4==0) $('#pretraga_rezultat').append("<div class='row'>");
+				$('#pretraga_rezultat').append("<div style='height: 350px' class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='thumbnail'><a href=http://"+data[i].domain+data[i].link+"><img src='"+data[i].slika+"' alt='Lights' style='height: 200px'><div class='caption'>"+data[i].naslov+"<div>"+data[i].cena+"€<div>"+data[i].kvadratura+"m<sup>2</sup></div></div><p><div class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='tumbnail'></div></div></p></div></a></div></div>");
+				//if (i%4==0) $('#pretraga_rezultat').append("</div>");
+			}
+		}
+	});
+});
+</script>
+<script type="text/javascript">	
+	var proso;
+	proso=0;
+	function pomeraj(){
+		if(proso==0){
+			proso=1;
+			var elem = document.getElementById("Pretragaa"); 
+			var pos = 100;
+			var id = setInterval(frame, 5);
+			function frame() {
+				if (pos == 10) {
+					animacija();
+					clearInterval(id);
+				} else {
+					pos--; 
+					elem.style.top = pos + 'px'; 
+				}
+			}
+		} else {
+			var ogl=document.getElementById("pretraga_rezultat");
+			ogl.style.opacity = 0;
+			ogl.innerHtml="";
+			console.log("cao1");
+			animacija();
+		}
+	}
+
+	function animacija(){
+		var oglass=document.getElementById("pretraga_rezultat");
+		var opa=0;
+		oglass.style.opacity=opa;
+		console.log("cao");
+
+		var id=setInterval(frame1,1)
+		function frame1(){
+			if(opa>=1){
+				clearInterval(id);
+			}else{
+				opa+=0.01;			
+				oglass.style.opacity=opa;
+			}
+		}
+	}
+	function alerts() {
+		$('#allalerts').html('');
+		$.ajax({
+			xhrFields: {
+				withCredentials: true
+			},
+			type: 'POST',
+			contentType: 'application/json',
+			url: 'http://localhost:3030/getalerts',						
+			success: function(data) {
+				console.log('success');
+				$('#pretraga_rezultat').html('<p>'+data.length+'</p>');
+				for(var i = 0; i<data.length; i++) {
+					console.log(data[i]);
+					$('#allalerts').append('<div class="jedanAlert"><div class="podaci_alert" data-id="'+data[i].id+'">'+data[i].cenalow+'-'+data[i].cenahigh+'€ | '+data[i].kvadraturalow+'-'+data[i].kvadraturahigh+'m<sup>2</sup> | '+data[i].namena+' | '+data[i].vrsta+'</div><div class="brisi" data-id="'+data[i].id+'">Brisi</div></div>')
+				}
+				$(".brisi").click(function(e) {
+					data = {}
+					data.id = $(this).data('id');
+					$.ajax({
+						xhrFields: {
+							withCredentials: true
+						},
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify(data),
+						url: 'http://localhost:3030/deletealert',						
+						success: function(data) {
+							console.log('obrisano');
+							alerts();
+						}
+					});
+				})
+				$('.podaci_alert').click(function(e) {
+					data = {}
+					data.id = $(this).data('id');
+					$('#pretraga_rezultat .container').html('<p style="margin: 0 auto; width:100px;"><img src="load" width="100"/></p>');
+					$.ajax({
+						xhrFields: {
+							withCredentials: true
+						},
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify(data),
+						url: 'http://localhost:3030/alertbyid',			
+						success: function(data) {
+							console.log(data);
+							$('#pretraga_rezultat .container').html('');
+							for(var i = 0; i<data.length; i++) {
+								if (i%4==0) {
+									$('#pretraga_rezultat .container').append('<div class="row"></div>');
+								}
+								$('#pretraga_rezultat .container .row:last-child').append("<div style='height: 355px' class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='thumbnail oglas'><div class='cena_text'>"+data[i].cena+"€</div><div class='kvadrat_text'>"+data[i].kvadratura+"m<sup>2</sup></div><a href=http://"+data[i].domain+data[i].link+"><div class='slike'><img class='img-responsive' style='width: 100%' src='"+data[i].slika+"' alt='Lights'><hr></div><div class='caption'>"+data[i].naslov+"<br>&#9673"+data[i].opstina+"&#9673"+data[i].mesto+"&#9673"+data[i].ulica+"</div></div><p><div class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='tumbnail'></div></div></p></div></a></div></div>");
+							}
+						}
+					});
+				});
+			}
+		});
+	}
+	function nav1(){
+		pomeraj()
+		document.getElementById("alert").style.visibility="visible";
+		document.getElementById("trazi").style.visibility="hidden";
+		alerts();
+		$.ajax({
+			xhrFields: {
+				withCredentials: true
+			},
+			type: 'POST',
+			data: {},
+			contentType: 'application/json',
+			url: 'http://localhost:3030/givealerts',						
+			success: function(data) {
+				console.log(data.length);
+				console.log('success');
+				$('#pretraga_rezultat').html('<div class="container"></div>');
+				for(var i = 0; i<data.length; i++) {
+					if (i%4==0) {
+						$('#pretraga_rezultat .container').append('<div class="row"></div>');
+					}
+					$('#pretraga_rezultat .container .row:last-child').append("<div style='height: 355px' class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='thumbnail oglas'><div class='cena_text'>"+data[i].cena+"€</div><div class='kvadrat_text'>"+data[i].kvadratura+"m<sup>2</sup></div><a href=http://"+data[i].domain+data[i].link+"><div class='slike'><img class='img-responsive' style='width: 100%' src='"+data[i].slika+"' alt='Lights'><hr></div><div class='caption'>"+data[i].naslov+"<br>&#9673"+data[i].opstina+"&#9673"+data[i].mesto+"&#9673"+data[i].ulica+"</div></div><p><div class='col-md-3 col-lg-3 col-sm-3 col-xs-12'><div class='tumbnail'></div></div></p></div></a></div></div>");
+				}
+			}
+		});
+	}
+	function nav(){
+		document.getElementById("alert").style.visibility="hidden";
+		document.getElementById("trazi").style.visibility="visible";
+		$('#pretraga_rezultat').html('<div class="container"></div>');
+	}
+</script>
+</html>

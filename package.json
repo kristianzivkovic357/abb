@@ -1,0 +1,30 @@
+{
+  "name": "bla",
+  "version": "1.0.0",
+  "description": "nebitno",
+  "main": "fwefw",
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "^1.15.2",
+    "cheerio": "^0.22.0",
+    "client-sessions": "^0.7.0",
+    "express": "^4.14.0",
+    "js-sorting": "^3.0.4",
+    "mysql": "^2.12.0",
+    "request": "^2.78.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "0"
+  },
+  "keywords": [
+    "0"
+  ],
+  "author": "0",
+  "license": "UNLICENSED"
+}
