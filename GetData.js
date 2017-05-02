@@ -71,5 +71,5 @@ function takeRequest(requestInfo)
 			})
 		}
 }
-setInterval(timeControlledRequests,2000);
+setInterval(timeControlledRequests,2500);
 module.exports={GetRawData};

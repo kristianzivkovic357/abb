@@ -266,11 +266,8 @@ function ubaci(arr,pozoviKraj)
                                     {
                                         
                                         if(resp==-1)return;
-                                       
-                                        //console.log({"ime1":(nacin+tip});
                                         insertNewInAlerts.insert(resp);
-                                       // console.log(resp);
-                                        //console.log(sizeof(resp));
+                                        console.log(resp);
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
                                         {
                                             if(err)console.log(err);
