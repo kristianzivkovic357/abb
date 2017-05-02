@@ -15,10 +15,10 @@ var listOfNames=[];
 //MOZDA POSTOJI PROBLEM AKO REQUEST KOJI DODJE KASNIJE 
 var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,priority,callback)//priority 1-fast 0-slow
 {
-	console.log('dobio request');
+	//console.log('dobio request');
 	if(!nameOfRemoteWebsite){console.log('GetRawData no parameter name');}
 	if(!phantomSupport)console.log('phantomSupport no parameter name');
-	console.log(phantomSupport,nameOfRemoteWebsite)
+	//console.log(phantomSupport,nameOfRemoteWebsite)
 	
 		if(!hashesOfEveryWebsite[nameOfRemoteWebsite])
 		{

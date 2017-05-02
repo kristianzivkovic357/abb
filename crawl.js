@@ -257,8 +257,8 @@ var find= function(a,callback)
                     }
                 
            //}
-           console.log('ZAVRSEN OBJEKAT');
-           console.log(obj);
+           //console.log('ZAVRSEN OBJEKAT');
+           //console.log(obj);
            //process.exit();
            callback(obj)
         }

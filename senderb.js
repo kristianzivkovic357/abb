@@ -10,16 +10,12 @@ var SpecialCase=require('./SpecialCase');
 var GetData=require('./GetData');
 var insertNewInAlerts=require('./insertNewInAlerts');
 var sizeof = require('object-sizeof');
-
 var MinOglasaKlase=50;
 var NoviOglasi=[];
 var Uprocesu=0;
-var UzmiSve=0;
 
 var lastid=0;
-
-
-
+var globalProcessTracker=[];
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
@@ -31,7 +27,6 @@ function clone(obj) {
 var NizRouteova=[];
 var brPagea=0
 function wrapper() {
-    
     fs.readFile("q.txt",'utf-8',function(err,data)
     {
         
@@ -39,41 +34,65 @@ function wrapper() {
         NizRouteova=[];
       var bin=data.split("&&||");
       var tempa=[]
-
+mongo.MongoWrapper(function(db)
+{ 
+    var websites=db.collection('websites');
+    websites.find().toArray(function(err,result)
+    {
+    
+       // console.log(result);process.exit();
  async.each(bin,function(Sajt,callback) 
  {
+
+    var UzmiSve=0;
     var nizRuta=[];
     var brOdradjenihStranica=1;
-     for(var i=0;i<bin.length;i++)
-    {
-        var klq=JSON.parse(bin[i]);
+        var klq=JSON.parse(Sajt);
         var pravi=clone(klq);
         if(klq.special=='true')
-            {
+        {
                 nizRuta.push(clone(pravi));
-            }
+        }
         else
         {
-            for(j in klq.path) 
+            for(var j in klq.path) 
             {
                 pravi.path=klq.path[j].put;
                 pravi.type=klq.path[j].tip;
                 pravi.nacinkupovine=klq.path[j].nacin;
                 nizRuta.push(clone(pravi));
             }
-           
         }
-    }
+        Sajt=JSON.parse(Sajt);
+        if(!globalProcessTracker[Sajt.websitename])
+        {
+             console.log(Sajt.websitename+' is set to doingAll');
+             globalProcessTracker[Sajt.websitename]={};
+            globalProcessTracker[Sajt.websitename].doingAll=1;
+            UzmiSve=1;
+        }
+        else if(globalProcessTracker[Sajt.websitename].doingAlerts!=1)
+        {
+             console.log(Sajt.websitename+' is set to doingAlerts');
+            globalProcessTracker[Sajt.websitename].doingAlerts=1;
+            UzmiSve=0;
+        }
+        else 
+        {
+            console.log(Sajt.websitename+' is already doing alerts and therefore is escaped');
+            callback();
+            return;
+        }
     async.eachSeries(nizRuta,function(Route,krajRute)
     {
+        console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
         var arr=[];
-        
     SpecialCase.add(arr,Sajt,function(cont)
     {
         if(cont==-1){ubaci(arr);arr=[];krajRute();}
         if(cont!=-1)
         {
-        console.log("Sending request so time is out!:"+Route.websitename);
+            
         var BrojOglasaKlase=[]
             var brPagea=[]
             for(var k=0;k<1;k++)
@@ -128,7 +147,7 @@ function wrapper() {
                         }
                         ubaci(arr,function()//kada se zavrsi svaka strana nastavlja se dalje
                         {
-                            console.log('nastavljam');
+                           // console.log('nastavljam');
                             arr=[];
                             if(!UzmiSve) 
                             {
@@ -168,7 +187,7 @@ function wrapper() {
 } 
 wrapp(1)
 },function(err) {
-    console.log('Zavrsena Faza Uzimanja Jedne Rute sa jednog Routea');
+    //console.log('Zavrsena Faza Uzimanja Jedne Rute sa jednog Routea');
     if(!err) krajRute();
     else console.log(err);
 })//prvi async
@@ -182,6 +201,8 @@ wrapp(1)
 });
 
 },KRAJ)//drugi async
+});
+});
 
 });//fs readifle
 }//wrapper
@@ -207,14 +228,8 @@ var GLOB;
 
 function ubaci(arr,pozoviKraj)
 {
-    console.log(arr);
-   console.log('Pocinje ubacivanje u MONGO');
-   if(UzmiSve)UzmiSve=0;
-   var temparr=[]
-   //if(err)console.log(err);
-   var bro=arr.length-1;
-    var exists=[];
-    var num=0;
+    //console.log(arr);
+  // console.log('Pocinje ubacivanje u MONGO');
     mongo.MongoWrapper(function(db)
     {
         GLOB=db;
@@ -254,11 +269,10 @@ function ubaci(arr,pozoviKraj)
                                        
                                         //console.log({"ime1":(nacin+tip});
                                         insertNewInAlerts.insert(resp);
-                                         //console.log(resp);
+                                       // console.log(resp);
                                         //console.log(sizeof(resp));
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
                                         {
-
                                             if(err)console.log(err);
                                             //else console.log(res);
                                             //callback3();
@@ -266,7 +280,7 @@ function ubaci(arr,pozoviKraj)
                                         collection.insert(resp,function(err,res)
                                         {
                                            if(err)console.log(err);
-                                           console.log('DODAJEMO U DATABASE');
+                                           //console.log('DODAJEMO objekat U DATABASE');
                                         });
                                         
 
@@ -299,116 +313,13 @@ function ubaci(arr,pozoviKraj)
 }
 var KRAJ=function(err) 
 {
-    console.log('KRAJ MONGOA');
-    process.exit();
-    wrapper();
-    Uprocesu=0;
+    console.log('KRAJ CELE RUNDE');
+    //process.exit();
+    //wrapper();
 }
-    /*NoviOglasi.sort(compare);
-    mongo.MongoWrapper(function(db)
-    {
-        var collection=db.collection('alerts');
-        var matching=db.collection('matching');
-        collection.find({}).toArray(function(err,res){
-
-
-            var soll=0,sold=NoviOglasi.length
-            for(var i=0;i<res.length;i++)
-            {
-                //console.log(res[i]);
-                //return;
-                var start=0;
-                var end=NoviOglasi.length;
-                var piv;
-                var levo,desno;
-                var temp;
-                soll=0;sold=NoviOglasi.length;
-                start=soll;
-                end=sold;
-                while(start<end)
-                {
-                    piv=Math.floor((start+end)/2)
-                    if(temp==piv)break;
-                    //if(end-start<=1)break;
-                    if(NoviOglasi[piv].cena>res[i].cenalow)end=piv;
-                    else if(NoviOglasi[piv].cena<res[i].cenalow)start=piv
-                        else end=piv;
-                    temp=piv;
-                    if(NoviOglasi[piv].cena>=res[i].cenalow)levo=piv
-                }
-            if(levo==undefined)continue;
-            start=soll-1;
-            end=sold;
-            temp=-1;
-
-            while(start<end)
-            {
-                piv=Math.ceil((start+end)/2)
-                if(temp==piv)break;
-                    //if(end-start<=1)break;
-                    if(NoviOglasi[piv].cena>res[i].cenahigh)end=piv;
-                    else if(NoviOglasi[piv].cenahigh<res[i].cenahigh)start=piv
-                        else start=piv;
-                    temp=piv;
-                    if(NoviOglasi[piv].cena<=res[i].cenahigh)desno=piv;
-
-                }
-
-                console.log(soll,' ',sold)
-                console.log(NoviOglasi.length)
-            //matching.createIndex( { "idalert": 1,"idogl":1,"websitename":1 }, { sparse: true } )
-            for(var j=soll;j<sold;j++)
-            {
-
-                if((typeof(NoviOglasi[j].kvadratura)!='number')||(typeof(res[i].kvadraturalow)!='number'))console.log('PROBLEM SA TIPOVIBA PODATAKA')
-
-                    if((NoviOglasi[j].kvadratura>=res[i].kvadraturalow)&&(NoviOglasi[j].kvadratura<=res[i].cenahigh))
-                    {
-                        console.log(NoviOglasi[j]);
-                        var obj={}
-
-                        obj.idalert=res[i]._id;
-                        obj.idogl=NoviOglasi[j].id
-                        obj.websitename=NoviOglasi[j].nacinkupovine+NoviOglasi[j].type;
-
-                        delete obj._id;
-                    //console.log(obj);
-                    matching.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)
-                    {
-                        console.log('UBACIO U MATCHING');
-                        if(err)console.log(err);
-                    });
-                   // sql.exec('INSERT INTO matching SET ?',obj);
-               }
-           }
-
-
-       }
-
-   })
-
-    }) 
-    
-    console.log('Zavrseno Kompletno ubacivanje')
-    if(!err) {
-
-    }
-    else console.log(err);
-}*/
 
 function poziv() { 
-    Uprocesu=1;
     wrapper();
 }
-UzmiSve = 0;
 poziv();
-/*setInterval(function()
-{
-    if(!Uprocesu) {
-        poziv();
-    }
-},1000*60*10);
-setInterval(function()
-{
-    UzmiSve=1;
-},1000*60*60*24)//na svaka 24 sata*/
+setInterval(poziv,1000*60*15);

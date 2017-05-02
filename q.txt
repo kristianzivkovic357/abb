@@ -20,3 +20,34 @@
 "FiksniBrojStrana":"1",
 "phantomSupport":"true"
 }
+&&||
+{
+"sitetype":"1",
+"type":"children().eq(4).children().eq(2).children().eq(0).children().eq(0).kk(Tip).text()",
+"websitename":"halooglasi",
+"nacinkupovine":"izdavanje",
+"images":"id(fotorama)",
+"lokacija":"class(ad-details-desc).text()",
+"cena":"children().eq(2).children().eq(0).attr(data-value)",
+"id":"attr(id)",
+"naslov":"children().eq(4).children().eq(0).children().eq(0).text()",
+"grad":"children().eq(4).children().eq(1).children().eq(0).text()",
+"opstina":"children().eq(4).children().eq(1).children().eq(1).text()",
+"mesto":"children().eq(4).children().eq(1).children().eq(2).text()",
+"ulica":"children().eq(4).children().eq(1).children().eq(3).text()",
+"data":{"1":"class(datasheet ad-basic-details).html()","2":"id(tabcontent2).html()","3":"class(last-item).html()"},
+"kvadratura":"children().eq(4).children().eq(2).children().eq(1).children().eq(0).kk(m).text()",
+"brojsoba":"children().eq(4).children().eq(2).children().eq(2).children().eq(0).kk(B).text()",
+"binders":{"Vrsta poljopr. zemljišta":"!@#vrsta_polj_zemljista","Vrsta zemljišta":"!@#vrsta_zemljista","Površina placa":"!@#povrs_placa","Broj soba":"!@#brojsoba","Stanje objekta":"!@#luxuznost","Nameštenost":"!@#namestenost","Način plaćanja":"!@#nacin_placanja","Oglašivač":"!@#oglasavac","Tip objekta":"!@#stanje_objekta","Grejanje":"!@#grejanje","Sprat":"!@#br_sprat","Ukupna spratnost":"!@#ukupno_spratova","Ostalo":"!@#tehnicka_opr*","Dodatni opis":"!@#opis"},
+"host":"www.halooglasi.com",
+"datum":"children().eq(1).children().eq(1).kk(|).text()",
+"link":"children().eq(3).children().eq(1).children().eq(0).attr(href).text()",
+"slika":"children().eq(3).children().eq(1).children().eq(0).children().eq(0).attr(src).text()",
+"path":{"1":{"nacin":"Izdavanje","tip":"stan","put":"/nekretnine/izdavanje-stanova?page="},"2":{"nacin":"prodaja","tip":"stan","put":"/nekretnine/prodaja-stanova?page="},"3":{"nacin":"prodaja","tip":"kuca","put":"/nekretnine/prodaja-kuca?page="},"4":{"nacin":"Izdavanje","tip":"kuca","put":"/nekretnine/izdavanje-kuca?page="},"5":{"nacin":"prodaja","tip":"zemljiste","put":"/nekretnine/prodaja-zemljista?page="},"6":{"nacin":"Izdavanje","tip":"zemljiste","put":"/nekretnine/izdavanje-zemljista?page="},"7":{"nacin":"Izdavanje","tip":"soba","put":"/nekretnine/izdavanje-soba?page="}},
+"page":"page=",
+"class":{"1":".product-item.product-list-item.Premium.real-estates","2":".product-item.product-list-item.Top.real-estates","3":".product-item.product-list-item.Standard.real-estates"},
+"request":"GET",
+"vrsta":{"putanja":"attr(class)","UkupanBroj":"3"},
+"phantomSupport":"true",
+"FiksniBrojStrana":"1"
+} 
