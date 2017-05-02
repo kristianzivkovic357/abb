@@ -23,6 +23,14 @@ app.use(session({
             pass: 'milica357zivkovic' // Your password
         }
     });
+var stream=exec('node senderb ',{maxBuffer:1024*100000},function(err,stdout,stderr)
+				{
+					requestInfo.callback(err,stderr,stdout);
+				})
+stream.stdout.on('data',function(data)
+{
+   console.log(data);
+})
 
 function swap(items, firstIndex, secondIndex){
     var temp = items[firstIndex];
@@ -135,7 +143,7 @@ mongo.MongoWrapper(function(d)
 {
   db=d;//UZIMANJE KONEKCIJE SAMO JEDANPUT;
 })
-app.listen(3030,function(req,res)
+app.listen(process.env.PORT || 3030,function(req,res)
 {
   console.log('Server listening on port:3030');
 })
