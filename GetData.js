@@ -58,7 +58,7 @@ function takeRequest(requestInfo)
 	//process.exit();
 	if(requestInfo.phantomSupport=='true')
 		{
-				exec('phantomjs.exe ./phantom.js '+requestInfo.url,{maxBuffer:1024*100000},function(err,stdout,stderr)
+				exec('./phantomjs.exe ./phantom.js '+requestInfo.url,{maxBuffer:1024*100000},function(err,stdout,stderr)
 				{
 					requestInfo.callback(err,stderr,stdout);
 				})
