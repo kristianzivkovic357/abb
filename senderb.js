@@ -99,93 +99,93 @@ mongo.MongoWrapper(function(db)
                 brPagea[k]=k;
        async.each(brPagea,function(Page,callback2)
         {
-        function wrapp(PageNum) 
-        {
-            var options =
+            function wrapp(PageNum) 
             {
-                host: Route.host,
-                path: Route.path+PageNum,
-                method: Route.request
-            };
-                GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,0,function(err,resp,body)
+                var options =
                 {
-                    var data=body;
-                    var obj={}
-                    if(typeof data != 'undefined' && data && data !=null) 
-                     {
-                        var sm=cheerio.load(data,{ignoreWhitespace:true})
-                        for(klasa in Route.class) 
+                    host: Route.host,
+                    path: Route.path+PageNum,
+                    method: Route.request
+                };
+                    GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,0,function(err,resp,body)
+                    {
+                        var data=body;
+                        var obj={}
+                        if(typeof data != 'undefined' && data && data !=null) 
                         {
-                           
-                            sm(Route.class[klasa]).each(function(i,j) 
+                            var sm=cheerio.load(data,{ignoreWhitespace:true})
+                            for(klasa in Route.class) 
                             {
-                                obj=clone(Route)
-                                var vrsta=crawl.FindData(sm,this,Route.vrsta.putanja);
-                                if(vrsta==undefined)vrsta='012';
-                                if(BrojOglasaKlase[vrsta]==undefined)BrojOglasaKlase[vrsta]=0;
+                            
+                                sm(Route.class[klasa]).each(function(i,j) 
+                                {
+                                    obj=clone(Route)
+                                    var vrsta=crawl.FindData(sm,this,Route.vrsta.putanja);
+                                    if(vrsta==undefined)vrsta='012';
+                                    if(BrojOglasaKlase[vrsta]==undefined)BrojOglasaKlase[vrsta]=0;
 
-                                BrojOglasaKlase[vrsta]++;
-                                BrojOglasaKlase[klasa]++;
-                                
-                                obj.cena=crawl.FindData(sm,this,Route.cena).replace('.','');
-                                obj.kvadratura=crawl.FindData(sm,this,Route.kvadratura).trim()
-                                obj.slika=crawl.FindData(sm,this,Route.slika);
-                                if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
-                                obj.naslov=crawl.FindData(sm,this,Route.naslov);
-                                delete obj.class;
-                                obj.websitename=Route.websitename;
-                                obj.link = crawl.FindData(sm,this,Route.link);
-                                if(((ttmp=obj.link.indexOf('sid'))!=-1)&&(Route.websitename=='halooglasi'))
-                                {
-                                    obj.link=obj.link.substr(0,ttmp-1);
-                                }
-                                if(obj.link[0]=='/')obj.link='http://'+Route.host+obj.link;
-                                obj.domain=Route.host;
-                                obj.type=Route.type;
-                                obj.nacinkupovine=Route.nacinkupovine;
-                                /*if(obj.websitename!='halooglasi')*/arr.push(clone(obj));
-                            })
-                        }
-                        ubaci(arr,function()//kada se zavrsi svaka strana nastavlja se dalje
-                        {
-                           // console.log('nastavljam');
-                            arr=[];
-                            if(!UzmiSve) 
-                            {
-                                var check=1;
-                                var iter=0;
-                                for(klasa in BrojOglasaKlase) 
-                                {
-                                    iter++;
-                                    if(BrojOglasaKlase[klasa]<MinOglasaKlase)
+                                    BrojOglasaKlase[vrsta]++;
+                                    BrojOglasaKlase[klasa]++;
+                                    
+                                    obj.cena=crawl.FindData(sm,this,Route.cena).replace('.','');
+                                    obj.kvadratura=crawl.FindData(sm,this,Route.kvadratura).trim()
+                                    obj.slika=crawl.FindData(sm,this,Route.slika);
+                                    if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
+                                    obj.naslov=crawl.FindData(sm,this,Route.naslov);
+                                    delete obj.class;
+                                    obj.websitename=Route.websitename;
+                                    obj.link = crawl.FindData(sm,this,Route.link);
+                                    if(((ttmp=obj.link.indexOf('sid'))!=-1)&&(Route.websitename=='halooglasi'))
                                     {
-                                        check=0;
+                                        obj.link=obj.link.substr(0,ttmp-1);
                                     }
-                                      
-                                }
-                                if((check==0)||(iter<Number(Route.vrsta.UkupanBroj)))wrapp(PageNum+1);
-                                else callback2();
+                                    if(obj.link[0]=='/')obj.link='http://'+Route.host+obj.link;
+                                    obj.domain=Route.host;
+                                    obj.type=Route.type;
+                                    obj.nacinkupovine=Route.nacinkupovine;
+                                    /*if(obj.websitename!='halooglasi')*/arr.push(clone(obj));
+                                })
                             }
-                            else
+                            ubaci(arr,function()//kada se zavrsi svaka strana nastavlja se dalje
                             {
-                                if(brOdradjenihStranica>=Number(Route.FiksniBrojStrana))
+                            // console.log('nastavljam');
+                                arr=[];
+                                if(!UzmiSve) 
                                 {
-                                    callback2();
-                                    return;
+                                    var check=1;
+                                    var iter=0;
+                                    for(klasa in BrojOglasaKlase) 
+                                    {
+                                        iter++;
+                                        if(BrojOglasaKlase[klasa]<MinOglasaKlase)
+                                        {
+                                            check=0;
+                                        }
+                                        
+                                    }
+                                    if((check==0)||(iter<Number(Route.vrsta.UkupanBroj)))wrapp(PageNum+1);
+                                    else callback2();
                                 }
                                 else
-                                {   
-                                    brOdradjenihStranica++;
-                                    wrapp(PageNum+1);
+                                {
+                                    if(brOdradjenihStranica>=Number(Route.FiksniBrojStrana))
+                                    {
+                                        callback2();
+                                        return;
+                                    }
+                                    else
+                                    {   
+                                        brOdradjenihStranica++;
+                                        wrapp(PageNum+1);
+                                    }
                                 }
-                            }
 
-                        })
+                            })
 
-                }
-                else console.log('Stvari mnogo ne valjaju');
-            })//OD REQUESTA
-} 
+                    }
+                    else console.log('Stvari mnogo ne valjaju');
+                })//OD REQUESTA
+    } 
 wrapp(1)
 },function(err) {
     //console.log('Zavrsena Faza Uzimanja Jedne Rute sa jednog Routea');
@@ -231,9 +231,7 @@ function ubaci(arr,pozoviKraj)
 {
     //console.log(arr);
   // console.log('Pocinje ubacivanje u MONGO');
-    mongo.MongoWrapper(function(db)
-    {
-        GLOB=db;
+   
         console.log('DOBIO DB');
            var oglasi=GLOB.collection('oglasi');
             var pointer=-1;
@@ -307,7 +305,7 @@ function ubaci(arr,pozoviKraj)
          }
          insertOne();
          var interval=setInterval(insertOne,2000);
-       })
+       
 }
 var KRAJ=function(err) 
 {
@@ -320,4 +318,19 @@ function poziv() {
     wrapper();
 }
 poziv();
+var pq=0;
+function getDbConnection()
+{
+    mongo.MongoWrapper(function(db)
+    {
+        if(!pq){GLOB=db;pq=1;}
+        else
+        {
+            GLOB.close();
+            GLOB=db;
+        }
+    })
+}
+getDbConnection();
+//setInterval(getDbConnection,1000*60);
 setInterval(poziv,1000*60*15);

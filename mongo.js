@@ -5,7 +5,7 @@ var MongoClient = mongodb.MongoClient;
 
 // Connection URL. This is where your mongodb server is running.
 var url = 'mongodb://kristian.zivkovic:123@ds123050.mlab.com:23050/advertising';
-
+//var url = 'mongodb://localhost/advertising'
 var MongoWrapper=function(callback)
 {
 	MongoClient.connect(url, function (err, db) {

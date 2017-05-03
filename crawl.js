@@ -103,6 +103,24 @@ var FindData=function (ch,th,str)
 
     return ch(th);
 }
+function indexOfReturnAll(a,b)//look b in a
+{
+    var indexes=[];
+    for(var i=0;i+b.length<a.length;i++)
+    {
+        var isSubstr=1;
+        for(var j=0;j<b.length;j++)
+        {
+            if(a[i+j]!=b[j]){isSubstr=0;break;}
+        }
+        if(isSubstr)
+        {
+            indexes.push(i);
+        }
+    }
+    return indexes;
+
+}
 function modify(string,obj)
 {
     if(obj.websitename=='halooglasi')
@@ -143,8 +161,6 @@ function getImagesFromDiv(objectToFill,$)
 }
 var find= function(a,callback)
 {	
-    //console.log(a);process.exit(0);
-    //console.log('OVDE SAM');
     if(!a.link||(a.websitename=='cityexpert')){console.log('NEMA LINKA NIDJE');return -1;}
     GetData.GetRawData(a.link,a.phantomSupport,a.websitename,0,function(err,resp,body)
     {
@@ -156,7 +172,7 @@ var find= function(a,callback)
             var $=cheerio.load(body,{ decodeEntities: false });
             var obj={};
             obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;
-            obj.lokacija=FindData($,null,a.lokacija).replace(/[\r\n\t]/g,"");
+            if(obj.lokacija)obj.lokacija=FindData($,null,a.lokacija).replace(/[\r\n\t]/g,"");
             var html="";
             for(www in a.data)
             {
@@ -164,7 +180,6 @@ var find= function(a,callback)
             }
             getImagesFromDiv(a,$);
             obj.images=a.images;
-            //console.log(html);
             var formed='';
             var NeDodaj=0;
             var comment=0,script=0;
@@ -189,7 +204,7 @@ var find= function(a,callback)
                 //console.log(formed);
                     for(var i in a.binders)
                     {
-                        
+                        formed=formed.replace(/&nbsp;/gi,' ');
                         if(a.binders[i][a.binders[i].length-1]=='*')
                         {
                            // console.log(a.binders[i]+"   "+a.binders[i].substr(0,a.binders[i].length-1));
@@ -202,64 +217,63 @@ var find= function(a,callback)
                             formed=formed.replace(i,a.binders[i]);
                         }
                     }
-                   // console.log(formed);
-                    //process.exit();
+                   
                     for (var i in a.binders)
                     {
                         var returnResultInArray=0;
                         if(a.binders[i][a.binders[i].length-1]=='*')//gledam da li je poslednji karakter zvezdica
                         {
                             returnResultInArray=1;
-                           
                         }
                         var withoutSuffix=a.binders[i].replace('!@#','');
                         withoutSuffix=withoutSuffix.replace('*','');
-                        var start=formed.indexOf(a.binders[i].substr(0,a.binders[i].length-1));
+                        var st=indexOfReturnAll(formed,a.binders[i].substr(0,a.binders[i].length-1));//zasto substr?
 
-                        if(start!=-1)
+                        for(var q in st)// za svaki occurence bindera u textu
                         {
-                            /*if(!obj[withoutSuffix])*/
+                            var start=st[q];
                             if(returnResultInArray)obj[withoutSuffix]=[];
                             else obj[withoutSuffix]='';
-                           // console.log(obj);console.log(withoutSuffix);//process.exit();
-                            start=start+a.binders[i].length;
-                            var singleData='';
-                            for(;(formed.substr(start,3)!='!@#')&&(start<formed.length);start++)
-                                {
-                                    if(formed[start]!='\r'&&formed[start]!='\r\n'&&formed[start]!='\n'&&formed[start]!='\t')
-                                    {
-                                        if(formed[start]!='^')singleData+=formed[start];
-                                        if((formed[start]=='^')||(start>=formed.length-1))
+                            //console.log(st);
+                            //process.exit();
+                            //for (var start in st)
+                            //{
+                                    /*if(!obj[withoutSuffix])*/
+                                
+                                // console.log(obj);console.log(withoutSuffix);//process.exit();
+                                    start=start+a.binders[i].length;
+                                    var singleData='';
+                                    for(;(formed.substr(start,3)!='!@#')&&(start<formed.length);start++)
                                         {
-                                            if(singleData.trim().length>0)
+                                            if(formed[start]!='\r'&&formed[start]!='\r\n'&&formed[start]!='\n'&&formed[start]!='\t')
                                             {
-                                                 //obj[withoutSuffix]=[];
-                                                if(returnResultInArray==1)
+                                                if(formed[start]!='^')singleData+=formed[start];
+                                                if((formed[start]=='^')||(start>=formed.length-1))
                                                 {
-                                                    obj[withoutSuffix].push(singleData);
+                                                    if(singleData.trim().length>0)
+                                                    {
+                                                        //obj[withoutSuffix]=[];
+                                                        if(returnResultInArray==1)
+                                                        {
+                                                            obj[withoutSuffix].push(singleData);
+                                                        }
+                                                        else
+                                                        {
+                                                            obj[withoutSuffix]+=singleData;
+                                                        }
+                                                    }
+                                                    singleData='';
                                                 }
-                                                else
-                                                {
-                                                    
-                                                     obj[withoutSuffix]+=singleData;
-                                                }
+                                                
                                             }
-                                            singleData='';
+
                                         }
-                                        
-                                    }
-                                }
-                               
 
-
-                                //obj[withoutSuffix]=obj[withoutSuffix].trim();
-                        }    
+                        }
                     }
                 
            //}
-           //console.log('ZAVRSEN OBJEKAT');
-           //console.log(obj);
-           //process.exit();
+          
            callback(obj)
         }
     else 

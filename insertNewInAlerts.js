@@ -31,7 +31,12 @@ function changeDataType(Advert)
 { 
 	Advert.cena=Number(Advert.cena);
 	Advert.kvadratura=Number(Advert.kvadratura);
-	Advert.brojsoba=Number(Advert.brojsoba);
+	if(!Advert.brojsoba)
+	{
+		delete Advert.brojsoba;		
+	}
+	else Advert.brojsoba=Number(Advert.brojsoba);
+	
 
 }
 mongo.MongoWrapper(function(db)
