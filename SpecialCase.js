@@ -76,9 +76,9 @@ function addEveryTime(Sajt,pageNum,callback)
 	if(Sajt.websitename=='4zida')
 	{
 		//process.exit();
-		var req="?for="+'sale'+"&page="+pageNum+"&sort=createdAt";
-		console.log(Sajt.host+Sajt.path+req);
-		//process.exit();
+		var req=Sajt.host+Sajt.path+pageNum;
+		//console.log(req);process.exit();
+		
 		getData.GetRawData(Sajt.host+Sajt.path+req,Sajt.phantomSupport,Sajt.websitename,0,function(err,resp,data)//ne treba nula za prioritet
 		{
 			//console.log(Sajt);process.exit();
@@ -97,7 +97,8 @@ function addEveryTime(Sajt,pageNum,callback)
 					obj.type=Sajt.type;
 					obj.nacinkupovine=Sajt.nacinkupovine;
 					obj.images=traverseJsonRecursively(data[j].images,'url');
-					obj.slika=traverseJsonRecursively(data[j].mainImage,'url')[0];
+					obj.slika=traverseJsonRecursively(data[j].mainImage,'url');
+					if(obj.slika)obj.slika=obj.slika[0];
 					if(!obj.slika)obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
 					if((!obj.images)||(!obj.images.length))obj.images=["https://www.4zida.rs/images/placeholders/image-placeholder.jpg"];
 					obj.lokacija='';

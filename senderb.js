@@ -311,6 +311,7 @@ mongo.MongoWrapper(function(db)
             websiteList.insert({'websitename':Sajt.websitename},function(err,res)
             {
                 if(err)
+
                 console.log(err);
             })
         }
