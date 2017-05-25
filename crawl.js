@@ -175,7 +175,7 @@ var find=function(a,callback)
             {
                 //console.log(i);
                 //process.exit();
-                obj[i]=FindData($,null,a.pickInAdvert[i]);
+                obj[i]=FindData($,null,a.pickInAdvert[i]).replace(new RegExp(/\s\s+|&nbsp;/g), ' ').trim();
             }
            //console.log(a);
             //process.exit();

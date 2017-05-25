@@ -129,14 +129,13 @@ mongo.MongoWrapper(function(db)
                     console.log(debug[deb].route);
                 }
                 console.log('\033[2J')*/
+                
                 SpecialCase.addEveryTime(Route,PageNum,function(specialArr)
                 {
                         if(specialArr!=-1)
                         {
-                            //console.log(specialArr);
                             ubaci(specialArr,trackCurrentState);
                         }
-                        
                         else//IZVRSAVA SE SAMO AKO GA SE SAJT NE OBRADJUJE KAO IZUZETAK
                         {
                     
@@ -146,8 +145,10 @@ mongo.MongoWrapper(function(db)
                             path: Route.path+PageNum,
                             method: Route.request
                         };
+                        
                             GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,0,function(err,resp,body)
                             {
+                                
                                 var data=body;
                                 var obj={}
                                 //console.log(resp);
@@ -173,7 +174,7 @@ mongo.MongoWrapper(function(db)
                                             //console.log()
                                             for(var j in obj.pickInList)
                                             {
-                                                obj[j]=crawl.FindData(sm,this,obj.pickInList[j]);
+                                                obj[j]=crawl.FindData(sm,this,obj.pickInList[j]).replace(new RegExp(/\s\s+/g), ' ');
                                             }
                                             if(obj.slika)if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
                                             //obj.naslov=crawl.FindData(sm,this,Route.naslov);

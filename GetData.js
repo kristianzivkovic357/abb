@@ -17,7 +17,7 @@ var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,priority,callback
 {
 	//console.log('dobio request');
 	if(!nameOfRemoteWebsite){console.log('GetRawData no parameter name');}
-	if(!phantomSupport)console.log('phantomSupport no parameter name');
+	//if(!phantomSupport)console.log('phantomSupport no parameter name');
 	//console.log(phantomSupport,nameOfRemoteWebsite)
 	
 		if(!hashesOfEveryWebsite[nameOfRemoteWebsite])

@@ -117,7 +117,7 @@ function addEveryTime(Sajt,pageNum,callback)
 						}
 						w++;
 					}
-					console.log(obj.lokacija)
+					//console.log(obj.lokacija)
 					obj.websitename=Sajt.websitename;
 					obj.shouldCrawl=Sajt.shouldCrawl;
 					//console.log('.')
@@ -161,6 +161,6 @@ function addEveryTime(Sajt,pageNum,callback)
 		})
 	}
 	
-	else return -1;
+	else callback(-1);
 }
 module.exports={add,addEveryTime}
