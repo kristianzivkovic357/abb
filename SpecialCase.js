@@ -1,63 +1,162 @@
 var request=require('request')
 var async=require('async');
+var getData=require("./GetData");
+var indexOfReturnAll=require('./crawl').indexOfReturnAll;
 function add(arr,Sajt,callback)
 {
-	//console.log('AAAAAAAAAAA');
-	//console.log(Sajt)
-	if(Sajt.websitename=="cityexpert")
-	{
-		var kraj=1;
-		var route='http://www.cityexpert.rs/jnkrtn.json';
-		async.each(['http://www.cityexpert.rs/jnkrtnpr.json','http://www.cityexpert.rs/jnkrtn.json'],function(route,call)
-		{
-			//console.log(' dqdqwd');
-			request(route,function(err,resp,data)
-			{
-				if(err){console.log(err)}
-
-				for(i in Sajt.binders)data=data.replace(new RegExp(i,'g'),Sajt.binders[i]);
-					
-
-				data=JSON.parse(data);
-			for(var i=0;i<data.length;i++)
-				{
-						data[i].websitename='cityexpert';
-						if(data[i].path.indexOf('izdavanje')!=-1)data[i].nacinkupovine='Izdavanje';
-						else if(data[i].path.indexOf('prodaja'))data[i].nacinkupovine='prodaja';
-						if(data[i].field_type_of_property.indexOf('Stan')!=-1)data[i].type='stan';
-						else if(data[i].field_type_of_property.indexOf('Kuća')!=-1)data[i].type='kuca';
-						else data[i].type='lokal';
-				}
-				for (var i=0;i<data.length;i++)arr.push(data[i]);
-				call()
-				
-			
-			})
-		},function(err)
-		{
-			//console.log(arr)
-			//process.exit(0)
-			console.log('Poziv za cityexpert');
-			callback(-1);
-		})
-	//	callback(-1);
-	}
-
-	else {callback(1);}
+callback(1)
 }
-function addEveryTime(arr,Sajt,callback)
+function eraseHtml(data)
+{
+	var formed='';
+	var dontAdd=0;
+	 for(var i=0;i<data.length;i++)
+            {
+                if(data[i]=='<')
+                {
+                    dontAdd=1;
+            	}
+                else if(data[i]=='>')
+                {
+                    dontAdd=0;
+                    continue;
+                }
+                if(!dontAdd)formed+=data[i];//CONTENT
+            }
+			return formed;
+}
+function modifyUrl(arr)
+{
+	//console.log(arr[0]);process.exit();
+	for(var i in arr)
+	{
+		arr[i]=arr[i].replace("{{mode}}","max");
+		arr[i]=arr[i].replace("{{width}}","1920");
+		arr[i]=arr[i].replace("{{height}}","1080");
+	}
+	return arr;
+}
+function traverseJsonRecursively(obj,key)
+{
+	var response=[];
+	function recursion(field)
+	{
+		//console.log(field);
+		//console.log(field);
+		//return;
+		if(!field)return;
+		if(field[key])
+		{
+			response.push(field[key]);
+		}
+		if(typeof field=='object')
+		{
+			for(var i in field)
+			{
+				//console.log(field[i]);return 0;
+				recursion(field[i]);
+			}
+		}
+		return
+	}
+	recursion(obj);
+	response=modifyUrl(response);
+	//console.log(response);
+	//process.exit();
+	if(response.length)
+	{
+		//console.log(response);
+		//console.log('///////////////////////')
+		return response;
+	}
+	return null;
+}
+function addEveryTime(Sajt,pageNum,callback)
 {
 	if(Sajt.websitename=='4zida')
 	{
-		var req="?for="+Sajt.nacinkupovine+"&page="+page+"&sort=plus";
-		request(Sajt.host+Sajt.path+req,function(err,resp,data)
+		//process.exit();
+		var req="?for="+'sale'+"&page="+pageNum+"&sort=createdAt";
+		console.log(Sajt.host+Sajt.path+req);
+		//process.exit();
+		getData.GetRawData(Sajt.host+Sajt.path+req,Sajt.phantomSupport,Sajt.websitename,0,function(err,resp,data)//ne treba nula za prioritet
 		{
-			if(!err)
-			{
-				data=JSON.parse(data);
-				console.log(data);
-				return 1;
-			}
+			//console.log(Sajt);process.exit();
+			var response=[];
+			var a=Sajt;
+			//console.log(data)
+			
+			data = eraseHtml(data);
+			//console.log(data);
+			data=JSON.parse(data).items;
+			//console.log(data);
+			for(var j in data)
+				{
+
+					var obj={};
+					obj.type=Sajt.type;
+					obj.nacinkupovine=Sajt.nacinkupovine;
+					obj.images=traverseJsonRecursively(data[j].images,'url');
+					obj.slika=traverseJsonRecursively(data[j].mainImage,'url')[0];
+					if(!obj.slika)obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
+					if((!obj.images)||(!obj.images.length))obj.images=["https://www.4zida.rs/images/placeholders/image-placeholder.jpg"];
+					obj.lokacija='';
+					var w=0;
+					//console.log(data[j].placeNames);
+					for(var kl in data[j].placeNames)
+					{
+						//console.log(data[j].placeNames[kl]);
+						if(w==0)
+						{
+							obj.lokacija+=data[j].placeNames[kl];
+						}
+						else
+						{
+							obj.lokacija+=(','+data[j].placeNames[kl]);
+						}
+						w++;
+					}
+					console.log(obj.lokacija)
+					obj.websitename=Sajt.websitename;
+					obj.shouldCrawl=Sajt.shouldCrawl;
+					//console.log('.')
+					for(var i in a.binders)
+					{
+						if(typeof a.binders[i]=='object')
+						{
+							if(data[j][i])
+							{
+								addTo=a.binders[i].addTo;
+								addLike=a.binders[i].addLike;
+								if(!obj[addTo])obj[addTo]=[]
+								
+								obj[addTo].push(addLike);
+								
+							}
+							continue;
+
+						}
+						if(a.binders[i][a.binders[i].length-1]=='*')
+						{
+							if(!obj[a.binders[i]])obj[a.binders[i]]=[];
+							if(typeof data[j][i]=='boolean'&&(data[j][i]))obj[a.binders[i]].push(a.binders[i]);
+							else
+							{
+								obj[a.binders[i]].push(data[j][i]);
+							}
+							
+						}
+						else
+						{
+							obj[a.binders[i]]=data[j][i];
+						}
+					}
+					response.push(obj);
+					
+				}
+				//console.log(response);
+				callback(response)
+				
 		})
 	}
 	

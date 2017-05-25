@@ -50,7 +50,7 @@ var insert=function(Advert)
 		//Oglas=clone(Advert)
 		//console.log('DOSO')
 			var matching=dbCon.collection('matching');
-			if(allDatabaseAlerts.length==0){console.log('NEMA DUZINU')}
+			if(allDatabaseAlerts.length==0){console.log('NEMA NIJEDAN ALERT')}
 			for(var j=0;j<allDatabaseAlerts.length;j++)
 	            {
 

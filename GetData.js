@@ -1,7 +1,7 @@
 var exec=require('child_process').exec;
 var request=require('request');
 var fs=require('fs');
-var getPage=require('./SpecialCase').addEveryTime;
+
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
@@ -38,6 +38,7 @@ var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,priority,callback
 			hashesOfEveryWebsite[nameOfRemoteWebsite].push(clone(object));
 		}
 }
+
 function timeControlledRequests()
 {
 	//console.log(hashesOfEveryWebsite);
@@ -47,7 +48,7 @@ function timeControlledRequests()
 		{
 			takeRequest(clone(hashesOfEveryWebsite[i][0]));
 			hashesOfEveryWebsite[i].shift();
-		}
+		} 
 	}
 }
 function takeRequest(requestInfo)
@@ -65,8 +66,10 @@ function takeRequest(requestInfo)
 		}
 		else
 		{
+			
 			request(requestInfo.url,function(err,resp,body)
 			{
+				//console.log(body);
 				requestInfo.callback(err,null,body);
 			})
 		}

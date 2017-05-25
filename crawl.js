@@ -159,27 +159,37 @@ function getImagesFromDiv(objectToFill,$)
         }
         domRecursion($);
 }
-var find= function(a,callback)
+var find=function(a,callback)
 {	
-    if(!a.link||(a.websitename=='cityexpert')){console.log('NEMA LINKA NIDJE');return -1;}
+    if(!a.link){console.log('NEMA LINKA NIDJE');return -1;}
     GetData.GetRawData(a.link,a.phantomSupport,a.websitename,0,function(err,resp,body)
     {
         if(body.length>=5000)
             {
-        
             if(err)console.log(err);
            // console.log(a.binders);
             var $=cheerio.load(body,{ decodeEntities: false });
             var obj={};
             obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;
-            if(obj.lokacija)obj.lokacija=FindData($,null,a.lokacija).replace(/[\r\n\t]/g,"");
+            for(var i in a.pickInAdvert)
+            {
+                //console.log(i);
+                //process.exit();
+                obj[i]=FindData($,null,a.pickInAdvert[i]);
+            }
+           //console.log(a);
+            //process.exit();
+            //if(obj.lokacija)obj.lokacija=FindData($,null,a.lokacija).replace(/[\r\n\t]/g,"");
             var html="";
             for(www in a.data)
             {
                 html+=FindData($,null,a.data[www]);
             }
-            getImagesFromDiv(a,$);
-            obj.images=a.images;
+           if(a.images)
+           { 
+                getImagesFromDiv(a,$);
+                obj.images=a.images;
+           }
             var formed='';
             var NeDodaj=0;
             var comment=0,script=0;
@@ -218,7 +228,7 @@ var find= function(a,callback)
                         }
                     }
                    
-                    for (var i in a.binders)
+                    for(var i in a.binders)
                     {
                         var returnResultInArray=0;
                         if(a.binders[i][a.binders[i].length-1]=='*')//gledam da li je poslednji karakter zvezdica
@@ -278,9 +288,9 @@ var find= function(a,callback)
         }
     else 
         {
-                console.log('PHANTOM KRENUO PRERANO')
+                console.log('PHANTOM KRENUO PRERANO');
                 callback(-1);
         }
     })
 }
-module.exports={find,FindData};
+module.exports={find,FindData,indexOfReturnAll};

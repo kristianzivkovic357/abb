@@ -20,6 +20,6 @@ page.onResourceRequested = function(requestData, request)
    	}
 }
 page.open(args[1], function () {
-    console.log(page.content)
+    console.log(page.content);
     phantom.exit();
     });
