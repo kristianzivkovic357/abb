@@ -436,13 +436,20 @@ app.post('/givealerts',function(req,res)
 
       if(odg.length)
       {
+          var unImportantVar=0;
           for(var i=0;i<odg.length;i++)
           {
             var oglasi= db.collection(odg[i].websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
-            oglasi.find({"link":odg[i].idogl}).toArray(function(err,arrayToSend)
+            oglasi.find({"link":odg[i].idogl}).toArray(function(err,objToSend)
             {
-              res.send(arrayToSend);
-              res.end();
+              res.send(objToSend);
+              unImportantVar++;
+              if(unImportantVar>=odg.length)res.end();//samo gledam kad je kraj
+            })
+
+            matching.update({"_id":new ObjectId(odg[i]._id)},{"seen":1},function(err,resp)
+            {
+              if(err)console.log(err);
             })
             /*matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
               var wer=[];

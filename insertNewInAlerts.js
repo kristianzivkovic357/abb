@@ -95,8 +95,8 @@ var insert=function(Advert)
 			                       obj.websitename=Advert.nacinkupovine+Advert.type;
 			                       //console.log(obj)
 			                       delete obj._id;
-			                   		
-				                   matching.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)
+			                   		obj.seen=0;
+				                   matching.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
 				                   {
 				                       console.log('UBACIO U MATCHING');
 				                       if(err)console.log(err);
