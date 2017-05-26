@@ -447,8 +447,8 @@ app.post('/givealerts',function(req,res)
               unImportantVar++;
               if(unImportantVar>=odg.length){res.send(resp);res.end();}//samo gledam kad je kraj
             })
-
-            matching.update({"_id":new ObjectId(odg[i]._id)},{"seen":1},function(err,resp)
+            odg[i].seen=1;
+            matching.update({"_id":new ObjectId(odg[i]._id)},odg[i],function(err,resp)
             {
               if(err)console.log(err);
             })
