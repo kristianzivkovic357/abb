@@ -440,15 +440,15 @@ app.post('/givealerts',function(req,res)
           
           async.each(odg,function(match,callback)
           {
-            var oglasi= db.collection(odg[i].websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
-            oglasi.find({"link":odg[i].idogl}).toArray(function(err,objToSend)
+            var oglasi= db.collection(match.websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
+            oglasi.find({"link":match.idogl}).toArray(function(err,objToSend)
             {
               resp.push({"seen":match.seen,"contentOfAdvert":objToSend[0]});
               callback();
               //samo gledam kad je kraj
             })
-            odg[i].seen=1;
-            matching.update({"_id":new ObjectId(odg[i]._id)},odg[i],function(err,resp)
+            match.seen=1;
+            matching.update({"_id":new ObjectId(match._id)},match,function(err,resp)
             {
               if(err)console.log(err);
             })
