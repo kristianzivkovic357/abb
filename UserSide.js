@@ -430,8 +430,10 @@ app.post('/givealerts',function(req,res)
   //res.header('Access-Control-Allow-Credentials', 'true');
   //sql.select('SELECT * FROM alerts WHERE email=\''+req.session.user[0].email+'\'',function(odg)
   //{
-    matching.find({"idalerta":req.body.idOfAlert}).toArray(function(err,odg)
+    matching.find({"idalert":req.body.idOfAlert}).toArray(function(err,odg)
     {
+      console.log(odg);
+
       if(odg.length)
       {
           for(var i=0;i<odg.length;i++)
@@ -461,6 +463,7 @@ app.post('/givealerts',function(req,res)
       }
       else
       {
+        console.log("NISTA NIJE PRONADJENO");
         res.end();
       }
     })

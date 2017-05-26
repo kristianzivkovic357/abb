@@ -27,7 +27,7 @@ function leaveOnlyDigits(string)
             returnString+=string[i];
         }
     }
-    console.log(returnString)
+    //console.log(returnString)
     return returnString;
 }
 function clone(obj) {
@@ -235,7 +235,8 @@ mongo.MongoWrapper(function(db)
                                     var iter=0;
                                     for(klasa in BrojOglasaKlase) 
                                         {
-                                            iter++;
+                                            it
+                                            er++;
                                             if(BrojOglasaKlase[klasa]<MinOglasaKlase)
                                             {
                                                 check=0;
@@ -352,7 +353,7 @@ function ubaci(arr,pozoviKraj)
    
         //if(arr.length!=10){console.log('ne valja ');console.log(arr.length);}
         console.log('DOBIO DB');
-        console.log(arr);
+        //console.log(arr);
             var oglasi=GLOB.collection('oglasi');
             var pointer=-1;
             var len=arr.length;
