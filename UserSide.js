@@ -426,11 +426,11 @@ app.post('/givealerts',function(req,res)
   //console.log(req.session.user.email);
   var alerts=db.collection('alerts');
   var matching=db.collection('matching');
-  //console.log(req.body);
+  console.log(req.body);
   //res.header('Access-Control-Allow-Credentials', 'true');
   //sql.select('SELECT * FROM alerts WHERE email=\''+req.session.user[0].email+'\'',function(odg)
   //{
-    matching.find({"idalert":req.body.idOfAlert}).toArray(function(err,odg)
+    matching.find({"idalert":new ObjectId(req.body.idOfAlert)}).toArray(function(err,odg)
     {
       console.log(odg);
 

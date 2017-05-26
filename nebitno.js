@@ -1,11 +1,15 @@
 var request=require('request');
-
-request("https://api.4zida.rs/v3/apartments?for=sale&page=1&sort=createdAt",function(err,resp,body)
+var mongo=require('./mongo');
+mongo.MongoWrapper(function(db)
 {
-    console.log(JSON.parse(body).items);
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-    request("https://api.4zida.rs/v3/apartments?for=sale&page=2&sort=createdAt",function(err,resp,pp)
+    var reqObj=
     {
-        console.log(JSON.parse(pp).items);
+      "$oid":"592834ea665d5700049265db"
+    }
+var matching =db.collection('matching');
+matching.find({"idalert":mongo.ObjectId('592834ea665d5700049265db')}).toArray(function(err,odg)
+    {
+        console.log(err);
+        console.log(odg);
     })
 })

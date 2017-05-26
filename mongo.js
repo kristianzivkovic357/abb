@@ -21,4 +21,5 @@ var MongoWrapper=function(callback)
 	  }
 	});
 }
-module.exports={MongoWrapper}
+var ObjectId=mongodb.ObjectId;
+module.exports={MongoWrapper,ObjectId}
