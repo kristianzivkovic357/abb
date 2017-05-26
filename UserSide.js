@@ -445,7 +445,7 @@ app.post('/givealerts',function(req,res)
             {
               resp.push(objToSend);
               unImportantVar++;
-              if(unImportantVar>=odg.length)res.end(resp);//samo gledam kad je kraj
+              if(unImportantVar>=odg.length){res.send(resp);res.end();}//samo gledam kad je kraj
             })
 
             matching.update({"_id":new ObjectId(odg[i]._id)},{"seen":1},function(err,resp)
