@@ -443,7 +443,7 @@ app.post('/givealerts',function(req,res)
             var oglasi= db.collection(odg[i].websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
             oglasi.find({"link":odg[i].idogl}).toArray(function(err,objToSend)
             {
-              resp.push(objToSend);
+              resp.push(objToSend[0]);
               unImportantVar++;
               if(unImportantVar>=odg.length){res.send(resp);res.end();}//samo gledam kad je kraj
             })
