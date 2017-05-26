@@ -57,6 +57,7 @@ var insert=function(Advert)
 	                if((typeof(Advert.kvadratura)!='number')||(typeof(allDatabaseAlerts[j].kvadraturalow)!='number'))console.log('PROBLEM SA TIPOVIBA PODATAKA')
 	                	//console.log(Advert);
 	             		//console.log(adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija));
+
 	                   if((adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija))&&(Advert.kvadratura>=allDatabaseAlerts[j].kvadraturalow)&&(Advert.kvadratura<=allDatabaseAlerts[j].kvadraturahigh)&&(Advert.cena<=allDatabaseAlerts[j].cenahigh)&&(Advert.cena>=allDatabaseAlerts[j].cenalow))
 	                   {
 	                   			console.log('Usao da dodam  alert');
@@ -102,6 +103,10 @@ var insert=function(Advert)
 				                   });
 				             //  }
 	               		}
+						else
+						{
+							console.log('nije uspeo da prodje LOKACIJY')
+						}
 	                    
 	             }
           

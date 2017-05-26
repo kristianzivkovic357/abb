@@ -292,6 +292,7 @@ app.get('/stari',function(req,res)
   console.log(req.session.user);
   res.sendFile('views/index1.html',{root:__dirname});
 })
+app.get()
 app.post('/endpoint', function(req, res){
   var obj = {};
   console.log(req.body)
@@ -426,6 +427,7 @@ app.post('/givealerts',function(req,res)
   console.log(req.session.user.email);
   var alerts=db.collection('alerts');
   var matching=db.collection('matching');
+  console.log(req.body);
   //res.header('Access-Control-Allow-Credentials', 'true');
   //sql.select('SELECT * FROM alerts WHERE email=\''+req.session.user[0].email+'\'',function(odg)
   //{
@@ -433,32 +435,32 @@ app.post('/givealerts',function(req,res)
     {
       if(odg.length)
       {
-        for(var i=0;i<odg.length;i++)
-        {
-          matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
-            var wer=[];
-            async.each(r,function(j,call) {
-              console.log('async');
+          for(var i=0;i<odg.length;i++)
+          {
+            matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
+              var wer=[];
+              async.each(r,function(j,call) {
+                console.log('async');
 
-/* Ovde treba da se izabere iz koje tabele je oglas (odg[i])
-              sql.select('SELECT * FROM '+j.websitename+' WHERE ids='+j.idogl,function(lk) {
+  /* Ovde treba da se izabere iz koje tabele je oglas (odg[i])
+                sql.select('SELECT * FROM '+j.websitename+' WHERE ids='+j.idogl,function(lk) {
+                  wer.push(Object.assign({},lk[0]));
+                  call()
+                })
+
+                */
                 wer.push(Object.assign({},lk[0]));
                 call()
-              })
+              },function(err)
+              {
+                console.log('end');
+                console.log(wer);
+                      /*res.send(wer);
+                      res.end();*/
+                    })
 
-              */
-              wer.push(Object.assign({},lk[0]));
-              call()
-            },function(err)
-            {
-              console.log('end');
-              console.log(wer);
-                    /*res.send(wer);
-                    res.end();*/
-                  })
-
-          });
-        }
+            });
+          }
       }
     })
 

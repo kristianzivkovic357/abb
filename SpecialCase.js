@@ -71,6 +71,20 @@ function traverseJsonRecursively(obj,key)
 	}
 	return null;
 }
+function locateJSONField(objectToTraverse,path)
+{
+	var field=objectToTraverse;
+	path=path.split(".");
+	for(var i in path)
+	{
+		if(typeof field=='object')
+		{
+			field=objectToTraverse[path[i]];
+		}
+		else return -1;
+	}
+	return field;
+}
 function addEveryTime(Sajt,pageNum,callback)
 {
 	if(Sajt.websitename=='4zida')
@@ -92,7 +106,6 @@ function addEveryTime(Sajt,pageNum,callback)
 			//console.log(data);
 			for(var j in data)
 				{
-
 					var obj={};
 					obj.type=Sajt.type;
 					obj.nacinkupovine=Sajt.nacinkupovine;
