@@ -292,7 +292,6 @@ app.get('/stari',function(req,res)
   console.log(req.session.user);
   res.sendFile('views/index1.html',{root:__dirname});
 })
-app.get()
 app.post('/endpoint', function(req, res){
   var obj = {};
   console.log(req.body)
