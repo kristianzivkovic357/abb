@@ -437,15 +437,15 @@ app.post('/givealerts',function(req,res)
       if(odg.length)
       {
          var resp=[];
-          var unImportantVar=0;
-          for(var i=0;i<odg.length;i++)
+          
+          async.each(odg,function(match,callback)
           {
             var oglasi= db.collection(odg[i].websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
             oglasi.find({"link":odg[i].idogl}).toArray(function(err,objToSend)
             {
-              resp.push(objToSend[0]);
-              unImportantVar++;
-              if(unImportantVar>=odg.length){res.send(resp);res.end();}//samo gledam kad je kraj
+              resp.push({"seen":match.seen,"contentOfAdvert":objToSend[0]});
+              callback();
+              //samo gledam kad je kraj
             })
             odg[i].seen=1;
             matching.update({"_id":new ObjectId(odg[i]._id)},odg[i],function(err,resp)
@@ -467,7 +467,13 @@ app.post('/givealerts',function(req,res)
                     })
 
             });*/
-          }
+          
+        
+        },function(err)
+        {
+          res.send(resp);
+          res.end();
+        })
       }
       else
       {
