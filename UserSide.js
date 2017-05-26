@@ -422,44 +422,46 @@ app.post('/deletealert', function(req,res) {
   });
 app.post('/givealerts',function(req,res)
 {
-  console.log('POSLAO SAM')
-  console.log(req.session.user.email);
+  //console.log('POSLAO SAM')
+  //console.log(req.session.user.email);
   var alerts=db.collection('alerts');
   var matching=db.collection('matching');
-  console.log(req.body);
+  //console.log(req.body);
   //res.header('Access-Control-Allow-Credentials', 'true');
   //sql.select('SELECT * FROM alerts WHERE email=\''+req.session.user[0].email+'\'',function(odg)
   //{
-    alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
+    matching.find({"idalerta":req.body.idOfAlert}).toArray(function(err,odg)
     {
       if(odg.length)
       {
           for(var i=0;i<odg.length;i++)
           {
-            matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
+            var oglasi= db.collection(odg[i].websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
+            oglasi.find({"link":odg[i].idogl}).toArray(function(err,arrayToSend)
+            {
+              res.send(arrayToSend);
+              res.end();
+            })
+            /*matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
               var wer=[];
               async.each(r,function(j,call) {
                 console.log('async');
-
-  /* Ovde treba da se izabere iz koje tabele je oglas (odg[i])
-                sql.select('SELECT * FROM '+j.websitename+' WHERE ids='+j.idogl,function(lk) {
-                  wer.push(Object.assign({},lk[0]));
-                  call()
-                })
-
-                */
                 wer.push(Object.assign({},lk[0]));
                 call()
               },function(err)
               {
                 console.log('end');
                 console.log(wer);
-                      /*res.send(wer);
-                      res.end();*/
+                      //res.send(wer);
+                      //res.end();
                     })
 
-            });
+            });*/
           }
+      }
+      else
+      {
+        res.end();
       }
     })
 
