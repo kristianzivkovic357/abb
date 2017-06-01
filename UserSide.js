@@ -307,7 +307,7 @@ app.post('/endpoint', function(req, res){
   oglasi.find({"ime":new RegExp(req.body.namena+'stan')}).toArray(function(err,r)
   { 
 
-      //console.log(r)
+      console.log(req.body);
       if(r.length)
       {
         var sortOptions={};
