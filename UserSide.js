@@ -329,7 +329,7 @@ app.post('/endpoint', function(req, res){
         }
         else
         {
-          sortOptions.sort=undefined;
+          sortOptions.cena=1;
         }
       console.log(sortOptions);
         var databaseIndex=req.body.namena+req.body.vrsta;
