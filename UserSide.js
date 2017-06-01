@@ -313,19 +313,19 @@ app.post('/endpoint', function(req, res){
         var sortOptions={};
         if(req.body.sort=="ascPrice")
         {
-          sortOptions.sort=['cena','asc'];
+          sortOptions.cena=1;
         }
         else if(req.body.sort=="descPrice")
         {
-          sortOptions.sort=['cena','desc'];
+          sortOptions.cena=-1;
         }
         else if(req.body.sort=='ascSize')
         {
-          sortOptions.sort=['kvadratura','asc']
+          sortOptions.kvadratura=1;
         }
         else if(req.body.sort=='descSize')
         {
-          sortOptions.sort=['kvadratura','desc']
+          sortOptions.kvadratura=-1;
         }
         else
         {
@@ -343,7 +343,7 @@ app.post('/endpoint', function(req, res){
         },sortOptions);
 
         queryy.count(function (e, count) {
-          queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
+          queryy.skip(req.body.scroll*18-18).limit(18).sort(sortOptions).toArray(function(err,re){
               var solv = {};
               solv.count = count;
               solv.oglasi = re;
