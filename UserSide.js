@@ -340,7 +340,7 @@ app.post('/endpoint', function(req, res){
         andNiz.push({ kvadratura : {$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]} });
         var queryy = kolekcija.find({
           $and : andNiz
-        });
+        },{},sortOptions);
 
         queryy.count(function (e, count) {
           queryy.skip(req.body.scroll*18-18).limit(18).sort(sortOptions).toArray(function(err,re){
