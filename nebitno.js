@@ -13,3 +13,4 @@ matching.find({"idalert":mongo.ObjectId('592834ea665d5700049265db')}).toArray(fu
         console.log(odg);
     })
 })
+console.log((JSON.stringify(['kure','palac'])));

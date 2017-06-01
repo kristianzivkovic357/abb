@@ -296,58 +296,57 @@ app.post('/endpoint', function(req, res){
   var obj = {};
   console.log(req.body)
   var oglasi=db.collection('oglasi');
- // sql.select('SELECT * FROM oglasi WHERE ime LIKE "%'+req.body.namena+'stan%"',function(r)//UMESTO STAN IDE VRSTA KOJA TREBA DA SE SALJE SA FRONTA
- // {
   oglasi.find({"ime":new RegExp(req.body.namena+'stan')}).toArray(function(err,r)
-  {
-    console.log(req.body.namena+'stan')
+  { 
+
       //console.log(r)
       if(r.length)
       {
-        var wer1 =[];
-
-        var DatabaseIndex=req.body.namena+'stan';
+        if(!req.body.namena||!req.body.vrsta)
+        {
+          res.end("Error with parameters")
+        }
+        var sortOptions={};
+        if(req.body.sort=="ascPrice")
+        {
+          sortOptions.sort=['cena','asc'];
+        }
+        else if(req.body.sort=="descPrice")
+        {
+          sortOptions.sort=['cena','desc'];
+        }
+        else if(req.body.sort=='ascSize')
+        {
+          sortOptions.sort=['kvadratura','asc']
+        }
+        else if(req.body.sort=='descSize')
+        {
+          sortOptions.sort=['kvadratura','desc']
+        }
+        else
+        {
+          sortOptions.sort=undefined;
+        }
+      
+        var databaseIndex=req.body.namena+req.body.vrsta;
         var kolekcija=db.collection(DatabaseIndex);
-        var wer =[];
         var brojac = 0;
-        console.log(req.body.cena[0]);
-        console.log(req.body.cena[1]);
         var andNiz = [];
         andNiz.push({ cena : {$gte:req.body.cena[0],$lte:req.body.cena[1]} });
         andNiz.push({ kvadratura : {$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]} });
-        /*
-        if (req.body.brojsoba.length) {
-          andNiz.push({ brojsoba: { $in: req.body.brojsoba } })
-        }*/
         var queryy = kolekcija.find({
           $and : andNiz
-        });
+        },sortOptions);
 
         queryy.count(function (e, count) {
-          console.log(count)
           queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
-
-            async.each(re,function(j,call) {
-
-              /****************************************************************************************
-              var br = 0;
-              for(var i =0;i<=req.body.atributi.length;i++) 
-                if(j.atributi.indexOf(req.atributi[i]) != -1) br++;
-              var procenti = (req.body.atributi.length/100)*br;
-              if(procenti>=procentiConst)wer.push(j);
-              *****************************************************************************************/
-              wer.push(j);//brisi ovo, ne treba kasnije, iznad ima vec
-              call();
-
-            },function(err)
-            {
               var solv = {};
               solv.count = count;
-              solv.oglasi = wer;
+              solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
               console.log('session: '+req.session.user)
               res.send(JSON.stringify(solv))
-            })
+            
           })
 
         })
