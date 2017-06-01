@@ -294,7 +294,15 @@ app.get('/stari',function(req,res)
 })
 app.post('/endpoint', function(req, res){
   var obj = {};
-  console.log(req.body)
+
+    if(!req.body.namena)
+      {
+        req.body.namena='Izdavanje';
+      }
+    if(!req.body.vrsta)
+    {
+      req.body.vrsta='stan';
+    }
   var oglasi=db.collection('oglasi');
   oglasi.find({"ime":new RegExp(req.body.namena+'stan')}).toArray(function(err,r)
   { 
@@ -302,10 +310,6 @@ app.post('/endpoint', function(req, res){
       //console.log(r)
       if(r.length)
       {
-        if(!req.body.namena||!req.body.vrsta)
-        {
-          res.end("Error with parameters")
-        }
         var sortOptions={};
         if(req.body.sort=="ascPrice")
         {
@@ -327,9 +331,9 @@ app.post('/endpoint', function(req, res){
         {
           sortOptions.sort=undefined;
         }
-      
+      console.log(sortOptions);
         var databaseIndex=req.body.namena+req.body.vrsta;
-        var kolekcija=db.collection(DatabaseIndex);
+        var kolekcija=db.collection(databaseIndex);
         var brojac = 0;
         var andNiz = [];
         andNiz.push({ cena : {$gte:req.body.cena[0],$lte:req.body.cena[1]} });
@@ -345,12 +349,13 @@ app.post('/endpoint', function(req, res){
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
               console.log('session: '+req.session.user)
+              console.log(solv);
               res.send(JSON.stringify(solv))
             
           })
 
         })
-      };
+      }
 
     });
 
