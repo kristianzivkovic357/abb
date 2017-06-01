@@ -344,11 +344,11 @@ app.post('/endpoint', function(req, res){
 
         queryy.count(function (e, count) {
           queryy.skip(req.body.scroll*18-18).limit(18).sort(sortOptions).toArray(function(err,re){
+            console.log(re);
               var solv = {};
               solv.count = count;
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
-              console.log('session: '+req.session.user)
               console.log(solv);
               res.send(JSON.stringify(solv))
             
