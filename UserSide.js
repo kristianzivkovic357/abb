@@ -343,7 +343,7 @@ app.post('/endpoint', function(req, res){
         },sortOptions);
 
         queryy.count(function (e, count) {
-          queryy.skip(req.body.scroll*18-18).limit(18).sort(sortOptions).toArray(function(err,re){
+          queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
             console.log(re);
               var solv = {};
               solv.count = count;
