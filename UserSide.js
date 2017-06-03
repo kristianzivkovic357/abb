@@ -345,10 +345,7 @@ app.post('/endpoint', function(req, res){
         {
           queryObject.kvadratura={kvadratura :{$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]}};//isto za kvadraturu
         }
-        var queryy = kolekcija.find({
-          $and : andNiz
-        }).sort(sortOptions);
-        //  if(sortOp)
+        var queryy = kolekcija.find(queryObject).sort(sortOptions);
 
         queryy.count(function (e, count) {
           queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
