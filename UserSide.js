@@ -339,11 +339,11 @@ app.post('/endpoint', function(req, res){
         var queryObject ={};
         if(req.body.cena)
         {
-          queryObject.cena={ cena : {$gte:req.body.cena[0],$lte:req.body.cena[1]} };//Formiram queyr samo ukoliko su parametri zadati za cenu 
+          queryObject.cena={$gte:req.body.cena[0],$lte:req.body.cena[1]};//Formiram queyr samo ukoliko su parametri zadati za cenu 
         }
         if(req.body.kvadratura)
         {
-          queryObject.kvadratura={kvadratura :{$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]}};//isto za kvadraturu
+          queryObject.kvadratura={$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]};//isto za kvadraturu
         }
         var queryy = kolekcija.find(queryObject).sort(sortOptions);
 
