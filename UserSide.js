@@ -308,6 +308,7 @@ app.post('/endpoint', function(req, res){
   { 
 
       console.log(req.body);
+
       if(r.length)
       {
         var sortOptions={};
@@ -335,12 +336,19 @@ app.post('/endpoint', function(req, res){
         var databaseIndex=req.body.namena+req.body.vrsta;
         var kolekcija=db.collection(databaseIndex);
         var brojac = 0;
-        var andNiz = [];
-        andNiz.push({ cena : {$gte:req.body.cena[0],$lte:req.body.cena[1]} });
-        andNiz.push({ kvadratura : {$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]} });
+        var queryObject ={};
+        if(req.body.cena)
+        {
+          queryObject.cena={ cena : {$gte:req.body.cena[0],$lte:req.body.cena[1]} };//Formiram queyr samo ukoliko su parametri zadati za cenu 
+        }
+        if(req.body.kvadratura)
+        {
+          queryObject.kvadratura={kvadratura :{$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]}};//isto za kvadraturu
+        }
         var queryy = kolekcija.find({
           $and : andNiz
         }).sort(sortOptions);
+        //  if(sortOp)
 
         queryy.count(function (e, count) {
           queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
