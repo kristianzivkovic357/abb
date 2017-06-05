@@ -1,4 +1,5 @@
 var mongo=require('./mongo');
+var notifications=require('./pushNotifications');
 var CONST_PERCENTAGE=85;
 var allDatabaseAlerts=[];
 var dbCon;
@@ -101,7 +102,8 @@ var insert=function(Advert)
 				                       console.log('UBACIO U MATCHING');
 				                       if(err)console.log(err);
 				                   });
-				             //  }
+
+								   //notifications.pushNotifications()
 	               		}
 						else
 						{

@@ -21,8 +21,8 @@ child.on('close', function(code) {
 app.use(session({
   cookieName: 'session',
   secret: 'Vojvoda*?od?!Vince357',
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000,
+  duration: 10000 * 60 * 1000,
+  activeDuration: 10000 * 60 * 1000,
 }));
 
 function swap(items, firstIndex, secondIndex){
@@ -180,14 +180,31 @@ app.get("/json",function(req,res)
 
   
 })
+app.post('/registrationId',function(req,res)
+{
+    if(req.body.session)
+    {
+        var users=db.collection('users');
+        db.update({"email":req.body.session},{"userId":req.body.registrationId},function(err,res)
+        {
+            if(err)
+            {
+              console.log(err);
+            }
+        })
+    }
+    else
+    {
+      res.end('Not logged in');
+    }
+})
 app.post('/register',function(req,res)
 {
   console.log('REGISTER');
   if((req.body.password==req.body.pass2)&&(req.body.password)&& req.body.email)
   {
    var users=db.collection('users');
-    	//sql.select('SELECT * FROM users WHERE email='+'\''+req.body.email+'\''+' AND password='+'\''+req.body.password+'\''+';',function(re)//moze biti da username i password moraju pod navodnike
-    //	{
+
       users.find({"email":req.body.email,"password":req.body.password},{}).toArray(function(err,re)
       {
         if(re.length)
@@ -267,10 +284,13 @@ app.post("/login",function(req,res)
         }
         else
         {
-          if(req.headers.aplikacija) {
+          if(req.headers.aplikacija) 
+          {
             console.log('aplikacija')
             res.send('0')
-          } else {
+          } 
+          else 
+          {
             res.writeHead(302,{'Location':'/login'})
           }
           res.end();
@@ -293,8 +313,7 @@ app.get('/stari',function(req,res)
   res.sendFile('views/index1.html',{root:__dirname});
 })
 app.post('/endpoint', function(req, res){
-  var obj = {};
-
+  
     if(!req.body.namena)
       {
         req.body.namena='Izdavanje';
@@ -332,7 +351,6 @@ app.post('/endpoint', function(req, res){
         {
           sortOptions.cena=1;
         }
-      console.log(sortOptions);
         var databaseIndex=req.body.namena+req.body.vrsta;
         var kolekcija=db.collection(databaseIndex);
         var brojac = 0;
@@ -349,12 +367,12 @@ app.post('/endpoint', function(req, res){
 
         queryy.count(function (e, count) {
           queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
-            console.log(re);
+           // console.log(re);
               var solv = {};
               solv.count = count;
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
-              console.log(solv);
+              //console.log(solv);
               res.send(JSON.stringify(solv))
             
           })
