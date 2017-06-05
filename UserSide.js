@@ -192,8 +192,8 @@ app.post('/registrationId',function(req,res)
             if(err)
             {
               console.log(err);
-              res.end('200');
             }
+            res.end('200');
         })
     }
     else
