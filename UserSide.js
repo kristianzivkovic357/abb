@@ -182,7 +182,8 @@ app.get("/json",function(req,res)
 })
 app.post('/registrationId',function(req,res)
 {
-    if(req.body.session)
+    console.log(reg)
+    if(req.session.user)
     {
       console.log('REGISTRATION  ID');
       console.log(req.body);
@@ -199,6 +200,7 @@ app.post('/registrationId',function(req,res)
     else
     {
       res.end('Not logged in');
+      console.log('not logged in');
     }
 })
 app.post('/register',function(req,res)
