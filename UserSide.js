@@ -184,12 +184,15 @@ app.post('/registrationId',function(req,res)
 {
     if(req.body.session)
     {
+      console.log('REGISTRATION  ID');
+      console.log(req.body);
         var users=db.collection('users');
         db.update({"email":req.body.session},{"userId":req.body.registrationId},function(err,res)
         {
             if(err)
             {
               console.log(err);
+              res.end('200');
             }
         })
     }
