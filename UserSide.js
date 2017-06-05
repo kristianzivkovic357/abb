@@ -195,12 +195,14 @@ app.post('/registrationId',function(req,res)
             {
               console.log(err);
             }
-            res.end('200');
+            res.send(200);
+            res.end();
         })
     }
     else
     {
-      res.end('Not logged in');
+      res.send('Not logged in');
+      res.end();
       console.log('not logged in');
     }
 })
