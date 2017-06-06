@@ -189,7 +189,7 @@ app.post('/registrationId',function(req,res)
       console.log(req.body);
       console.log(req.session.user);
         var users=db.collection('users');
-        users.update({"email":req.session.user.email},{"userId":req.body.registrationId},function(err,res)
+        users.update({"email":req.session.user.email},{$set:{"userId":req.body.registrationId}},function(err,response)
         {
             if(err)
             {
@@ -197,6 +197,7 @@ app.post('/registrationId',function(req,res)
             }
             res.send(200);
             res.end();
+            
         })
     }
     else
