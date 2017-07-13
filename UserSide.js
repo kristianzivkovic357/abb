@@ -443,7 +443,7 @@ app.post('/getalerts', function(req,res)
 
       },function(err)
       {
-        res.send()
+        res.send(responseToUser);
       })
         
   });
