@@ -197,7 +197,7 @@ app.post('/registrationId',function(req,res)
             }
             res.send(200);
             res.end();
-            
+
         })
     }
     else
@@ -218,7 +218,7 @@ app.post('/register',function(req,res)
       {
         if(re.length)
         {
-          console.log('IMA TAKVOG USERA')
+          console.log('IMA TAKVOG USERA');
           if(req.headers.aplikacija) {
             console.log('aplikacija')
             res.send('-1');
@@ -402,10 +402,10 @@ app.post('/alertpoint',function(req,res)
     console.log(req.body)
     var obj={}
     obj.email=req.session.user.email;
-    obj.cenalow=req.body.cena[0];
-    obj.cenahigh=req.body.cena[1];
-    obj.kvadraturalow=req.body.kvadratura[0];
-    obj.kvadraturahigh=req.body.kvadratura[1];
+    obj.cenalow=Number(req.body.cena[0]);
+    obj.cenahigh=Number(req.body.cena[1]);
+    obj.kvadraturalow=Number(req.body.kvadratura[0]);
+    obj.kvadraturahigh=Number(req.body.kvadratura[1]);
     obj.brojsoba=req.body.brojsoba;
     obj.vrsta=req.body.vrsta;
     obj.lokacija=req.body.lokacija;
@@ -424,48 +424,57 @@ app.post('/alertpoint',function(req,res)
   }
   else console.log('ALERTPOINTU FALI SESIJA KORISNIKA');
 })
-app.post('/getalerts', function(req,res) {
+app.post('/getalerts', function(req,res) 
+{
   var alerts=db.collection('alerts');
-  console.log(req.session.user.email);
+  var matching=db.collection('matching');
+  var responseToUser={};
+
   alerts.find({"email":req.session.user.email}).toArray(function(err,odg) {
-    if(err)console.log(err);
-    else
-    {
-      res.send(odg);
-      res.end();
-    }
-  });
-});
-app.post('/deletealert', function(req,res) {
-  var alerts=db.collection('alerts');
-  console.log(req.session.user.email);
-  //console.log(req);
-  //sql.select('delete FROM alerts WHERE email="'+req.session.user[0].email+'" AND id = '+req.body.id,function(odg) {
-    console.log('delete')
-    console.log(req.body);
-    var id = req.body.id;       
-    var o_id = new ObjectId(id);
-    alerts.deleteOne({"email":req.session.user.email,"_id":o_id},function(err,odg)
-    {
-      if(err)console.log(err)
-        else
+   
+      
+      async.each(odg,function(alert,callb)
+      {
+        responseToUser[alert.nazivAlerta]=alert;
+         matching.find({idalert:odg.id,"seen":1}).toArray(function(err,matchings)
         {
-          console.log('deleted');
-          res.send(odg);
-          res.end();
-        }
-      });
+           responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
+           callb();
+        })
+
+      },function(err)
+      {
+        res.send()
+      })
+        
+});
+  app.post('/deletealert', function(req,res) 
+  {
+    var alerts=db.collection('alerts');
+    console.log(req.session.user.email);
+    //console.log(req);
+    //sql.select('delete FROM alerts WHERE email="'+req.session.user[0].email+'" AND id = '+req.body.id,function(odg) {
+      console.log('delete')
+      console.log(req.body);
+      var id = req.body.id;       
+      var o_id = new ObjectId(id);
+      alerts.deleteOne({"email":req.session.user.email,"_id":o_id},function(err,odg)
+      {
+        if(err)console.log(err)
+          else
+          {
+            console.log('deleted');
+            res.send(odg);
+            res.end();
+          }
+        });
   });
 app.post('/givealerts',function(req,res)
 {
-  //console.log('POSLAO SAM')
-  //console.log(req.session.user.email);
+
   var alerts=db.collection('alerts');
   var matching=db.collection('matching');
   console.log(req.body);
-  //res.header('Access-Control-Allow-Credentials', 'true');
-  //sql.select('SELECT * FROM alerts WHERE email=\''+req.session.user[0].email+'\'',function(odg)
-  //{
     matching.find({"idalert":new ObjectId(req.body.idOfAlert)}).toArray(function(err,odg)
     {
       console.log(odg);
@@ -488,22 +497,6 @@ app.post('/givealerts',function(req,res)
             {
               if(err)console.log(err);
             })
-            /*matching.find({"idalert":odg[i].id}).toArray(function(err,r) {
-              var wer=[];
-              async.each(r,function(j,call) {
-                console.log('async');
-                wer.push(Object.assign({},lk[0]));
-                call()
-              },function(err)
-              {
-                console.log('end');
-                console.log(wer);
-                      //res.send(wer);
-                      //res.end();
-                    })
-
-            });*/
-          
         
         },function(err)
         {

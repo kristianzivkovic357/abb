@@ -116,7 +116,7 @@ mongo.MongoWrapper(function(db)
         var arr=[];
     SpecialCase.add(arr,Sajt,function(cont)
     {
-        if(cont==-1){ubaci(arr);arr=[];krajRute();}
+        if(cont==-1){ubaci(arr,UzmiSve);arr=[];krajRute();}
         if(cont!=-1)
         {
             var BrojOglasaKlase=[]
@@ -130,13 +130,13 @@ mongo.MongoWrapper(function(db)
                 }
                 console.log('\033[2J')*/
                 
-                SpecialCase.addEveryTime(Route,PageNum,function(specialArr)
+                SpecialCase.addEveryTime(Route,PageNum,UzmiSve,function(specialArr)
                 {
                         if(specialArr!=-1)
                         {
-                            ubaci(specialArr,trackCurrentState);
+                            ubaci(specialArr,UzmiSve,trackCurrentState);
                         }
-                        else//IZVRSAVA SE SAMO AKO GA SE SAJT NE OBRADJUJE KAO IZUZETAK
+                        else//IZVRSAVA SE SAMO AKO SE SAJT NE OBRADJUJE KAO IZUZETAK
                         {
                     
                         var options =
@@ -198,7 +198,7 @@ mongo.MongoWrapper(function(db)
                                         })
                                     }
                                 // console.log(arr);
-                                    ubaci(arr,trackCurrentState);
+                                    ubaci(arr,UzmiSve,trackCurrentState);
 
                             }
                             else console.log('Stvari mnogo ne valjaju');
@@ -346,11 +346,11 @@ function compare (a,b)
 
 var GLOB;
 
-function ubaci(arr,pozoviKraj)
+function ubaci(arr,UzmiSve,pozoviKraj)
 {
     //console.log(arr);
   // console.log('Pocinje ubacivanje u MONGO');
-   
+    console.log("Uzmi sve:"+UzmiSve);
         //if(arr.length!=10){console.log('ne valja ');console.log(arr.length);}
         console.log('DOBIO DB');
         //console.log(arr);
@@ -381,13 +381,14 @@ function ubaci(arr,pozoviKraj)
                             {
                                 if(i.shouldCrawl)
                                 {
+                                    delete i.shouldCrawl;
                                    //console.log(i.binders);
                                     crawl.find(i,function(resp)
                                     {
                                         
                                         if(resp==-1)return;
-                                        insertNewInAlerts.insert(resp);
-                                        console.log(resp);
+                                        if(UzmiSve==0)insertNewInAlerts.insert(resp);
+                                        //console.log(resp);
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
                                         {
                                             if(err)console.log(err);
@@ -406,7 +407,7 @@ function ubaci(arr,pozoviKraj)
                                 else
                                 {
                                     console.log('Usao sam');
-                                    insertNewInAlerts.insert(i);
+                                    if(UzmiSve==0)insertNewInAlerts.insert(i);
                                     collection.insert(i,function(err,res)
                                         {
                                            if(err)console.log(err);

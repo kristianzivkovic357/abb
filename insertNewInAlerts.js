@@ -46,11 +46,12 @@ mongo.MongoWrapper(function(db)
 })
 var insert=function(Advert)
 {
-
+		console.log(Advert);
 		changeDataType(Advert);
 		//Oglas=clone(Advert)
 		//console.log('DOSO')
 			var matching=dbCon.collection('matching');
+			var users=dbCon.collection('users')
 			if(allDatabaseAlerts.length==0){console.log('NEMA NIJEDAN ALERT')}
 			for(var j=0;j<allDatabaseAlerts.length;j++)
 	            {
@@ -59,9 +60,9 @@ var insert=function(Advert)
 	                	//console.log(Advert);
 	             		//console.log(adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija));
 
-	                   if((adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija))&&(Advert.kvadratura>=allDatabaseAlerts[j].kvadraturalow)&&(Advert.kvadratura<=allDatabaseAlerts[j].kvadraturahigh)&&(Advert.cena<=allDatabaseAlerts[j].cenahigh)&&(Advert.cena>=allDatabaseAlerts[j].cenalow))
-	                   {
-	                   			console.log('Usao da dodam  alert');
+	                  // if((adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija))&&(Advert.kvadratura>=allDatabaseAlerts[j].kvadraturalow)&&(Advert.kvadratura<=allDatabaseAlerts[j].kvadraturahigh)&&(Advert.cena<=allDatabaseAlerts[j].cenahigh)&&(Advert.cena>=allDatabaseAlerts[j].cenalow))
+	                   //{
+	                   			console.log('Usao da dodam alert');
 		                       //console.log(Advert);
 		                       var copy=clone(allDatabaseAlerts[j]);
 		                       //delete copy.kvadraturalow;delete copy.kvadraturahigh;delete copy.cenalow;delete copy.cenahigh;
@@ -102,13 +103,26 @@ var insert=function(Advert)
 				                       console.log('UBACIO U MATCHING');
 				                       if(err)console.log(err);
 				                   });
-
-								   //notifications.pushNotifications()
-	               		}
+								   (function(alert)
+										{
+											
+											users.findOne({email:alert.email},function(err,result)
+											{
+												console.log('DOSAO DO SLANJA ALERTOVA')
+												if((!err)&&result)notifications.sendNotification(result,alert);
+												else
+												{
+													console.log(err);
+												}
+											})
+								   	
+									})(allDatabaseAlerts[j]);
+								   
+	               		/*}
 						else
 						{
 							console.log('nije uspeo da prodje LOKACIJY')
-						}
+						}*/
 	                    
 	             }
           

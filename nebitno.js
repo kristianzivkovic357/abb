@@ -1,16 +1,9 @@
-var request=require('request');
-var mongo=require('./mongo');
-mongo.MongoWrapper(function(db)
-{
-    var reqObj=
-    {
-      "$oid":"592834ea665d5700049265db"
-    }
-var matching =db.collection('matching');
-matching.find({"idalert":mongo.ObjectId('592834ea665d5700049265db')}).toArray(function(err,odg)
-    {
-        console.log(err);
-        console.log(odg);
-    })
-})
-console.log((JSON.stringify(['kure','palac'])));
+var request = require('request');
+var links = ['http://google.com', 'http://yahoo.com'];
+for (link in links) {
+    (function(url) {
+        request(url, function() {
+            console.log(url);
+        });
+    })(links[link]);
+}

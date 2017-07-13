@@ -1,22 +1,29 @@
-/*var FCM = require('fcm-node');
-var SERVER_KEY='AAAAPwFS6QU:APA91bFdrfiFbwIhGezBWXMNuJHRmu4zucXHZXV7I2C6REx3RaveZ5suM7JoOEEp3qEa-LfLHajlwlHskmDoHSuLFwxdIgiOae3f_dWqt7S6U9gfg3WsE-g9qjrv2GSdbNWv-9qSt8h1';
+var FCM = require('fcm-node');
+var SERVER_KEY='AAAAed4tRFc:APA91bH7W2xHMOuka3kAiyluIhXbAAhgjO4TvfT8rJxRjYS3UDQqpnP24SdoNUy8oK5Einglk-mErCpXCRzgId4k-3CabxNQpaAnCo216_YmkEStBs5NdrsXPj7Jd7dYmkdkj9Gi8HEW';
 var fcm = new FCM(SERVER_KEY);
-
-function sendNotification(deviceID,message)
+var mongo=require('./mongo');
+var users=[];
+function sendNotification(user,alert)
 {
+    var currentDate=new Date();
+    var timeDifference;
+    if(users[user.email])timeDifference=currentDate-users[user.email];
+    else timeDifference=currentDate;
+
+    
     var message = 
     {
-        to: deviceID,
+        to: user.userId,
         data: 
         {
-            title: {"locKey": "push_app_title"},
-            message: message
-            // Constant with formatted params
-            // message: {"locKey": "push_message_fox", "locData": ["fox", "dog"]});
+            title: "Savrsena nekretnina za vas!",
+            message: "Upravo se pojavila nova nekretnina koja odgovara vasim potrebama!",
+            alertId:alert._id,
+            alertName:alert.nazivAlerta
         }
     };
 
-
+    console.log(message);
     fcm.send(message, function(err, response)
     {
         if(err) 
@@ -30,4 +37,4 @@ function sendNotification(deviceID,message)
         }
     });
 }
-*/
+module.exports={sendNotification}

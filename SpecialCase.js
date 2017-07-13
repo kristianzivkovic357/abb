@@ -1,6 +1,7 @@
-var request=require('request')
+dwavar request=require('request')
 var async=require('async');
 var getData=require("./GetData");
+var db=require('./mongo');
 var indexOfReturnAll=require('./crawl').indexOfReturnAll;
 function add(arr,Sajt,callback)
 {
@@ -85,10 +86,26 @@ function locateJSONField(objectToTraverse,path)
 	}
 	return field;
 }
-function addEveryTime(Sajt,pageNum,callback)
+function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 {
+
 	if(Sajt.websitename=='4zida')
 	{
+		/*if(UzmiSve)
+		{
+			db.MongoWrapper(function(db)
+			{
+				
+				var stateCollection=db.collection('previousState');
+				var obj={};
+				obj.route=Route.host+Route.path;
+				obj.page=PageNum;
+				stateCollection.update({'route':obj.route},obj,{upsert:true},function(err,res)
+				{
+					db.close();
+				})
+			})
+		}*/
 		//process.exit();
 		var req=Sajt.host+Sajt.path+pageNum;
 		//console.log(req);process.exit();
@@ -101,7 +118,7 @@ function addEveryTime(Sajt,pageNum,callback)
 			//console.log(data)
 			
 			data = eraseHtml(data);
-			//console.log(data);
+			
 			data=JSON.parse(data).items;
 			//console.log(data);
 			for(var j in data)
@@ -111,6 +128,8 @@ function addEveryTime(Sajt,pageNum,callback)
 					obj.nacinkupovine=Sajt.nacinkupovine;
 					obj.images=traverseJsonRecursively(data[j].images,'url');
 					obj.slika=traverseJsonRecursively(data[j].mainImage,'url');
+					obj.naslov=data[j].title; 
+					obj.brojsoba=data[j].structureName;
 					if(obj.slika)obj.slika=obj.slika[0];
 					if(!obj.slika)obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
 					if((!obj.images)||(!obj.images.length))obj.images=["https://www.4zida.rs/images/placeholders/image-placeholder.jpg"];
