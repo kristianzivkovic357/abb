@@ -430,13 +430,12 @@ app.post('/getalerts', function(req,res)
   var matching=db.collection('matching');
   var responseToUser={};
 
-  alerts.find({"email":req.session.user.email}).toArray(function(err,odg) {
-   
-      
+  alerts.find({"email":req.session.user.email}).toArray(function(err,odg) 
+{
       async.each(odg,function(alert,callb)
       {
         responseToUser[alert.nazivAlerta]=alert;
-         matching.find({idalert:odg.id,"seen":1}).toArray(function(err,matchings)
+        matching.find({idalert:odg.id,"seen":1}).toArray(function(err,matchings)
         {
            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
            callb();
@@ -447,7 +446,8 @@ app.post('/getalerts', function(req,res)
         res.send()
       })
         
-});
+  });
+})
   app.post('/deletealert', function(req,res) 
   {
     var alerts=db.collection('alerts');
