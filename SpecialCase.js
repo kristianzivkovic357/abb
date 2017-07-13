@@ -1,4 +1,4 @@
-dwavar request=require('request')
+var request=require('request')
 var async=require('async');
 var getData=require("./GetData");
 var db=require('./mongo');
@@ -95,7 +95,7 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 		{
 			db.MongoWrapper(function(db)
 			{
-				
+
 				var stateCollection=db.collection('previousState');
 				var obj={};
 				obj.route=Route.host+Route.path;
