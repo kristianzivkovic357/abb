@@ -372,11 +372,14 @@ app.post('/endpoint', function(req, res){
         {
           queryObject.kvadratura={$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]};//isto za kvadraturu
         }
+
+        
         var queryy = kolekcija.find(queryObject).sort(sortOptions);
 
-        queryy.count(function (e, count) {
+        queryy.count(function (e, count) 
+        {
           queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
-           // console.log(re);
+          
               var solv = {};
               solv.count = count;
               solv.oglasi = re;
@@ -430,13 +433,19 @@ app.post('/getalerts', function(req,res)
   var matching=db.collection('matching');
   var responseToUser={};
 
-  alerts.find({"email":req.session.user.email}).toArray(function(err,odg) 
+alerts.find({"email":req.session.user.email}).toArray(function(err,odg) 
 {
+/*
+OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
+---JEDE PRENOS PODATAKA---
+*/
+  if(!odg)console.log('odg ne vaja');
       async.each(odg,function(alert,callb)
       {
         responseToUser[alert.nazivAlerta]=alert;
-        matching.find({idalert:odg.id,"seen":1}).toArray(function(err,matchings)
+        matching.find({idalert:new ObjectId(odg.id),"seen":0}).toArray(function(err,matchings)
         {
+          if(!matchings)console.log('matcg ne valja');
            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
            callb();
         })
