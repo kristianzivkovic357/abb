@@ -170,16 +170,15 @@ var find=function(a,callback)
            // console.log(a.binders);
             var $=cheerio.load(body,{ decodeEntities: false });
             var obj={};
-            obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;
+            obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;obj.datum=a.datum;obj.datumSetup=a.datumSetup;
             for(var i in a.pickInAdvert)
             {
-                //console.log(i);
-                //process.exit();
+                /**
+                 * collecting data for every advert by getting the page of the advert itself(sending request) and then
+                 */
                 obj[i]=FindData($,null,a.pickInAdvert[i]).replace(new RegExp(/\s\s+|&nbsp;/g), ' ').trim();
             }
-           //console.log(a);
-            //process.exit();
-            //if(obj.lokacija)obj.lokacija=FindData($,null,a.lokacija).replace(/[\r\n\t]/g,"");
+
             var html="";
             for(www in a.data)
             {

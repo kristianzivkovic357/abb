@@ -37,6 +37,7 @@ function modifyUrl(arr)
 	}
 	return arr;
 }
+
 function traverseJsonRecursively(obj,key)
 {
 	var response=[];
@@ -134,6 +135,14 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 					if(!obj.slika)obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
 					if((!obj.images)||(!obj.images.length))obj.images=["https://www.4zida.rs/images/placeholders/image-placeholder.jpg"];
 					obj.lokacija='';
+
+					/** creating date **/
+					if(data[j].lastModifiedAt)obj.datum=new Date(data[j].lastModifiedAt);
+					else if(data[j].createdAt)obj.datum=new Date(data[j].createdAt);
+					else if(data[j].createdAt)obj.datum=new Date(data[j].renewedAt);
+					else obj.datum=new Date();
+
+
 					var w=0;
 					//console.log(data[j].placeNames);
 					for(var kl in data[j].placeNames)

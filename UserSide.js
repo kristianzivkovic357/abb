@@ -356,6 +356,14 @@ app.post('/endpoint', function(req, res){
         {
           sortOptions.kvadratura=-1;
         }
+        else if(req.body.sort=='ascTime')
+        {
+          sortOptions.datum=1;
+        }
+        else if(req.body.sort=='descTime')
+        {
+          sortOptions.datum=-1;
+        }
         else
         {
           sortOptions.cena=1;

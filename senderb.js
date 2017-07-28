@@ -10,6 +10,7 @@ var SpecialCase=require('./SpecialCase');
 var GetData=require('./GetData');
 var insertNewInAlerts=require('./insertNewInAlerts');
 var sizeof = require('object-sizeof');
+var dateFunctions=require('./dateFunctions');
 var MinOglasaKlase=50;
 var NoviOglasi=[];
 var Uprocesu=0;
@@ -348,8 +349,12 @@ var GLOB;
 
 function ubaci(arr,UzmiSve,pozoviKraj)
 {
-    //console.log(arr);
-  // console.log('Pocinje ubacivanje u MONGO');
+    /**
+     * function responsible for detailed information about every advert by sending another request to the link of the advert
+     * and inserting into the database. Also calling insert into alerts
+     */
+    console.log(arr);
+
     console.log("Uzmi sve:"+UzmiSve);
         //if(arr.length!=10){console.log('ne valja ');console.log(arr.length);}
         console.log('DOBIO DB');
@@ -382,19 +387,23 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                 if(i.shouldCrawl)
                                 {
                                     delete i.shouldCrawl;
-                                   //console.log(i.binders);
+                                  
                                     crawl.find(i,function(resp)
                                     {
                                         
                                         if(resp==-1)return;
+                                        
+                                        resp.datum=dateFunctions.fixDate(resp.datum,resp.datumSetup)//datum
+                                        console.log(resp);
                                         if(UzmiSve==0)insertNewInAlerts.insert(resp);
-                                        //console.log(resp);
+                                        
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
                                         {
                                             if(err)console.log(err);
                                             //else console.log(res);
                                             //callback3();
                                         });
+                                        
                                         collection.insert(resp,function(err,res)
                                         {
                                            if(err)console.log(err);
@@ -407,6 +416,7 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                 else
                                 {
                                     console.log('Usao sam');
+                                    i.datum=dateFunctions.fixDate(i.datum,i.datumSetup)//datum
                                     if(UzmiSve==0)insertNewInAlerts.insert(i);
                                     collection.insert(i,function(err,res)
                                         {
