@@ -1,4 +1,4 @@
-var FCM = require('fcm-node');
+/*var FCM = require('fcm-node');
 var SERVER_KEY='AAAAed4tRFc:APA91bH7W2xHMOuka3kAiyluIhXbAAhgjO4TvfT8rJxRjYS3UDQqpnP24SdoNUy8oK5Einglk-mErCpXCRzgId4k-3CabxNQpaAnCo216_YmkEStBs5NdrsXPj7Jd7dYmkdkj9Gi8HEW';
 var fcm = new FCM(SERVER_KEY);
 var mongo=require('./mongo');
@@ -37,4 +37,4 @@ function sendNotification(user,alert)
         }
     });
 }
-module.exports={sendNotification}
+module.exports={sendNotification}*/
