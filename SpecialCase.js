@@ -141,7 +141,23 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 					else if(data[j].createdAt)obj.datum=new Date(data[j].createdAt);
 					else if(data[j].createdAt)obj.datum=new Date(data[j].renewedAt);
 					else obj.datum=new Date();
-
+					switch(data[j].structureName)
+					{
+						case "Garsonjera":obj.brojsoba=1;break;
+						case "Jednosoban stan":obj.brojsoba=1;break;
+						case "Jednoiposoban stan":obj.brojsoba=1.5;break;
+						case "Dvosoban stan":obj.brojsoba=2;break;
+						case "Dvoiposoban stan":obj.brojsoba=2.5;break;
+						case "Trosoban stan":obj.brojsoba=3;break;
+						case "Troiposoban stan":obj.brojsoba=3.5;break;
+						case "Četvorosoban stan":obj.brojsoba=4;break;
+						case "Četvoroiposoban stan":obj.brojsoba=4.5;break;
+						case "Petosoban stan":obj.brojsoba=5;break;
+						case "Petoiposoban stan":obj.brojsoba=5.5;break;
+						case "Šestosoban stan":obj.brojsoba=6;break;
+						default:obj.brojsoba='nema';break;
+						
+					}
 
 					var w=0;
 					//console.log(data[j].placeNames);
