@@ -392,9 +392,10 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                     {
                                         
                                         if(resp==-1)return;
-                                        
+                                        changeDataType(resp);
                                         resp.datum=dateFunctions.fixDate(resp.datum,resp.datumSetup)//datum
                                         console.log(resp);
+
                                         if(UzmiSve==0)insertNewInAlerts.insert(resp);
                                         
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
@@ -415,6 +416,7 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                 }
                                 else
                                 {
+                                    changeDataType(i);
                                     console.log('Usao sam');
                                     i.datum=dateFunctions.fixDate(i.datum,i.datumSetup)//datum
                                     if(UzmiSve==0)insertNewInAlerts.insert(i);
@@ -467,6 +469,18 @@ function getDbConnection()
             GLOB=db;
         }
     })
+}
+function changeDataType(Advert)
+{ 
+	Advert.cena=Number(Advert.cena);
+	Advert.kvadratura=Number(Advert.kvadratura);
+	if(!Advert.brojsoba)
+	{
+		delete Advert.brojsoba;		
+	}
+	else Advert.brojsoba=Number(Advert.brojsoba);
+	
+
 }
 getDbConnection();
 //setInterval(getDbConnection,1000*60);

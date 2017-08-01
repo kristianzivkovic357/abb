@@ -156,7 +156,6 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 						case "Petoiposoban stan":obj.brojsoba=5.5;break;
 						case "Šestosoban stan":obj.brojsoba=6;break;
 						default:obj.brojsoba='nema';break;
-						
 					}
 
 					var w=0;

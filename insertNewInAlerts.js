@@ -28,18 +28,7 @@ var getAllDbAlerts=function()
 }
 getAllDbAlerts();
 setInterval(getAllDbAlerts,1000*60*5);//AZURIRANJE NA SVAKIH 5 MIN 
-function changeDataType(Advert)
-{ 
-	Advert.cena=Number(Advert.cena);
-	Advert.kvadratura=Number(Advert.kvadratura);
-	if(!Advert.brojsoba)
-	{
-		delete Advert.brojsoba;		
-	}
-	else Advert.brojsoba=Number(Advert.brojsoba);
-	
 
-}
 mongo.MongoWrapper(function(db)
 {
 	dbCon=db;
@@ -47,9 +36,6 @@ mongo.MongoWrapper(function(db)
 var insert=function(Advert)
 {
 		console.log(Advert);
-		changeDataType(Advert);
-		//Oglas=clone(Advert)
-		//console.log('DOSO')
 			var matching=dbCon.collection('matching');
 			var users=dbCon.collection('users')
 			if(allDatabaseAlerts.length==0){console.log('NEMA NIJEDAN ALERT')}

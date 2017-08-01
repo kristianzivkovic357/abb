@@ -380,6 +380,10 @@ app.post('/endpoint', function(req, res){
         {
           queryObject.kvadratura={$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]};//isto za kvadraturu
         }
+        if(req.body.roomNumber)
+        {
+           queryObject.brojsoba={$gte:req.body.roomNumber[0],$lte:req.body.roomNumber[1]};//brojsoba
+        }
 
         
         var queryy = kolekcija.find(queryObject).sort(sortOptions);
