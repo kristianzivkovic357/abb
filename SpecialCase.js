@@ -160,6 +160,7 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 
 					var w=0;
 					//console.log(data[j].placeNames);
+					obj.lokacija={};
 					for(var kl in data[j].placeNames)
 					{
 						//console.log(data[j].placeNames[kl]);
