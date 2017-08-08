@@ -530,6 +530,8 @@ app.post('/givealerts',function(req,res)
       else
       {
         console.log("NISTA NIJE PRONADJENO");
+        var pom=[];
+        res.send(pom);
         res.end();
       }
     })
