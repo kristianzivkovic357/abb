@@ -11,12 +11,23 @@ var GetData=require('./GetData');
 var insertNewInAlerts=require('./insertNewInAlerts');
 var sizeof = require('object-sizeof');
 var dateFunctions=require('./dateFunctions');
+var locations=require('./locationProcessing');
 var MinOglasaKlase=50;
 var NoviOglasi=[];
 var Uprocesu=0;
-
+var DEBUG_MODE="STANDARD_DEBUG";
+var debugObj={};
 var lastid=0;
 var globalProcessTracker=[];
+function standardDebugging()
+{
+    console.log('\033[2J');//clrscr
+    console.log(debugObj);
+}
+if(DEBUG_MODE==='STANDARD_DEBUG')
+{
+    setInterval(standardDebugging,15000);
+}
 function leaveOnlyDigits(string)
 {
     var len=string.length;
@@ -30,6 +41,14 @@ function leaveOnlyDigits(string)
     }
     //console.log(returnString)
     return returnString;
+}
+function deleteUnecessaryFields(obj)
+{
+    var listOfUnecessaryFields=["lokacijaOptions","datumSetup","shouldCrawl"];
+    for(var i in listOfUnecessaryFields)
+    {
+        delete obj[listOfUnecessaryFields[i]];
+    }
 }
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
@@ -56,27 +75,25 @@ mongo.MongoWrapper(function(db)
        // console.log(result);process.exit();
  async.each(bin,function(Sajt,callback) 
  {
-    var debugObj={};
+      
+   
     var UzmiSve=1;
     var nizRuta=[];
     var brOdradjenihStranica=1;
         var klq=JSON.parse(Sajt);
         var pravi=clone(klq);
-        if(klq.special=='true')
-        {
-                nizRuta.push(clone(pravi));
-        }
-        else
-        {
             for(var j in klq.path) 
             {
                 pravi.path=klq.path[j].put;
                 pravi.type=klq.path[j].tip;
                 pravi.nacinkupovine=klq.path[j].nacin;
+                pravi.FiksniBrojStrana=klq.path[j].FiksniBrojStrana;
                 nizRuta.push(clone(pravi));
             }
-        }
+        
         Sajt=JSON.parse(Sajt);
+        
+        if(!debugObj[Sajt.websitename]) debugObj[Sajt.websitename]={};  
 
         var websiteList=db.collection('websiteList');
         websiteList.find().toArray(function(err,n)//moze ici sasvin van
@@ -112,6 +129,7 @@ mongo.MongoWrapper(function(db)
         }*/
     async.eachSeries(nizRuta,function(Route,krajRute)
     {
+        //console.log(Route);process.exit();
         //console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
         
         var arr=[];
@@ -123,14 +141,9 @@ mongo.MongoWrapper(function(db)
             var BrojOglasaKlase=[]
             function wrapp(PageNum) 
             {
-                /*debugObj.route=Route.websitename+' '+Route.nacinkupovine+Route.type+' '+PageNum;
-                debug[Route.websitename]=debugObj;
-                for(var deb in debug)
-                {
-                    console.log(debug[deb].route);
-                }
-                console.log('\033[2J')*/
-                
+               
+                debugObj[Route.websitename].pageNum=PageNum;//debug only
+
                 SpecialCase.addEveryTime(Route,PageNum,UzmiSve,function(specialArr)
                 {
                         if(specialArr!=-1)
@@ -146,6 +159,7 @@ mongo.MongoWrapper(function(db)
                             path: Route.path+PageNum,
                             method: Route.request
                         };
+                        
                         
                             GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,0,function(err,resp,body)
                             {
@@ -210,7 +224,7 @@ mongo.MongoWrapper(function(db)
                 function trackCurrentState(brObradjenihOglasa)
                             {
                                 
-                                console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+PageNum+'//////');
+                                //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+PageNum+'//////');
                                 arr=[];
                                 
                                 if(!UzmiSve) 
@@ -236,8 +250,7 @@ mongo.MongoWrapper(function(db)
                                     var iter=0;
                                     for(klasa in BrojOglasaKlase) 
                                         {
-                                            it
-                                            er++;
+                                            iter++;
                                             if(BrojOglasaKlase[klasa]<MinOglasaKlase)
                                             {
                                                 check=0;
@@ -291,17 +304,17 @@ mongo.MongoWrapper(function(db)
                 {
                     //console.log(n);
                     //process.exit();
-                    console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+n.page);
+                    //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+n.page);
                     wrapp(n.page+1);
                 }
                 else
                 {
-                    console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1);
+                    //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1);
                     wrapp(1);
                 }
             })
         }
-        else{console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1); wrapp(1);}
+        else{/*console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1);*/ wrapp(1);}
       
     
 //})
@@ -353,11 +366,11 @@ function ubaci(arr,UzmiSve,pozoviKraj)
      * function responsible for detailed information about every advert by sending another request to the link of the advert
      * and inserting into the database. Also calling insert into alerts
      */
-    console.log(arr);
+    //console.log(arr);
 
-    console.log("Uzmi sve:"+UzmiSve);
+    //console.log("Uzmi sve:"+UzmiSve);
         //if(arr.length!=10){console.log('ne valja ');console.log(arr.length);}
-        console.log('DOBIO DB');
+        //console.log('DOBIO DB');
         //console.log(arr);
             var oglasi=GLOB.collection('oglasi');
             var pointer=-1;
@@ -366,13 +379,19 @@ function ubaci(arr,UzmiSve,pozoviKraj)
             var insertOne=function()
             {
                 pointer++;
+               
                 if(pointer>=len)
                 {
                     clearInterval(interval);
                     pozoviKraj(arr.length);
                     return;
                 }
+                //Only used for debugging purposes (STANDARD_DEBUG)
                 var i=arr[pointer];
+                debugObj[i.websitename].websitename=i.websitename;
+                debugObj[i.websitename].nacin=i.nacinkupovine
+                debugObj[i.websitename].type=i.type
+                debugObj[i.websitename].finishedAdsOnPage=pointer; 
              var collection=GLOB.collection(i.nacinkupovine+i.type);
 
             if((!i.nacinkupovine)||(!i.type)||(!i.websitename)){console.log('Ne postoji tip ili nacinkupovine');process.exit(0);}
@@ -393,9 +412,12 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                         
                                         if(resp==-1)return;
                                         changeDataType(resp);
+                                        locations.processLocationOfAdvert(resp);
                                         resp.datum=dateFunctions.fixDate(resp.datum,resp.datumSetup)//datum
-                                        console.log(resp);
+                                        deleteUnecessaryFields(resp);
 
+                                        
+                                        if(DEBUG_MODE=="FUll_DEBUG")console.log(resp);
                                         if(UzmiSve==0)insertNewInAlerts.insert(resp);
                                         
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
@@ -417,13 +439,18 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                 else
                                 {
                                     changeDataType(i);
-                                    console.log('Usao sam');
+                                    //console.log('Usao sam');
                                     i.datum=dateFunctions.fixDate(i.datum,i.datumSetup)//datum
+                                    //locations.processLocationOfAdvert(i);
+                                    deleteUnecessaryFields(i);
+
+                                    if(DEBUG_MODE=="FUll_DEBUG")console.log(i)
+
                                     if(UzmiSve==0)insertNewInAlerts.insert(i);
                                     collection.insert(i,function(err,res)
                                         {
                                            if(err)console.log(err);
-                                           console.log('DODAJEMO U DATABASE');
+                                           //console.log('DODAJEMO U DATABASE');
                                         });
                   
                                     oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)

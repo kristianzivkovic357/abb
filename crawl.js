@@ -170,7 +170,7 @@ var find=function(a,callback)
            // console.log(a.binders);
             var $=cheerio.load(body,{ decodeEntities: false });
             var obj={};
-            obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;obj.datum=a.datum;obj.datumSetup=a.datumSetup;
+            obj.cena=a.cena;obj.link=a.link; obj.kvadratura=a.kvadratura;obj.slika=a.slika;obj.websitename=a.websitename;obj.type=a.type;obj.nacinkupovine=a.nacinkupovine;obj.naslov=a.naslov;obj.datum=a.datum;obj.datumSetup=a.datumSetup;obj.lokacijaOptions=a.lokacijaOptions;
             for(var i in a.pickInAdvert)
             {
                 /**

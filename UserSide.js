@@ -24,7 +24,18 @@ app.use(session({
   duration: 10000 * 60 * 1000,
   activeDuration: 10000 * 60 * 1000,
 }));
-
+function generateHash(numberOfChars)
+{
+  var text='';
+  var possible="abcdefghijklmnopqrstuvwxyz0123456789"
+  for(var i=0;i<numberOfChars;i++)
+  {
+      min = 0
+      max = possible.length-1;
+      text+=possible[Math.floor(Math.random() * (max - min + 1)) + min]; //The maximum is inclusive and the minimum is inclusive 
+  }
+    return text;
+}
 function swap(items, firstIndex, secondIndex){
   var temp = items[firstIndex];
   items[firstIndex] = items[secondIndex];
@@ -207,6 +218,34 @@ app.post('/registrationId',function(req,res)
       console.log('not logged in');
     }
 })
+app.get('/confirmation/:code',function(req,res)
+{
+    var code=req.params.code;
+    var users=db.collection('users');
+    users.findOne({code:code},{id:1,email:1},function(err,res)
+    {
+        if(res.length)
+        {
+
+          users.update({email:res.email},{$set:{accountConfirmed:1,code:undefined}},function(err,resp)
+          {
+              if(!err)
+              {
+                res.send('You have successfully activated your account');
+              }
+              else
+              {
+                res.send('Error 404');
+              }
+          })
+          
+        }
+        else
+        {
+          res.send('Error 404');
+        }
+    })
+})
 app.post('/register',function(req,res)
 {
   console.log('REGISTER');
@@ -219,18 +258,24 @@ app.post('/register',function(req,res)
         if(re.length)
         {
           console.log('IMA TAKVOG USERA');
-          if(req.headers.aplikacija) {
+          if(req.headers.aplikacija) 
+            {
             console.log('aplikacija')
             res.send('-1');
-          } else {
-            res.writeHead(302,{'Location':'/register'})
+          }
+          else 
+          {
+              res.writeHead(302,{'Location':'/register'})
           }
           res.end();
         }
         else
         {
+          //send email here
           console.log('Nema usera');
           var obj={};obj.email=req.body.email;obj.password=req.body.password;
+          //generating confirmation hash
+          obj.code=generateHash(75);
           req.session.user = obj;
           console.log(obj)
           users.insert(obj,function(err,r)
@@ -421,7 +466,7 @@ app.post('/alertpoint',function(req,res)
     obj.cenahigh=Number(req.body.cena[1]);
     obj.kvadraturalow=Number(req.body.kvadratura[0]);
     obj.kvadraturahigh=Number(req.body.kvadratura[1]);
-    obj.brojsoba=req.body.brojsoba;
+    obj.brojsoba=req.body.roomNumber;
     obj.vrsta=req.body.vrsta;
     obj.lokacija=req.body.lokacija;
     obj.namena=req.body.namena;

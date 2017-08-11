@@ -35,7 +35,7 @@ mongo.MongoWrapper(function(db)
 })
 var insert=function(Advert)
 {
-		console.log(Advert);
+		//console.log(Advert);
 			var matching=dbCon.collection('matching');
 			var users=dbCon.collection('users')
 			if(allDatabaseAlerts.length==0){console.log('NEMA NIJEDAN ALERT')}
@@ -48,7 +48,7 @@ var insert=function(Advert)
 
 	                  // if((adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija))&&(Advert.kvadratura>=allDatabaseAlerts[j].kvadraturalow)&&(Advert.kvadratura<=allDatabaseAlerts[j].kvadraturahigh)&&(Advert.cena<=allDatabaseAlerts[j].cenahigh)&&(Advert.cena>=allDatabaseAlerts[j].cenalow))
 	                   //{
-	                   			console.log('Usao da dodam alert');
+	                   			//console.log('Usao da dodam alert');
 		                       //console.log(Advert);
 		                       var copy=clone(allDatabaseAlerts[j]);
 		                       //delete copy.kvadraturalow;delete copy.kvadraturahigh;delete copy.cenalow;delete copy.cenahigh;
@@ -86,7 +86,7 @@ var insert=function(Advert)
 			                   		obj.seen=0;
 				                   matching.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
 				                   {
-				                       console.log('UBACIO U MATCHING');
+				                       //console.log('UBACIO U MATCHING');
 				                       if(err)console.log(err);
 				                   });
 								   (function(alert)
@@ -94,7 +94,7 @@ var insert=function(Advert)
 											
 											users.findOne({email:alert.email},function(err,result)
 											{
-												console.log('DOSAO DO SLANJA ALERTOVA')
+												//console.log('DOSAO DO SLANJA ALERTOVA')
 												if((!err)&&result)notifications.sendNotification(result,alert);
 												else
 												{

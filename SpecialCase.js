@@ -160,19 +160,10 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 
 					var w=0;
 					//console.log(data[j].placeNames);
-					obj.lokacija={};
+					obj.lokacija=[];
 					for(var kl in data[j].placeNames)
 					{
-						//console.log(data[j].placeNames[kl]);
-						if(w==0)
-						{
-							obj.lokacija+=data[j].placeNames[kl];
-						}
-						else
-						{
-							obj.lokacija+=(','+data[j].placeNames[kl]);
-						}
-						w++;
+						obj.lokacija.push(data[j].placeNames[kl]);
 					}
 					//console.log(obj.lokacija)
 					obj.websitename=Sajt.websitename;
@@ -196,11 +187,12 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 						}
 						if(a.binders[i][a.binders[i].length-1]=='*')
 						{
-							if(!obj[a.binders[i]])obj[a.binders[i]]=[];
-							if(typeof data[j][i]=='boolean'&&(data[j][i]))obj[a.binders[i]].push(a.binders[i]);
+							var withoutStar=a.binders[i].substr(0,a.binders[i].length-1);
+							if(!obj[a.binders[i]])obj[withoutStar]=[];
+							if(typeof data[j][i]=='boolean'&&(data[j][i]))obj[withoutStar].push(a.binders[i]);
 							else
 							{
-								obj[a.binders[i]].push(data[j][i]);
+								obj[withoutStar].push(data[j][i]);
 							}
 							
 						}

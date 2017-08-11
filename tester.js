@@ -19,14 +19,8 @@ function rp(myPlace)
                     console.log("FOUND IT: ");
                     console.log(places[i]);
                 }
-            if(places[i].parents.length>parents)
-                {
-                    parents=places[i].parents.length;
-                    parentObj=places[i];
-                }
         }
-        //console.log("Najveci broj parenta je:"+parentObj);
-        console.log(parentObj);
+        //console.log(parentObj);
     })
 }
-rp("grbavica");
+rp("Blok 7a");
