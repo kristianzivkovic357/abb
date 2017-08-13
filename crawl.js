@@ -90,7 +90,11 @@ var FindData=function (ch,th,str)
         }
         else if(arrOfCom[i].indexOf('html(')!=-1)
         {
-            var b = ch(th).html().toString('utf-8')
+            var b = ch(th).html();
+            if(b)
+            {
+                b=b.toString('utf-8');
+            }
             
             return b;//RADI SAMO AKO JE ZADNJI U x.txt
         }
@@ -159,10 +163,11 @@ function getImagesFromDiv(objectToFill,$)
         }
         domRecursion($);
 }
-var find=function(a,callback)
+var find=function(a,priority,callback)
 {	
     if(!a.link){console.log('NEMA LINKA NIDJE');return -1;}
-    GetData.GetRawData(a.link,a.phantomSupport,a.websitename,0,function(err,resp,body)
+
+    GetData.GetRawData(a.link,a.phantomSupport,a.websitename,priority,function(err,resp,body)
     {
         if(body.length>=5000)
             {
@@ -292,4 +297,5 @@ var find=function(a,callback)
         }
     })
 }
+
 module.exports={find,FindData,indexOfReturnAll};

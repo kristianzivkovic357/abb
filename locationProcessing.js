@@ -186,7 +186,7 @@ function processLocationOfAdvert(Advert)
             }
         
         }
-        console.log(maximumMatchings)
+        //console.log(maximumMatchings)
         Advert.lokacija=finalDataObject;
         return finalDataObject;// NE MORA;
     

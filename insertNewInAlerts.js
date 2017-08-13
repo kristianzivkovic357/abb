@@ -42,7 +42,7 @@ var insert=function(Advert)
 			for(var j=0;j<allDatabaseAlerts.length;j++)
 	            {
 
-	                if((typeof(Advert.kvadratura)!='number')||(typeof(allDatabaseAlerts[j].kvadraturalow)!='number'))console.log('PROBLEM SA TIPOVIBA PODATAKA')
+	                //xsdcif((typeof(Advert.kvadratura)!='number')||(typeof(allDatabaseAlerts[j].kvadraturalow)!='number'))console.log('PROBLEM SA TIPOVIBA PODATAKA')
 	                	//console.log(Advert);
 	             		//console.log(adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija));
 

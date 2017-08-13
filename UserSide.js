@@ -464,11 +464,11 @@ app.post('/alertpoint',function(req,res)
     console.log(req.body)
     var obj={}
     obj.email=req.session.user.email;
-    obj.cenalow=Number(req.body.cena[0]);
-    obj.cenahigh=Number(req.body.cena[1]);
-    obj.kvadraturalow=Number(req.body.kvadratura[0]);
-    obj.kvadraturahigh=Number(req.body.kvadratura[1]);
-    obj.brojsoba=req.body.roomNumber;
+    if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
+    if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
+    if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
+    if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+    if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
     obj.vrsta=req.body.vrsta;
     obj.lokacija=req.body.lokacija;
     obj.namena=req.body.namena;

@@ -12,17 +12,30 @@ var insertNewInAlerts=require('./insertNewInAlerts');
 var sizeof = require('object-sizeof');
 var dateFunctions=require('./dateFunctions');
 var locations=require('./locationProcessing');
-var MinOglasaKlase=50;
+var ObjectId = require('mongodb').ObjectId;
+var MinOglasaKlase=30;
 var NoviOglasi=[];
 var Uprocesu=0;
 var DEBUG_MODE="STANDARD_DEBUG";
+var numberOfCrawlers=0;
 var debugObj={};
+var debugObjUzmiSve={};
 var lastid=0;
 var globalProcessTracker=[];
 function standardDebugging()
 {
-    console.log('\033[2J');//clrscr
-    console.log(debugObj);
+    //console.log('\033[2J');//clrscr
+    console.log("UZIMANJE SVEGA:")
+    for(var i in debugObjUzmiSve)
+    {
+        console.log(i+":"+JSON.stringify(debugObjUzmiSve[i]));
+    }
+    console.log("UZIMANJE ZA ALERTOVE:")
+    for(var i in debugObj)
+    {
+        console.log(i+":"+JSON.stringify(debugObj[i]));
+    }
+    
 }
 if(DEBUG_MODE==='STANDARD_DEBUG')
 {
@@ -60,6 +73,8 @@ function clone(obj) {
 var debug=[];
 var NizRouteova=[];
 var brPagea=0
+
+
 function wrapper() {
     fs.readFile("q.txt",'utf-8',function(err,data)
     {
@@ -73,6 +88,7 @@ mongo.MongoWrapper(function(db)
     var websites=db.collection('websites');
     
        // console.log(result);process.exit();
+
  async.each(bin,function(Sajt,callback) 
  {
       
@@ -93,40 +109,57 @@ mongo.MongoWrapper(function(db)
         
         Sajt=JSON.parse(Sajt);
         
-        if(!debugObj[Sajt.websitename]) debugObj[Sajt.websitename]={};  
+         
+        if(!debugObjUzmiSve[Sajt.websitename])debugObjUzmiSve[Sajt.websitename]={}; 
+        if(!debugObj[Sajt.websitename]) debugObj[Sajt.websitename]={}; 
+
 
         var websiteList=db.collection('websiteList');
         websiteList.find().toArray(function(err,n)//moze ici sasvin van
         {
-            for(var i in n)
-            {
-                if(n[i].websitename==Sajt.websitename)
+           
+                for(var i in n)
                 {
+                    if(n[i].websitename==Sajt.websitename)
+                    {
                         UzmiSve=0;
-                        break;
+                    }
+                }
+            
+            
+            if(UzmiSve==0)//i have already finished scrapping whole db of this website ,see condiiton above
+            {
+                if(numberOfCrawlers==1)
+                {
+                    UzmiSve=0;
+                }
+                else
+                {
+                    callback();
+                    return;
                 }
             }
-        
-       
-        /*if(!globalProcessTracker[Sajt.websitename])
-        {
-             console.log(Sajt.websitename+' is set to doingAll');
-             globalProcessTracker[Sajt.websitename]={};
-            globalProcessTracker[Sajt.websitename].doingAll=1;
-            UzmiSve=1;
-        }
-        else if(globalProcessTracker[Sajt.websitename].doingAlerts!=1)
-        {
-             console.log(Sajt.websitename+' is set to doingAlerts');
-            globalProcessTracker[Sajt.websitename].doingAlerts=1;
-            UzmiSve=0;
-        }
-        else 
-        {
-            console.log(Sajt.websitename+' is already doing alerts and therefore is escaped');
-            callback();
-            return;
-        }*/
+            else
+            {
+                if(numberOfCrawlers==1)
+                {
+                    UzmiSve=1;
+                }
+                else if(numberOfCrawlers==2)
+                {
+                    UzmiSve=0;
+                }
+                else
+                {
+                    console.log("Fatal error with multiple crawlers");
+                }
+            }
+            console.log("UzmiSve detected as:"+UzmiSve);
+           
+          
+            
+    
+            
     async.eachSeries(nizRuta,function(Route,krajRute)
     {
         //console.log(Route);process.exit();
@@ -138,12 +171,21 @@ mongo.MongoWrapper(function(db)
         if(cont==-1){ubaci(arr,UzmiSve);arr=[];krajRute();}
         if(cont!=-1)
         {
-            var BrojOglasaKlase=[]
+            var BrojOglasaKlase={}
             function wrapp(PageNum) 
             {
+                if(UzmiSve)
+                {
+                    debugObjUzmiSve[Route.websitename].pageNum=PageNum;//debug only
+                    debugObjUzmiSve[Route.websitename].finishedAdsOnPage=0;
+                }
+                else
+                {
+                    debugObj[Route.websitename].pageNum=PageNum;
+                    debugObj[Route.websitename].finishedAdsOnPage=0;
+                }
                
-                debugObj[Route.websitename].pageNum=PageNum;//debug only
-
+            
                 SpecialCase.addEveryTime(Route,PageNum,UzmiSve,function(specialArr)
                 {
                         if(specialArr!=-1)
@@ -159,9 +201,16 @@ mongo.MongoWrapper(function(db)
                             path: Route.path+PageNum,
                             method: Route.request
                         };
-                        
-                        
-                            GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,0,function(err,resp,body)
+                            var priority;//priority for getData
+                            if(UzmiSve)
+                            {
+                                priority=0;
+                            }
+                            else
+                            {
+                                priority=1;
+                            }
+                            GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,priority,function(err,resp,body)
                             {
                                 
                                 var data=body;
@@ -182,17 +231,15 @@ mongo.MongoWrapper(function(db)
                                             if(vrsta==undefined)vrsta='012';
                                             if(BrojOglasaKlase[vrsta]==undefined)BrojOglasaKlase[vrsta]=0;
                                             BrojOglasaKlase[vrsta]++;
-                                            BrojOglasaKlase[klasa]++;
-                                            //obj.cena=crawl.FindData(sm,this,Route.cena).replace('.','');
-                                            //obj.kvadratura=crawl.FindData(sm,this,Route.kvadratura).trim()
-                                            //obj.slika=crawl.FindData(sm,this,Route.slika);
-                                            //console.log()
+                                            //if(!UzmiSve){console.log(vrsta+' '+BrojOglasaKlase[vrsta]);}
+                                           // BrojOglasaKlase[klasa]++;//THIS SHOULD BE A BUG
+                                            
                                             for(var j in obj.pickInList)
                                             {
                                                 obj[j]=crawl.FindData(sm,this,obj.pickInList[j]).replace(new RegExp(/\s\s+/g), ' ');
                                             }
                                             if(obj.slika)if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
-                                            //obj.naslov=crawl.FindData(sm,this,Route.naslov);
+                                            
                                             delete obj.class;
                                             obj.websitename=Route.websitename;
                                             //obj.link = crawl.FindData(sm,this,Route.link);
@@ -212,8 +259,9 @@ mongo.MongoWrapper(function(db)
                                             //console.log('AAA')
                                         })
                                     }
-                                // console.log(arr);
-                                    ubaci(arr,UzmiSve,trackCurrentState);
+                                 //console.log(BrojOglasaKlase);//process.exit();
+                                 //if(!UzmiSve)console.log(BrojOglasaKlase);
+                                    ubaci(arr,UzmiSve,BrojOglasaKlase,trackCurrentState);
 
                             }
                             else console.log('Stvari mnogo ne valjaju');
@@ -221,15 +269,20 @@ mongo.MongoWrapper(function(db)
                         
                         }
                 })
-                function trackCurrentState(brObradjenihOglasa)
+                function trackCurrentState(brObradjenihOglasa,numOfInsertedInDb,BrojOglasaKlase)
                             {
-                                
+                                console.log("trackCurrentState je pozvan");
                                 //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+PageNum+'//////');
                                 arr=[];
-                                
+                                if(!brObradjenihOglasa)
+                                {
+                                    console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+"has finished on page:"+PageNum);
+                                    krajRute();
+                                    return;
+                                }
                                 if(!UzmiSve) 
                                 {
-                                    if(Route.isJSON)
+                                    if(Route.isJSON)// it is set that JSON sites have only one class ('1'), that might not be true for every website
                                     {
                                         if(!BrojOglasaKlase['1'])BrojOglasaKlase['1']=0;
                                         BrojOglasaKlase['1']+=20;
@@ -246,19 +299,31 @@ mongo.MongoWrapper(function(db)
                                     }
                                     else
                                     {
-                                    var check=1;
-                                    var iter=0;
-                                    for(klasa in BrojOglasaKlase) 
-                                        {
-                                            iter++;
-                                            if(BrojOglasaKlase[klasa]<MinOglasaKlase)
+                                        debugObj[Route.websitename].klase=clone(BrojOglasaKlase);
+                                        var check=1;
+                                        var iter=0;
+                                        var zadnjaKlasa=null;
+                                        for(klasa in BrojOglasaKlase) //trazim zadnju klasu
                                             {
-                                                check=0;
+                                                iter++;
+                                                zadnjaKlasa=klasa   
                                             }
-                                                
-                                        }
-                                        if((check==0)||(iter<Number(Route.vrsta.UkupanBroj)))wrapp(PageNum+1);
-                                        else krajRute();
+                                            
+                                            if((!BrojOglasaKlase)||(iter==0))
+                                            {
+                                                    console.log("FATAL ERROR BrojOglasaKlase EMPTY");
+                                                    process.exit();
+                                            }
+                                            if(BrojOglasaKlase[zadnjaKlasa]<MinOglasaKlase)
+                                            {
+                                                    check=0;//nastavi
+                                            }
+                                            if((check==0)||(iter<Number(Route.vrsta.UkupanBroj)))wrapp(PageNum+1);
+                                            else 
+                                            {
+                                                console.log("Alertovi zavrsili rutu");
+                                                krajRute();
+                                            }
                                     }
                                 }
                                 else
@@ -267,17 +332,15 @@ mongo.MongoWrapper(function(db)
                                         var obj={};
                                         obj.route=Route.host+Route.path;
                                         obj.page=PageNum;
-                                        stateCollection.update({'route':obj.route},obj,{upsert:true},function(err,res)
+                                        obj.websitename=Route.websitename;
+                                        stateCollection.update({websitename:obj.websitename},obj,{upsert:true},function(err,res)
                                         {
 
                                         })
                                             
-                                        if(brOdradjenihStranica>=Number(Route.FiksniBrojStrana))
+                                        if((brOdradjenihStranica>=Number(Route.FiksniBrojStrana))||(!numOfInsertedInDb))
                                         {
-                                            stateCollection.remove({'route':obj.route},function(err,res)
-                                            {
-                                                if(err)console.log(err);
-                                            })
+                                            if(!numOfInsertedInDb)console.log("Ruta prekinuta zbog neubacenih oglasa");
                                             krajRute();
                                             return;
                                         }
@@ -302,14 +365,12 @@ mongo.MongoWrapper(function(db)
             {
                 if(n)
                 {
-                    //console.log(n);
-                    //process.exit();
-                    //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+n.page);
+                   
                     wrapp(n.page+1);
                 }
                 else
                 {
-                    //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1);
+                    
                     wrapp(1);
                 }
             })
@@ -326,9 +387,7 @@ mongo.MongoWrapper(function(db)
         {
             websiteList.insert({'websitename':Sajt.websitename},function(err,res)
             {
-                if(err)
-
-                console.log(err);
+                if(err)console.log(err);
             })
         }
     console.log("Zavrsene sve rute jednog Routea");
@@ -360,38 +419,38 @@ function compare (a,b)
 
 var GLOB;
 
-function ubaci(arr,UzmiSve,pozoviKraj)
+function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
 {
     /**
      * function responsible for detailed information about every advert by sending another request to the link of the advert
-     * and inserting into the database. Also calling insert into alerts
+     * and inserting into the database. Also calling insertIntoAlerts
      */
-    //console.log(arr);
-
-    //console.log("Uzmi sve:"+UzmiSve);
-        //if(arr.length!=10){console.log('ne valja ');console.log(arr.length);}
-        //console.log('DOBIO DB');
-        //console.log(arr);
+            console.log(BrojOglasaKlase);
             var oglasi=GLOB.collection('oglasi');
             var pointer=-1;
+            var numOfInsertedInDb=0;
             var len=arr.length;
             //console.log(arr.length);
-            var insertOne=function()
+            async.each(arr,function(singleAdvert,finish)
             {
                 pointer++;
-               
-                if(pointer>=len)
-                {
-                    clearInterval(interval);
-                    pozoviKraj(arr.length);
-                    return;
-                }
                 //Only used for debugging purposes (STANDARD_DEBUG)
-                var i=arr[pointer];
-                debugObj[i.websitename].websitename=i.websitename;
-                debugObj[i.websitename].nacin=i.nacinkupovine
-                debugObj[i.websitename].type=i.type
-                debugObj[i.websitename].finishedAdsOnPage=pointer; 
+                var i=singleAdvert;
+                if(UzmiSve)
+                {
+                    debugObjUzmiSve[i.websitename].websitename=i.websitename;
+                    debugObjUzmiSve[i.websitename].nacin=i.nacinkupovine
+                    debugObjUzmiSve[i.websitename].type=i.type
+                    debugObjUzmiSve[i.websitename].finishedAdsOnPage=pointer; 
+                }
+                else
+                {
+                    debugObj[i.websitename].websitename=i.websitename;
+                    debugObj[i.websitename].nacin=i.nacinkupovine
+                    debugObj[i.websitename].type=i.type
+                    debugObj[i.websitename].finishedAdsOnPage=pointer; 
+                }
+                
              var collection=GLOB.collection(i.nacinkupovine+i.type);
 
             if((!i.nacinkupovine)||(!i.type)||(!i.websitename)){console.log('Ne postoji tip ili nacinkupovine');process.exit(0);}
@@ -403,11 +462,19 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                         if(err)console.log(err)
                             if(!n)
                             {
+                                numOfInsertedInDb++;
                                 if(i.shouldCrawl)
                                 {
-                                    delete i.shouldCrawl;
-                                  
-                                    crawl.find(i,function(resp)
+                                   
+                                    if(UzmiSve)
+                                    {
+                                        priority=0;
+                                    }
+                                    else
+                                    {
+                                        priority=1;
+                                    }
+                                    crawl.find(i,priority,function(resp)
                                     {
                                         
                                         if(resp==-1)return;
@@ -417,7 +484,7 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                         deleteUnecessaryFields(resp);
 
                                         
-                                        if(DEBUG_MODE=="FUll_DEBUG")console.log(resp);
+                                        if(DEBUG_MODE=="FULL_DEBUG")console.log(resp);
                                         if(UzmiSve==0)insertNewInAlerts.insert(resp);
                                         
                                         oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
@@ -432,6 +499,8 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                            if(err)console.log(err);
                                            //console.log('DODAJEMO objekat U DATABASE');
                                         });
+                                        finish();
+
                                         
 
                                     });
@@ -441,10 +510,10 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                     changeDataType(i);
                                     //console.log('Usao sam');
                                     i.datum=dateFunctions.fixDate(i.datum,i.datumSetup)//datum
-                                    //locations.processLocationOfAdvert(i);
+                                    locations.processLocationOfAdvert(i);//DISKUTABILNO
                                     deleteUnecessaryFields(i);
 
-                                    if(DEBUG_MODE=="FUll_DEBUG")console.log(i)
+                                    if(DEBUG_MODE=="FULL_DEBUG")console.log(i)
 
                                     if(UzmiSve==0)insertNewInAlerts.insert(i);
                                     collection.insert(i,function(err,res)
@@ -459,31 +528,54 @@ function ubaci(arr,UzmiSve,pozoviKraj)
                                             if(err)console.log(err);
                                             
                                         });
+                                    finish();
+                                    
                                 }
 
                             }
                             else
                             {
-                                console.log('vec je u bazi');
+                                if(!UzmiSve)console.log('vec je u bazi');
+                                finish();
+                                
                             }
+                           
                       
                     })
-         }
-         insertOne();
-         var interval=setInterval(insertOne,2000);
+         },function()
+        {
+            pozoviKraj(pointer,numOfInsertedInDb,BrojOglasaKlase)
+        })
        
 }
 var KRAJ=function(err) 
 {
     console.log('KRAJ CELE RUNDE');
+    numberOfCrawlers--;
     //process.exit();
     //wrapper();
 }
 
-function poziv() { 
-    wrapper();
+function poziv() 
+{
+    if(numberOfCrawlers>2)
+    {
+        console.log("Fatal error, number of crawlers > 2");
+    }
+    else if(numberOfCrawlers==2)
+    {
+        console.log("Aborting this call for a crawler because there is two instances");
+    }
+    else
+    {
+        numberOfCrawlers++;
+        console.log("Calling Crawler...");
+        wrapper();
+    }
+    
 }
 poziv();
+setInterval(poziv,1000*20);
 var pq=0;
 function getDbConnection()
 {
@@ -511,4 +603,4 @@ function changeDataType(Advert)
 }
 getDbConnection();
 //setInterval(getDbConnection,1000*60);
-setInterval(poziv,1000*60*15);
+
