@@ -59,10 +59,7 @@ function takeRequest(requestInfo)
 	//process.exit();
 	if(requestInfo.phantomSupport=='true')
 		{
-				exec('phantomjs ./phantom.js '+requestInfo.url,{maxBuffer:1024*100000},function(err,stdout,stderr)
-				{
-					requestInfo.callback(err,stderr,stdout);
-				})
+				regulatePhantomJSCall(requestInfo,1);
 		}
 		else
 		{
@@ -73,6 +70,24 @@ function takeRequest(requestInfo)
 				requestInfo.callback(err,null,body);
 			})
 		}
+}
+function regulatePhantomJSCall(requestInfo,countOfCalls)
+{
+	exec('phantomjs ./phantom.js '+requestInfo.url,{maxBuffer:1024*10000},function(err,stdout,stderr)
+	{
+		if(stdout.length<=5000)
+		{
+			console.log("PHANTOMJS returned invalid webpage for "+countOfCalls+" times "+"on object:");
+			console.log(JSON.stringify(requestInfo));
+			console.log("Sending request again");
+			regulatePhantomJSCall(requestInfo,countOfCalls+1);
+		}
+		else
+		{
+			requestInfo.callback(err,stderr,stdout);
+		}
+	})
+
 }
 setInterval(timeControlledRequests,2500);
 module.exports={GetRawData};

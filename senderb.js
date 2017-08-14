@@ -20,20 +20,66 @@ var DEBUG_MODE="STANDARD_DEBUG";
 var numberOfCrawlers=0;
 var debugObj={};
 var debugObjUzmiSve={};
+var debugObjPrevious={}
+var debugObjUzmiSvePrevious={}
 var lastid=0;
 var globalProcessTracker=[];
 function standardDebugging()
 {
     //console.log('\033[2J');//clrscr
-    console.log("UZIMANJE SVEGA:")
-    for(var i in debugObjUzmiSve)
+    var print=1;
+    /*for(var i in debugObjUzmiSve)
     {
-        console.log(i+":"+JSON.stringify(debugObjUzmiSve[i]));
+        if(debugObjUzmiSve[i]!=debugObjUzmiSvePrevious[i])
+        {
+            print=1;
+            debugObjUzmiSvePrevious=clone(debugObjUzmiSve);
+            break;
+        }
+        
+    }*/
+    if(print)
+    {
+        console.log('***************************************************************')
+        console.log("UZIMANJE SVEGA:")
+        for(var i in debugObjUzmiSve)
+        {
+            console.log(i+":"+JSON.stringify(debugObjUzmiSve[i]));
+        }
+       
     }
-    console.log("UZIMANJE ZA ALERTOVE:")
+    else
+    {
+        console.log("Identicni");
+        console.log(debugObjUzmiSve);
+        console.log(debugObjUzmiSvePrevious);
+    }
+    /*print=1;
     for(var i in debugObj)
     {
-        console.log(i+":"+JSON.stringify(debugObj[i]));
+        if(debugObj[i]!=debugObjPrevious[i])
+        {
+            print=1;
+            debugObjPrevious=clone(debugObj);
+            break;
+        }
+            
+    }*/
+    if(print)
+    {
+        
+        console.log("UZIMANJE ZA ALERTOVE:")
+        for(var i in debugObj)
+        {
+            console.log(i+":"+JSON.stringify(debugObj[i]));
+        }
+        console.log('******************************************************************')
+    }
+    else
+    {
+            console.log("Identicni");
+            console.log(debugObj);
+            console.log(debugObjPrevious);
     }
     
 }
@@ -74,7 +120,13 @@ var debug=[];
 var NizRouteova=[];
 var brPagea=0
 
-
+function fromClassToString(cl)
+{
+     var a=cl.replace(new RegExp(/\./g)," ");
+     a=a.trim();
+     return a;
+}
+//console.log(fromClassToString("/./../.././."));process.exit();
 function wrapper() {
     fs.readFile("q.txt",'utf-8',function(err,data)
     {
@@ -95,7 +147,7 @@ mongo.MongoWrapper(function(db)
    
     var UzmiSve=1;
     var nizRuta=[];
-    var brOdradjenihStranica=1;
+    
         var klq=JSON.parse(Sajt);
         var pravi=clone(klq);
             for(var j in klq.path) 
@@ -162,8 +214,9 @@ mongo.MongoWrapper(function(db)
             
     async.eachSeries(nizRuta,function(Route,krajRute)
     {
+        
         //console.log(Route);process.exit();
-        //console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
+        console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
         
         var arr=[];
     SpecialCase.add(arr,Sajt,function(cont)
@@ -172,6 +225,13 @@ mongo.MongoWrapper(function(db)
         if(cont!=-1)
         {
             var BrojOglasaKlase={}
+            for(var klase=0;klase<Route.vrsta.UkupanBroj;klase++)//inicijalizacija na 0
+            {
+                BrojOglasaKlase[fromClassToString(Route.class[klase])]=0;
+                //console.log(fromClassToString(Route.class[klase]));
+            }
+            //process.exit();
+            //if(!UzmiSve)console.log(BrojOglasaKlase);
             function wrapp(PageNum) 
             {
                 if(UzmiSve)
@@ -299,17 +359,16 @@ mongo.MongoWrapper(function(db)
                                     }
                                     else
                                     {
-                                        debugObj[Route.websitename].klase=clone(BrojOglasaKlase);
+                                        //debugObj[Route.websitename].klase=clone(BrojOglasaKlase);
                                         var check=1;
-                                        var iter=0;
+                                        console.log(BrojOglasaKlase)
                                         var zadnjaKlasa=null;
-                                        for(klasa in BrojOglasaKlase) //trazim zadnju klasu
+                                        for(klasa in Route.class) //trazim zadnju klasu
                                             {
-                                                iter++;
-                                                zadnjaKlasa=klasa   
+                                                zadnjaKlasa=fromClassToString(Route.class[klasa]);   
                                             }
                                             
-                                            if((!BrojOglasaKlase)||(iter==0))
+                                            if(!BrojOglasaKlase)
                                             {
                                                     console.log("FATAL ERROR BrojOglasaKlase EMPTY");
                                                     process.exit();
@@ -318,7 +377,7 @@ mongo.MongoWrapper(function(db)
                                             {
                                                     check=0;//nastavi
                                             }
-                                            if((check==0)||(iter<Number(Route.vrsta.UkupanBroj)))wrapp(PageNum+1);
+                                            if(check==0)wrapp(PageNum+1);
                                             else 
                                             {
                                                 console.log("Alertovi zavrsili rutu");
@@ -338,15 +397,15 @@ mongo.MongoWrapper(function(db)
 
                                         })
                                             
-                                        if((brOdradjenihStranica>=Number(Route.FiksniBrojStrana))||(!numOfInsertedInDb))
+                                        if((PageNum>=Number(Route.FiksniBrojStrana))/*||(!numOfInsertedInDb)*/)
                                         {
-                                            if(!numOfInsertedInDb)console.log("Ruta prekinuta zbog neubacenih oglasa");
+                                            //if(!numOfInsertedInDb)console.log("Ruta prekinuta zbog neubacenih oglasa");
                                             krajRute();
                                             return;
                                         }
                                         else
                                         {   
-                                            brOdradjenihStranica++;
+                                            
                                             wrapp(PageNum+1);
                                         }
                                     }
@@ -425,7 +484,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
      * function responsible for detailed information about every advert by sending another request to the link of the advert
      * and inserting into the database. Also calling insertIntoAlerts
      */
-            console.log(BrojOglasaKlase);
+            //console.log(BrojOglasaKlase);
             var oglasi=GLOB.collection('oglasi');
             var pointer=-1;
             var numOfInsertedInDb=0;
@@ -535,7 +594,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
                             }
                             else
                             {
-                                if(!UzmiSve)console.log('vec je u bazi');
+                                //if(!UzmiSve)console.log('vec je u bazi');
                                 finish();
                                 
                             }
