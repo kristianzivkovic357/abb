@@ -83,7 +83,7 @@ function standardDebugging()
     }
     
 }
-if(DEBUG_MODE==='STANDARD_DEBUG')
+if((DEBUG_MODE==='STANDARD_DEBUG')||(DEBUG_MODE==='FULL_DEBUG'))
 {
     setInterval(standardDebugging,15000);
 }
@@ -145,20 +145,8 @@ mongo.MongoWrapper(function(db)
  {
       
    
-    var UzmiSve=1;
-    var nizRuta=[];
-    
-        var klq=JSON.parse(Sajt);
-        var pravi=clone(klq);
-            for(var j in klq.path) 
-            {
-                pravi.path=klq.path[j].put;
-                pravi.type=klq.path[j].tip;
-                pravi.nacinkupovine=klq.path[j].nacin;
-                pravi.FiksniBrojStrana=klq.path[j].FiksniBrojStrana;
-                nizRuta.push(clone(pravi));
-            }
-        
+        var UzmiSve=1;
+        var nizRuta=[];
         Sajt=JSON.parse(Sajt);
         
          
@@ -169,6 +157,8 @@ mongo.MongoWrapper(function(db)
         var websiteList=db.collection('websiteList');
         websiteList.find().toArray(function(err,n)//moze ici sasvin van
         {
+                var klq=Sajt;
+                var pravi=clone(klq);
            
                 for(var i in n)
                 {
@@ -177,6 +167,38 @@ mongo.MongoWrapper(function(db)
                         UzmiSve=0;
                     }
                 }
+                var stateCollection=db.collection('previousState');
+        stateCollection.findOne({websitename:Sajt.websitename},function(err,whereCrawlerStopped)
+        {
+                var shouldAddTheRest=0;
+                for(var j in klq.path) 
+                {
+                    if(UzmiSve)
+                        {
+                            if((whereCrawlerStopped.route==(klq.host+klq.path[j].put))||shouldAddTheRest)
+                            {
+                                shouldAddTheRest=1;//when find route matching every next route will be added
+                                
+                                pravi.path=klq.path[j].put;
+                                //console.log(pravi.host+pravi.path);
+                                pravi.type=klq.path[j].tip;
+                                pravi.nacinkupovine=klq.path[j].nacin;
+                                pravi.FiksniBrojStrana=klq.path[j].FiksniBrojStrana;
+                                nizRuta.push(clone(pravi));
+                            }
+                        }
+                    else
+                        {
+                            pravi.path=klq.path[j].put;
+                            pravi.type=klq.path[j].tip;
+                            pravi.nacinkupovine=klq.path[j].nacin;
+                            pravi.FiksniBrojStrana=klq.path[j].FiksniBrojStrana;
+                            nizRuta.push(clone(pravi));
+                        }
+                   
+                }
+                //console.log(nizRuta);
+                //process.exit();
             
             
             if(UzmiSve==0)//i have already finished scrapping whole db of this website ,see condiiton above
@@ -216,18 +238,14 @@ mongo.MongoWrapper(function(db)
     {
         
         //console.log(Route);process.exit();
-        console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
+            console.log('Zapoceta ruta:'+Route.websitename+' '+Route.nacinkupovine+Route.type);
         
-        var arr=[];
-    SpecialCase.add(arr,Sajt,function(cont)
-    {
-        if(cont==-1){ubaci(arr,UzmiSve);arr=[];krajRute();}
-        if(cont!=-1)
-        {
+            var arr=[];
+   
             var BrojOglasaKlase={}
             for(var klase=0;klase<Route.vrsta.UkupanBroj;klase++)//inicijalizacija na 0
             {
-                BrojOglasaKlase[fromClassToString(Route.class[klase])]=0;
+                BrojOglasaKlase[fromClassToString(Route.existingPromoClasses[klase])]=0;
                 //console.log(fromClassToString(Route.class[klase]));
             }
             //process.exit();
@@ -331,12 +349,28 @@ mongo.MongoWrapper(function(db)
                 })
                 function trackCurrentState(brObradjenihOglasa,numOfInsertedInDb,BrojOglasaKlase)
                             {
-                                console.log("trackCurrentState je pozvan");
-                                //console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+PageNum+'//////');
                                 arr=[];
+                                var stateCollection=db.collection('previousState');
+                                console.log("trackCurrentState je pozvan");
+                                if(!PageNum)console.log("PageNum: "+PageNum);
+                                if(PageNum>Route.FiksniBrojStrana)
+                                {
+                                    console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+"has exceeded max number of pages");
+                                    krajRute();
+                                    return;
+                                }
+                               
+                               
                                 if(!brObradjenihOglasa)
                                 {
                                     console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+"has finished on page:"+PageNum);
+                                    if(UzmiSve)
+                                    {
+                                        stateCollection.remove({websitename:obj.websitename},function(err,res)
+                                        {
+                                            if(err)console.log(err);
+                                        })
+                                    }
                                     krajRute();
                                     return;
                                 }
@@ -359,35 +393,35 @@ mongo.MongoWrapper(function(db)
                                     }
                                     else
                                     {
-                                        //debugObj[Route.websitename].klase=clone(BrojOglasaKlase);
+                                        if(BrojOglasaKlase.length>Route.vrsta.UkupanBroj)
+                                        {
+                                            console.log("Error: Detected more style classes then it should be, possibly the website: "+Route.websitename+" has been changed");
+                                        }
                                         var check=1;
                                         console.log(BrojOglasaKlase)
-                                        var zadnjaKlasa=null;
-                                        for(klasa in Route.class) //trazim zadnju klasu
-                                            {
-                                                zadnjaKlasa=fromClassToString(Route.class[klasa]);   
-                                            }
+                                        var zadnjaKlasa=Route.existingPromoClasses[Route.vrsta.UkupanBroj-1];
+                                        
                                             
-                                            if(!BrojOglasaKlase)
-                                            {
-                                                    console.log("FATAL ERROR BrojOglasaKlase EMPTY");
-                                                    process.exit();
-                                            }
-                                            if(BrojOglasaKlase[zadnjaKlasa]<MinOglasaKlase)
-                                            {
-                                                    check=0;//nastavi
-                                            }
-                                            if(check==0)wrapp(PageNum+1);
-                                            else 
-                                            {
-                                                console.log("Alertovi zavrsili rutu");
-                                                krajRute();
-                                            }
+                                        if(!BrojOglasaKlase)
+                                        {
+                                            console.log("FATAL ERROR BrojOglasaKlase EMPTY");
+                                            process.exit();
+                                        }
+                                        if(BrojOglasaKlase[zadnjaKlasa]<MinOglasaKlase)
+                                        {
+                                            check=0;//nastavi
+                                        }
+                                        if(check==0)wrapp(PageNum+1);
+                                        else 
+                                        {
+                                            console.log("Alertovi zavrsili rutu");
+                                            krajRute();
+                                        }
                                     }
                                 }
                                 else
                                     {
-                                        var stateCollection=db.collection('previousState');
+                                        
                                         var obj={};
                                         obj.route=Route.host+Route.path;
                                         obj.page=PageNum;
@@ -399,7 +433,11 @@ mongo.MongoWrapper(function(db)
                                             
                                         if((PageNum>=Number(Route.FiksniBrojStrana))/*||(!numOfInsertedInDb)*/)
                                         {
-                                            //if(!numOfInsertedInDb)console.log("Ruta prekinuta zbog neubacenih oglasa");
+                                            stateCollection.remove({websitename:obj.websitename},function(err,res)
+                                            {
+                                                if(err)console.log(err);
+                                            })
+                                            console.log("Ruta je zavrsena jer je premasen fixni broj strana");
                                             krajRute();
                                             return;
                                         }
@@ -413,33 +451,30 @@ mongo.MongoWrapper(function(db)
                             }
             }
             
-    }
+    
 //mongo.MongoWrapper(function(db)
 //{
     //console.log(UzmiSve);
         if(UzmiSve==1)
         {
-            var stateCollection=db.collection('previousState');
-            stateCollection.findOne({route:Route.host+Route.path},function(err,n)
+           if(whereCrawlerStopped)
             {
-                if(n)
-                {
-                   
-                    wrapp(n.page+1);
-                }
-                else
-                {
-                    
-                    wrapp(1);
-                }
-            })
+                var temporary=whereCrawlerStopped.page;//this is done because recursion might not come back
+                whereCrawlerStopped.page=1;
+                wrapp(temporary);
+                
+            }
+            else
+            {
+                wrapp(1);
+            }
         }
         else{/*console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+' '+UzmiSve+' '+1);*/ wrapp(1);}
       
     
 //})
 
-})//specialcase
+
 },function(err)
 {
      if(UzmiSve)
@@ -452,6 +487,7 @@ mongo.MongoWrapper(function(db)
     console.log("Zavrsene sve rute jednog Routea");
     callback();
     return;
+});
 });
  })
 
@@ -486,7 +522,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
      */
             //console.log(BrojOglasaKlase);
             var oglasi=GLOB.collection('oglasi');
-            var pointer=-1;
+            var pointer=0;
             var numOfInsertedInDb=0;
             var len=arr.length;
             //console.log(arr.length);
@@ -569,7 +605,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
                                     changeDataType(i);
                                     //console.log('Usao sam');
                                     i.datum=dateFunctions.fixDate(i.datum,i.datumSetup)//datum
-                                    locations.processLocationOfAdvert(i);//DISKUTABILNO
+                                    //locations.processLocationOfAdvert(i);//DISKUTABILNO
                                     deleteUnecessaryFields(i);
 
                                     if(DEBUG_MODE=="FULL_DEBUG")console.log(i)

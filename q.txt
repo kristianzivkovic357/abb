@@ -1,4 +1,30 @@
 ﻿{
+"websitename":"nekretnine",
+"images":"id(images)",
+"pickInList":
+	{
+	"datum":"children().eq(1).children().eq(1).text()",
+	"kvadratura":"children().eq(1).children().eq(2).children().eq(1).kk(m).text()",
+	"cena":"children().eq(1).children().eq(2).children().eq(1).split(, 1).kk(E).text()",
+	"naslov":"children().eq(1).children().eq(0).text()",
+	"link":"children().eq(0).attr(href)",
+	"slika":"children().eq(0).children().eq(0).attr(src).text()"
+	},
+"lokacijaOptions":{"format":"$ulica;,$oblast;,$grad;,$drzava;", "charsToDelete":"()-_"},
+"datumSetup":{"deliminator":".","format":"d/m/y","spliter":{"splitString":"|","index":0}},
+"data":{"1":"class(fixed oglasData).children().eq(0).children().eq(1).html()","2":"class(fixed oglasData).children().eq(1).children().eq(0).html()","3":"class(fixed oglasData).children().eq(1).children().eq(1).html()"},
+"binders":{"Tip (Poljoprivredna zemljišta):":"!@#bottom_row*","Tip (Kuće):":"!@#tip_stana","Opis:":"!@#opis","Vrsta goriva:":"!@#vrsta_goriva","Tip (Stanovi):":"!@#tip_stana","Gradski prevoz:":"!@#bottom_row*","Vrsta grejanja:":"!@#grejanje","Pomagala:":"!@#pomagala","ID:":"!@#ID","Objavljen:":"!@#datum", "Ažuriran:":"!@#Azuriran","Adresa:":"!@#lokacija","Oglas od:":"!@#oglasavac","Sobe:":"!@#brojsoba","Na spratu:":"!@#br_sprat","Uknjiženo:":"!@#uknjizeno","Kupatila:":"!@#kupatila","Prateći objekti/ površine:":"!@#middle_row*","Oprema:":"!@#upper_row*","Tehnička opremljenost:":"!@#upper_row*","Stanje objekta:":"!@#stanje_objekta","Ukupno Spratova:":"!@#ukupno_spratova","Godina izgradnje:":"!@#god_izgradnje"},
+"host":"www.nekretnine.rs",
+"path":{"6":{"FiksniBrojStrana":1554,"nacin":"Izdavanje","tip":"stan","put":"/stambeni-objekti/stanovi/izdavanje-prodaja/izdavanje/lista/po_stranici/50/stranica/"},"5":{"FiksniBrojStrana":214,"nacin":"prodaja","tip":"stan","put":"/stambeni-objekti/stanovi/izdavanje-prodaja/prodaja/lista/po_stranici/50/stranica/"},"4":{"FiksniBrojStrana":21,"nacin":"Izdavanje","tip":"kuca","put":"/stambeni-objekti/kuce/izdavanje-prodaja/izdavanje/lista/po_stranici/50/stranica/"},"3":{"FiksniBrojStrana":201,"nacin":"prodaja","tip":"kuca","put":"/stambeni-objekti/kuce/izdavanje-prodaja/prodaja/lista/po_stranici/50/stranica/"},"2":{"FiksniBrojStrana":59,"nacin":"prodaja","tip":"zemljiste","put":"/zemljista/izdavanje-prodaja/prodaja/lista/po_stranici/50/stranica/"},"1":{"FiksniBrojStrana":1,"nacin":"Izdavanje","tip":"zemljiste","put":"/zemljista/izdavanje-prodaja/izdavanje/lista/po_stranici/50/stranica/"}},
+"slikaadd":"http://www.nekretnine.rs",
+"class":[".resultList.fixed"],
+"existingPromoClasses":["icon icon_t topPonuda","012"],
+"vrsta":{"putanja":"children().eq(0).children().eq(1).attr(class)","UkupanBroj":2},
+"phantomSupport":"false",
+"shouldCrawl":1
+}
+&&||
+{
 "websitename":"halooglasi",
 "images":"id(fotorama)",
 "id":"attr(id)",
@@ -26,6 +52,7 @@
 "path":{"7":{"FiksniBrojStrana":483,"nacin":"Izdavanje","tip":"stan","put":"/nekretnine/izdavanje-stanova?page="},"2":{"FiksniBrojStrana":2674,"nacin":"prodaja","tip":"stan","put":"/nekretnine/prodaja-stanova?page="},"3":{"FiksniBrojStrana":788,"nacin":"prodaja","tip":"kuca","put":"/nekretnine/prodaja-kuca?page="},"4":{"FiksniBrojStrana":37,"nacin":"Izdavanje","tip":"kuca","put":"/nekretnine/izdavanje-kuca?page="},"5":{"FiksniBrojStrana":246,"nacin":"prodaja","tip":"zemljiste","put":"/nekretnine/prodaja-zemljista?page="},"6":{"FiksniBrojStrana":4,"nacin":"Izdavanje","tip":"zemljiste","put":"/nekretnine/izdavanje-zemljista?page="},"1":{"FiksniBrojStrana":36,"nacin":"Izdavanje","tip":"soba","put":"/nekretnine/izdavanje-soba?page="}},
 
 "class":[".product-item.product-list-item.Premium.real-estates.my-ad-placeholder",".product-item.product-list-item.Top.real-estates.my-ad-placeholder",".product-item.product-list-item.Standard.real-estates.my-ad-placeholder"],
+"existingPromoClasses":[" product-item product-list-item Premium real-estates my-ad-placeholder"," product-item product-list-item Top real-estates my-ad-placeholder"," product-item product-list-item Standard real-estates my-ad-placeholder"],
 "vrsta":{"putanja":"attr(class)","UkupanBroj":3},
 "phantomSupport":"true",
 "FiksniBrojStrana":"3",

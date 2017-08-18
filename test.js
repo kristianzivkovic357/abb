@@ -1,4 +1,6 @@
-var async= require('async');
-var str="/./././."
-console.log(str.replace(/./gi, ""));
-console.log(str);
+
+
+var arr=[1,2,3];
+arr.shift()
+console.log(arr);
+console.log();

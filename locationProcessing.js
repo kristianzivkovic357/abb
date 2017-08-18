@@ -87,6 +87,11 @@ function removeAccentFromString(string)
 }
 function processLocationOfAdvert(Advert)
 {
+    if(!Advert.lokacija)
+    {
+        console.log(Advert);
+        return -1;
+    }
     var variables=locateAllCharsInString(Advert.lokacijaOptions.format,"$");
     //console.log(variables);
     var finalDataObject={};

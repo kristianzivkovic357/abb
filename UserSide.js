@@ -502,7 +502,7 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
       async.each(odg,function(alert,callb)
       {
         responseToUser[alert.nazivAlerta]=alert;
-        matching.find({idalert:new ObjectId(odg.id),"seen":0}).toArray(function(err,matchings)
+        matching.find({idalert:new ObjectId(odg.id),"seen":0}).limit(18).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
         {
           if(!matchings)console.log('matcg ne valja');
            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
