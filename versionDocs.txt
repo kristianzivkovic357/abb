@@ -2,6 +2,16 @@ This file is used to describe every version and its changes from the older ones.
 
 *********************************************************************************************************************
 
+"v1.0.2"
+changed program flow, GetData algorithm changed completely to be 1:4 in use of uzmiSve, changed memorising previousState bug,
+ added nekretnine.rs to testing
+
+**this version needs to be tested more specifically to determine the quality
+*********************************************************************************************************************
+
+
+*********************************************************************************************************************
+
 "v1.0.1"
 Features: fixed algorithm for ending crawler when it reaches fixed limit of pages(for UzmiSve=1) and limit for dynamic limit of alerts.
 Basically completely changed algorithm for breaking. Halooglasi had changed css classes which caused bugs, now its fixed.
