@@ -528,24 +528,26 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
             //console.log(arr.length);
             async.each(arr,function(singleAdvert,finish)
             {
-                pointer++;
+               
                 //Only used for debugging purposes (STANDARD_DEBUG)
                 var i=singleAdvert;
-                if(UzmiSve)
-                {
-                    debugObjUzmiSve[i.websitename].websitename=i.websitename;
-                    debugObjUzmiSve[i.websitename].nacin=i.nacinkupovine
-                    debugObjUzmiSve[i.websitename].type=i.type
-                    debugObjUzmiSve[i.websitename].finishedAdsOnPage=pointer; 
+                function updateDebug()
+                    {
+                    if(UzmiSve)
+                    {
+                        debugObjUzmiSve[i.websitename].websitename=i.websitename;
+                        debugObjUzmiSve[i.websitename].nacin=i.nacinkupovine
+                        debugObjUzmiSve[i.websitename].type=i.type
+                        debugObjUzmiSve[i.websitename].finishedAdsOnPage=pointer; 
+                    }
+                    else
+                    {
+                        debugObj[i.websitename].websitename=i.websitename;
+                        debugObj[i.websitename].nacin=i.nacinkupovine
+                        debugObj[i.websitename].type=i.type
+                        debugObj[i.websitename].finishedAdsOnPage=pointer; 
+                    }
                 }
-                else
-                {
-                    debugObj[i.websitename].websitename=i.websitename;
-                    debugObj[i.websitename].nacin=i.nacinkupovine
-                    debugObj[i.websitename].type=i.type
-                    debugObj[i.websitename].finishedAdsOnPage=pointer; 
-                }
-                
              var collection=GLOB.collection(i.nacinkupovine+i.type);
 
             if((!i.nacinkupovine)||(!i.type)||(!i.websitename)){console.log('Ne postoji tip ili nacinkupovine');process.exit(0);}
@@ -594,6 +596,8 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
                                            if(err)console.log(err);
                                            //console.log('DODAJEMO objekat U DATABASE');
                                         });
+                                        pointer++;
+                                        updateDebug();
                                         finish();
 
                                         
@@ -623,6 +627,8 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
                                             if(err)console.log(err);
                                             
                                         });
+                                    pointer++;
+                                    updateDebug();
                                     finish();
                                     
                                 }
@@ -631,6 +637,8 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,pozoviKraj)
                             else
                             {
                                 //if(!UzmiSve)console.log('vec je u bazi');
+                                pointer++;
+                                updateDebug();
                                 finish();
                                 
                             }

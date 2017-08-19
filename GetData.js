@@ -54,7 +54,7 @@ function timeControlledRequests()
 			if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 			{
 				//alreadySent=1;
-				//console.log("sent to alerts")
+				console.log("sent to alerts on "+i);
 				hashesOfEveryWebsite[i].lastSent++;
 				takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
 				hashesOfEveryWebsite[i].arrayForAlerts.shift();
@@ -63,7 +63,7 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 				{
-					//console.log("sent to getall")
+					console.log("sent to getall on "+i)
 					takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
 					hashesOfEveryWebsite[i].arrayForTakingAll.shift();
 				}
@@ -74,7 +74,7 @@ function timeControlledRequests()
 		{
 			if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 			{
-				//console.log("sent to getall")
+				console.log("sent to getall on "+i)
 				hashesOfEveryWebsite[i].lastSent++;
 				takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
 				hashesOfEveryWebsite[i].arrayForTakingAll.shift();
@@ -83,7 +83,7 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 				{
-					//console.log("sent to alerts")
+					console.log("sent to alerts on "+i)
 					takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
 					hashesOfEveryWebsite[i].arrayForAlerts.shift();
 				}
