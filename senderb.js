@@ -366,7 +366,7 @@ mongo.MongoWrapper(function(db)
                                     console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+"has finished on page:"+PageNum);
                                     if(UzmiSve)
                                     {
-                                        stateCollection.remove({websitename:obj.websitename},function(err,res)
+                                        stateCollection.remove({websitename:Route.websitename},function(err,res)
                                         {
                                             if(err)console.log(err);
                                         })
@@ -433,7 +433,7 @@ mongo.MongoWrapper(function(db)
                                             
                                         if((PageNum>=Number(Route.FiksniBrojStrana))/*||(!numOfInsertedInDb)*/)
                                         {
-                                            stateCollection.remove({websitename:obj.websitename},function(err,res)
+                                            stateCollection.remove({websitename:Route.websitename},function(err,res)
                                             {
                                                 if(err)console.log(err);
                                             })
