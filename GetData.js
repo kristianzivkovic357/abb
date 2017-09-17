@@ -1,7 +1,9 @@
 var exec=require('child_process').exec;
 var request=require('request');
 var fs=require('fs');
+var DEBUG="STANDARD_DEBUG";
 var MAX_REQUEST_RETRY=3;
+var MIN_CHARS_RESPONSE=100;
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
@@ -15,7 +17,13 @@ var listOfNames=[];
 //MOZDA POSTOJI PROBLEM AKO REQUEST KOJI DODJE KASNIJE 
 var alertPointer=0;
 var svePointer=0;
-var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,priority,callback)//priority 1-fast 0-slow
+
+function debug()
+{
+	console.log(hashesOfEveryWebsite);
+}
+if(DEBUG=="STANDARD_DEBUG")setInterval(debug,6000)
+var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,uzmiSve,callback)
 {
 	//console.log('dobio request');
 	if(!nameOfRemoteWebsite){console.log('GetRawData no parameter name');}
@@ -34,7 +42,7 @@ var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,priority,callback
 		object.url=url;
 		object.callback=callback;
 		object.phantomSupport=phantomSupport;
-		if(priority==1)
+		if(uzmiSve==0)
 		{
 			hashesOfEveryWebsite[nameOfRemoteWebsite].arrayForAlerts.push(clone(object));
 		}
@@ -48,24 +56,29 @@ function timeControlledRequests()
 	//console.log(hashesOfEveryWebsite);
 	for(var i in hashesOfEveryWebsite)
 	{
-		var alreadySent=0;
+		//console.log(hashesOfEveryWebsite[i].lastSent+ ' duzina alert niza'+hashesOfEveryWebsite[i].arrayForAlerts.length+' duzina uzmiSve niza:'+hashesOfEveryWebsite[i].arrayForTakingAll.length);
 		if(hashesOfEveryWebsite[i].lastSent==4)
 		{
 			if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 			{
 				//alreadySent=1;
-				//console.log("sent to alerts")
+				console.log("sent to alerts "+i)
 				hashesOfEveryWebsite[i].lastSent++;
-				takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
+				var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
 				hashesOfEveryWebsite[i].arrayForAlerts.shift();
+				takeRequest(temp);
+				
 			}
 			else
 			{
 				if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 				{
-					//console.log("sent to getall")
-					takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
+				//console.log("sent to getall "+i)
+				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
+					var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
 					hashesOfEveryWebsite[i].arrayForTakingAll.shift();
+					takeRequest(temp);
+					
 				}
 			}
 			
@@ -74,18 +87,23 @@ function timeControlledRequests()
 		{
 			if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 			{
-				//console.log("sent to getall")
+				//console.log("sent to getall "+i)
+				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
 				hashesOfEveryWebsite[i].lastSent++;
-				takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
+				var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
 				hashesOfEveryWebsite[i].arrayForTakingAll.shift();
+				takeRequest(temp);
+				
 			}
 			else
 			{
 				if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 				{
-					//console.log("sent to alerts")
-					takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
+					console.log("sent to alerts "+i)
+					var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
 					hashesOfEveryWebsite[i].arrayForAlerts.shift();
+					takeRequest(temp);
+					
 				}
 			}
 		}
@@ -93,19 +111,23 @@ function timeControlledRequests()
 		
 	}
 }
-
+var balance=0;
 function takeRequest(requestInfo)
 {
 	//console.log(requestInfo);
 	if(!requestInfo)console.log("nema request info");
 	
 	//process.exit();
+	balance++;
 	if(requestInfo.phantomSupport=='true')
 		{
+			//console.log("Phantom pozvan!")
 			regulatePhantomJSCall(requestInfo,1);
+			
 		}
 		else
 		{
+			//console.log("request pozvan!")
 			regulateRequestCall(requestInfo,1);	
 		}
 }
@@ -134,6 +156,8 @@ function regulatePhantomJSCall(requestInfo,countOfCalls)
 		}
 		else
 		{
+			balance--;
+			console.log("BALANCE:"+balance);
 			requestInfo.callback(err,stderr,stdout);
 		}
 	})
@@ -143,7 +167,7 @@ function regulateRequestCall(requestInfo,countOfCalls)
 {
 	request(requestInfo.url,function(err,resp,body)
 	{
-		if((!body)||(body.length<5000))
+		if((!body)||(body.length<MIN_CHARS_RESPONSE))
 		{
 			if((countOfCalls % MAX_REQUEST_RETRY)==0)
 			{

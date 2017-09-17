@@ -33,82 +33,110 @@ mongo.MongoWrapper(function(db)
 {
 	dbCon=db;
 })
+function parametersFit(advert,alert)
+{
+	if(advert.nacinkupovine.toLowerCase()!=alert.namena.toLowerCase())
+	{
+		return 0;
+	}
+	if(advert.type.toLowerCase()!=alert.vrsta.toLowerCase())
+	{
+		return 0;
+	}
+	if(alert.kvadraturalow)
+	{
+		if(alert.kvadraturalow>advert.kvadratura)//if not
+		{
+			return 0;
+		}
+	}
+	if(alert.kvadraturahigh)
+	{
+		if(alert.kvadraturahigh<advert.kvadratura)//if not
+		{
+			return 0;
+		}
+	}
+	if(alert.cenalow)
+	{
+		if(alert.cenalow>advert.cena)//if not
+		{
+			return 0;
+		}
+	}
+	if(alert.cenahigh)
+	{
+		if(alert.cenahigh<advert.cena)
+		{
+			return 0;
+		}
+	}
+	if(alert.brojsoba)
+	{
+		if(alert.brojsoba.indexOf(advert.brojsoba)==-1)
+		{
+			return 0;
+		}
+	}
+	if(alert.lokacija)
+	{
+		for(var i=alert.lokacija.length-1,j=advert.lokacija.length-1;(i>=0)&&(j>=0);i--,j--)
+		{
+			if(alert.lokacija[i]!=advert.lokacija[j])return 0;
+		}
+	}
+	return 1;
+}
 var insert=function(Advert)
 {
 		//console.log(Advert);
-			var matching=dbCon.collection('matching');
+			
 			var users=dbCon.collection('users')
 			if(allDatabaseAlerts.length==0){console.log('NEMA NIJEDAN ALERT')}
 			for(var j=0;j<allDatabaseAlerts.length;j++)
 	            {
 
-	                //xsdcif((typeof(Advert.kvadratura)!='number')||(typeof(allDatabaseAlerts[j].kvadraturalow)!='number'))console.log('PROBLEM SA TIPOVIBA PODATAKA')
-	                	//console.log(Advert);
-	             		//console.log(adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija));
-
-	                  // if((adressMatching.isDesiredAdress(Advert.lokacija,allDatabaseAlerts[j].lokacija))&&(Advert.kvadratura>=allDatabaseAlerts[j].kvadraturalow)&&(Advert.kvadratura<=allDatabaseAlerts[j].kvadraturahigh)&&(Advert.cena<=allDatabaseAlerts[j].cenahigh)&&(Advert.cena>=allDatabaseAlerts[j].cenalow))
-	                   //{
+	                  if(parametersFit(Advert,allDatabaseAlerts[j]))
+	                   {
 	                   			//console.log('Usao da dodam alert');
 		                       //console.log(Advert);
-		                       var copy=clone(allDatabaseAlerts[j]);
-		                       //delete copy.kvadraturalow;delete copy.kvadraturahigh;delete copy.cenalow;delete copy.cenahigh;
-		                      /* var matched=0,total=0;
-		                       for(i in copy)
-		                       {
-		                       		total++;
-		                       		if(!Advert[i]){matched++;continue;}
-		                       		console.log(i);
-		                       		for(var k=0;k<copy[i].length;k++)
-		                       		{
-		                       			if(!copy[i][k]){matched++;break;}
-		                       			if(copy[i][k]==Advert[i])
-		                       			{
-		                       				matched++;
-		                       				break;
-		                       			}
-		                       		}
-		                       }
-		                       var percentage=(matched/total)*100;
-		                       //console.log(Advert);
-		                       //console.log(allDatabaseAlerts[j]);
-		                       //console.log(matched,' ',total);
-		                       console.log('verovatnoca je:'+percentage);
-		                       //process.exit(0)
-		                       if(percentage>=CONST_PERCENTAGE)
-		                       {*/
-		                       	  // console.log(Advert);
-			                       var obj={}
-			                       obj.idalert=allDatabaseAlerts[j]._id;
-			                       obj.idogl=Advert.link;
-			                       obj.websitename=Advert.nacinkupovine+Advert.type;
-			                       //console.log(obj)
-			                       delete obj._id;
-			                   		obj.seen=0;
-				                   matching.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
-				                   {
-				                       //console.log('UBACIO U MATCHING');
-				                       if(err)console.log(err);
-				                   });
-								   (function(alert)
-										{
+		                        var copy=clone(allDatabaseAlerts[j]);
+		                     
+			                    var obj={}
+			                    obj.idalert=allDatabaseAlerts[j]._id;
+			                    obj.idogl=Advert.link;
+			                    obj.websitename=Advert.nacinkupovine+Advert.type;
+			                    //console.log(obj)
+			                    delete obj._id;
+								obj.seen=0;
+								console.log("userid"+allDatabaseAlerts[j].userId);
+								var collection=dbCon.collection(allDatabaseAlerts[j].userId.toString());
+								
+				                collection.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
+				                {
+				                    console.log('UBACIO U TABELU');
+				                    if(err)console.log(err);
+				                });
+								(function(alert)
+									{
 											
-											users.findOne({email:alert.email},function(err,result)
+										users.findOne({email:alert.email},function(err,result)
+										{
+											//console.log('DOSAO DO SLANJA ALERTOVA')
+											if((!err)&&result)notifications.sendNotification(result,alert);
+											else
 											{
-												//console.log('DOSAO DO SLANJA ALERTOVA')
-												if((!err)&&result)notifications.sendNotification(result,alert);
-												else
-												{
-													console.log(err);
-												}
-											})
+												console.log(err);
+											}
+										})
 								   	
-									})(allDatabaseAlerts[j]);
+								})(allDatabaseAlerts[j]);
 								   
-	               		/*}
+	               		}
 						else
 						{
-							console.log('nije uspeo da prodje LOKACIJY')
-						}*/
+							console.log('Parameters dont fit.');
+						}
 	                    
 	             }
           

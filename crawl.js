@@ -39,13 +39,60 @@ var FindData=function (ch,th,str)
             string=string.substr(0,string.length-1);
             th=ch(th).attr(string);
             //if(typeof th==='undefined')return "012";//Ovo je uvedeno u trenutku kad smo ubacili nekretnine.rs TREBA RAZMOTRITI PRI DODAVANJU DRUGIH SAJTOVA
-            return th;
+            //return th;ovde je bilo
         }
         else if(arrOfCom[i].indexOf('text(')!=-1) 
         {//console.log('3');
             if (typeof th != 'string') { th=ch(th).text(); }
-            return th;
+            //else console.log("pre text i q.txt je string a treba objekat")
+            //return th;ovde je bilo
         }
+        else if(arrOfCom[i].indexOf('returnStringAfterChar(')!=-1)
+        {
+            if(typeof th !="string")
+            {
+                console.log("Nepravilna upotreba returnStringAfterChar");
+            }
+            else
+            {
+                th=th.substr(th.indexOf(arrOfCom[i][otv+1])+1);
+                
+            }
+        }
+        else if(arrOfCom[i].indexOf('returnStringBeforeValues(')!=-1)
+            {
+                if(typeof th !="string")
+                {
+                    console.log("Nepravilna upotreba returnStringBefore");
+                }
+                else
+                {
+                    var valuesToFind=arrOfCom[i].substr(otv+1,zatv-(otv+1));
+                   valuesToFind=JSON.parse(valuesToFind);
+                   var minIndex=100000;
+                   for(var j in valuesToFind)
+                    {
+                        
+                        var val=th.indexOf(valuesToFind[j]);
+                        //console.log(val)
+                        if((minIndex>val)&&(val!=-1))
+                        {
+                            minIndex=val;
+                        }
+                    }
+                    var solution;
+                   // console.log(minIndex);
+                    if(minIndex!=100000)
+                    {
+                        th=th.substr(0,minIndex);
+                    }
+                    //console.log(th);
+                    
+                    
+                    //process.exit();
+                    
+                }
+            }
         else if(arrOfCom[i].indexOf('split(')!=-1) 
         {//console.log('4');
             var string=arrOfCom[i].substr(otv+1,arrOfCom[i].length-2);
@@ -90,13 +137,13 @@ var FindData=function (ch,th,str)
         }
         else if(arrOfCom[i].indexOf('html(')!=-1)
         {
-            var b = ch(th).html();
-            if(b)
+            var th = ch(th).html();
+            if(th)
             {
-                b=b.toString('utf-8');
+                th=th.toString('utf-8');
             }
             
-            return b;//RADI SAMO AKO JE ZADNJI U x.txt
+            //return b;//RADI SAMO AKO JE ZADNJI U x.txtovde je bilo
         }
 
         else 
@@ -104,7 +151,10 @@ var FindData=function (ch,th,str)
             console.log('Funckija FindData dobija parametar koji ne valja!');
         }
     }
-
+    if(typeof th =='string')
+    {
+        return th;
+    }
     return ch(th);
 }
 function indexOfReturnAll(a,b)//look b in a
@@ -163,11 +213,11 @@ function getImagesFromDiv(objectToFill,$)
         }
         domRecursion($);
 }
-var find=function(a,priority,callback)
+var find=function(a,uzmiSve,callback)
 {	
     if(!a.link){console.log('NEMA LINKA NIDJE');return -1;}
 
-    GetData.GetRawData(a.link,a.phantomSupport,a.websitename,priority,function(err,resp,body)
+    GetData.GetRawData(a.link,a.phantomSupport,a.websitename,uzmiSve,function(err,resp,body)
     {
         if(body.length>=5000)
             {

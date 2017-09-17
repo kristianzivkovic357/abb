@@ -8,6 +8,7 @@ var ObjectId = require('mongodb').ObjectId;
 var exec=require('child_process').exec;
 //var sender=require('./sender.js');
 //var sql=require('./sql.js');
+/*
 var child = exec('node ./senderb.js');
 child.stdout.on('data', function(data) {
     console.log('stdout: ' + data);
@@ -17,7 +18,7 @@ child.stderr.on('data', function(data) {
 });
 child.on('close', function(code) {
     console.log('closing code: ' + code);
-});
+});*/
 app.use(session({
   cookieName: 'session',
   secret: 'Vojvoda*?od?!Vince357',
@@ -40,6 +41,10 @@ function swap(items, firstIndex, secondIndex){
   var temp = items[firstIndex];
   items[firstIndex] = items[secondIndex];
   items[secondIndex] = temp;
+}
+function validateEmail(email) {
+  var re =/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
 }
 function partition(items, left, right,sta) {
 
@@ -255,45 +260,59 @@ app.post('/register',function(req,res)
 
       users.find({"email":req.body.email,"password":req.body.password},{}).toArray(function(err,re)
       {
-        if(re.length)
+        users.find().sort({userId:1}).limit(1).toArray(function(err,maxUserId)
         {
-          console.log('IMA TAKVOG USERA');
-          if(req.headers.aplikacija) 
-            {
-            console.log('aplikacija')
-            res.send('-1');
-          }
-          else 
+          console.log(maxUserId);
+          if(re.length)
           {
-              res.writeHead(302,{'Location':'/register'})
-          }
-          res.end();
-        }
-        else
-        {
-          //send email here
-          console.log('Nema usera');
-          var obj={};obj.email=req.body.email;obj.password=req.body.password;
-          //generating confirmation hash
-          obj.code=generateHash(75);
-          req.session.user = obj;
-          console.log(obj)
-          users.insert(obj,function(err,r)
-          {
-            if(!err)
-            {
-             console.log('create user:'+req.body.email);
-             if(req.headers.aplikacija) {
+            console.log('IMA TAKVOG USERA');
+            if(req.headers.aplikacija) 
+              {
               console.log('aplikacija')
-              res.send('1');
-            } else {
-              res.writeHead(302,{'Location':'/home'})
+              res.send('-1');
+            }
+            else 
+            {
+                res.writeHead(302,{'Location':'/register'})
             }
             res.end();
           }
-          else console.log(err);
-        });
+          else
+          {
+            if(validateEmail(req.body.email))
+            {
+              //send email here
+              console.log('Nema usera');
+              var obj={};obj.email=req.body.email;obj.password=req.body.password;
+              //generating confirmation hash
+              obj.code=generateHash(75);
+              if(maxUserId.length)obj.id=maxUserId[0].userId;
+              else obj.id=1;
+              req.session.user = obj;
+              console.log(obj)
+              users.insert(obj,function(err,r)
+              {
+                if(!err)
+                {
+                console.log('create user:'+req.body.email);
+                if(req.headers.aplikacija) {
+                  console.log('aplikacija')
+                  res.send('1');
+                } else {
+                  res.writeHead(302,{'Location':'/home'})
+                }
+                res.end();
+              }
+              else console.log(err);
+            });
+          }
+          else
+          {
+            res.send("0");
+            res.end();
+          }
         }
+        })
       })
 
     }
@@ -460,28 +479,33 @@ app.post('/alertpoint',function(req,res)
   console.log(req.session);
   if(req.session.user.email)
   {
+    var users=db.collection("users");
     var alerts=db.collection('alerts');
     console.log(req.body)
-    var obj={}
-    obj.email=req.session.user.email;
-    if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
-    if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
-    if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
-    if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
-    if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
-    obj.vrsta=req.body.vrsta;
-    obj.lokacija=req.body.lokacija;
-    obj.namena=req.body.namena;
-    obj.nazivAlerta=req.body.ime;
-    console.log(obj);
-    console.log('ovde sam');
-    alerts.insert(obj,function(err)
+    users.findOne({email:req.session.user.email},function(err,resp)//THISmight be stored in session so reqeust from database is not necessary
     {
-      if(err) {
-        console.log(err)
-      } else {
-        res.end('1')
-      }
+      var obj={}
+      obj.email=req.session.user.email;
+      obj.userId=resp.id;
+      if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
+      if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
+      if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
+      if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+      if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
+      obj.vrsta=req.body.vrsta;
+      obj.lokacija=req.body.lokacija;
+      obj.namena=req.body.namena;
+      obj.nazivAlerta=req.body.ime;
+      console.log(obj);
+      console.log('ovde sam');
+      alerts.insert(obj,function(err)
+      {
+        if(err) {
+          console.log(err)
+        } else {
+          res.end('1')
+        }
+      })
     })
   }
   else console.log('ALERTPOINTU FALI SESIJA KORISNIKA');
@@ -537,50 +561,60 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
           }
         });
   });
-app.post('/givealerts',function(req,res)
-{
-
-  var alerts=db.collection('alerts');
-  var matching=db.collection('matching');
-  console.log(req.body);
-    matching.find({"idalert":new ObjectId(req.body.idOfAlert)}).toArray(function(err,odg)
-    {
-      console.log(odg);
-
-      if(odg.length)
+  app.post('/givealerts',function(req,res)
+  {
+  
+    var alerts=db.collection('alerts');
+    
+      var pageNum= req.body.pageNumAlert;
+      pageNum= pageNum>0 ? pageNum:0;
+      alerts.findOne({"_id":new ObjectId(req.body.idOfAlert)},function(err,alert)
       {
-         var resp=[];
-
-          async.each(odg,function(match,callback)
-          {
-            var oglasi= db.collection(match.websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
-            oglasi.find({"link":match.idogl}).toArray(function(err,objToSend)
-            {
-              resp.push({"seen":match.seen,"contentOfAdvert":objToSend[0]});
-              callback();
-              //samo gledam kad je kraj
-            })
-            match.seen=1;
-            matching.update({"_id":new ObjectId(match._id)},match,function(err,resp)
-            {
-              if(err)console.log(err);
-            })
-
-        },function(err)
+        var matching=db.collection(alert.userId.toString());//looking in the collection of only this user
+        var cursor=matching.find({"idalert":new ObjectId(req.body.idOfAlert)});
+        cursor.count(function(e,count)
         {
-          res.send(resp);
-          res.end();
-        })
-      }
-      else
-      {
-        console.log("NISTA NIJE PRONADJENO");
-        var pom=[];
-        res.send(pom);
-        res.end();
-      }
+          cursor.sort({datum:-1,naslov:1}).skip(pageNum*18-18).limit(18).toArray(function(err,odg)
+          {
+            console.log(odg);
+  
+            if(odg.length)
+            {
+              var respObj={};
+              respObj.numberOfAdverts=count;
+              var data=[];
+                
+                async.each(odg,function(match,callback)
+                {
+                  var oglasi= db.collection(match.websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
+                  oglasi.find({"link":match.idogl}).toArray(function(err,objToSend)
+                  {
+                    data.push({"seen":match.seen,"contentOfAdvert":objToSend[0]});
+                    callback();
+                    //samo gledam kad je kraj
+                  })
+                  match.seen=1;
+                  matching.update({"_id":new ObjectId(match._id)},match,function(err,resp)
+                  {
+                    if(err)console.log(err);
+                  })
+              
+              },function(err)
+              {
+                respObj.data=data;
+                res.send(respObj);
+                res.end();
+              })
+            }
+            else
+            {
+              console.log("NISTA NIJE PRONADJENO");
+              res.end();
+            }
+          })
+      });
     })
-
+  
   })
 app.get('/logout',function(req,res)
 {

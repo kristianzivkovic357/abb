@@ -155,7 +155,7 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 						case "Petosoban stan":obj.brojsoba=5;break;
 						case "Petoiposoban stan":obj.brojsoba=5.5;break;
 						case "Šestosoban stan":obj.brojsoba=6;break;
-						default:obj.brojsoba='nema';break;
+						default:obj.brojsoba=undefined;break;
 					}
 
 					var w=0;
@@ -178,9 +178,7 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 								addTo=a.binders[i].addTo;
 								addLike=a.binders[i].addLike;
 								if(!obj[addTo])obj[addTo]=[]
-								
 								obj[addTo].push(addLike);
-								
 							}
 							continue;
 

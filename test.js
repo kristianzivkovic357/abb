@@ -1,6 +1,2 @@
 
-
-var arr=[1,2,3];
-arr.shift()
-console.log(arr);
-console.log();
+console.log(Number("14.15"));

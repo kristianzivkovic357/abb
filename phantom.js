@@ -3,7 +3,7 @@ var system = require('system');
 var args = system.args;
 page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
 page.settings.loadImages=false;
-//page.settings.resourceTimeout=10000;
+page.settings.resourceTimeout=10000;
 //console.log('KRENULI SMOOOO');
 //console.log(args[1]);
 if(!args[1])console.log('ne valja komandna linija');
