@@ -62,7 +62,11 @@ function timeControlledRequests()
 			if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 			{
 				//alreadySent=1;
+<<<<<<< HEAD
 				console.log("sent to alerts "+i)
+=======
+				console.log("sent to alerts on "+i);
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 				hashesOfEveryWebsite[i].lastSent++;
 				var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
 				hashesOfEveryWebsite[i].arrayForAlerts.shift();
@@ -73,9 +77,14 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 				{
+<<<<<<< HEAD
 				//console.log("sent to getall "+i)
 				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
 					var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
+=======
+					console.log("sent to getall on "+i)
+					takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 					hashesOfEveryWebsite[i].arrayForTakingAll.shift();
 					takeRequest(temp);
 					
@@ -87,8 +96,12 @@ function timeControlledRequests()
 		{
 			if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 			{
+<<<<<<< HEAD
 				//console.log("sent to getall "+i)
 				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
+=======
+				console.log("sent to getall on "+i)
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 				hashesOfEveryWebsite[i].lastSent++;
 				var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
 				hashesOfEveryWebsite[i].arrayForTakingAll.shift();
@@ -99,8 +112,13 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 				{
+<<<<<<< HEAD
 					console.log("sent to alerts "+i)
 					var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
+=======
+					console.log("sent to alerts on "+i)
+					takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 					hashesOfEveryWebsite[i].arrayForAlerts.shift();
 					takeRequest(temp);
 					

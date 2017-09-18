@@ -605,24 +605,26 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
             console.log("BROJ OGLASA U UBACI JE:"+len);
             async.each(arr,function(singleAdvert,finish)
             {
-                pointer++;
+               
                 //Only used for debugging purposes (STANDARD_DEBUG)
                 var i=singleAdvert;
-                if(UzmiSve)
-                {
-                    debugObjUzmiSve[i.websitename].websitename=i.websitename;
-                    debugObjUzmiSve[i.websitename].nacin=i.nacinkupovine
-                    debugObjUzmiSve[i.websitename].type=i.type
-                    debugObjUzmiSve[i.websitename].finishedAdsOnPage=pointer; 
+                function updateDebug()
+                    {
+                    if(UzmiSve)
+                    {
+                        debugObjUzmiSve[i.websitename].websitename=i.websitename;
+                        debugObjUzmiSve[i.websitename].nacin=i.nacinkupovine
+                        debugObjUzmiSve[i.websitename].type=i.type
+                        debugObjUzmiSve[i.websitename].finishedAdsOnPage=pointer; 
+                    }
+                    else
+                    {
+                        debugObj[i.websitename].websitename=i.websitename;
+                        debugObj[i.websitename].nacin=i.nacinkupovine
+                        debugObj[i.websitename].type=i.type
+                        debugObj[i.websitename].finishedAdsOnPage=pointer; 
+                    }
                 }
-                else
-                {
-                    debugObj[i.websitename].websitename=i.websitename;
-                    debugObj[i.websitename].nacin=i.nacinkupovine
-                    debugObj[i.websitename].type=i.type
-                    debugObj[i.websitename].finishedAdsOnPage=pointer; 
-                }
-                
              var collection=GLOB.collection(i.nacinkupovine+i.type);
 
             if((!i.nacinkupovine)||(!i.type)||(!i.websitename)){console.log('Ne postoji tip ili nacinkupovine');process.exit(0);}
@@ -663,7 +665,13 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                                            if(err)console.log(err);
                                            finish();
                                         });
+<<<<<<< HEAD
                                         
+=======
+                                        pointer++;
+                                        updateDebug();
+                                        finish();
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 
                                         
 
@@ -692,7 +700,13 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                                             if(err)console.log(err);
                                             
                                         });
+<<<<<<< HEAD
                                     
+=======
+                                    pointer++;
+                                    updateDebug();
+                                    finish();
+>>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
                                     
                                 }
 
@@ -700,6 +714,8 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                             else
                             {
                                 //if(!UzmiSve)console.log('vec je u bazi');
+                                pointer++;
+                                updateDebug();
                                 finish();
                                 
                             }
