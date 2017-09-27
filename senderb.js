@@ -268,7 +268,7 @@ mongo.MongoWrapper(function(db)
                 else addToMatching=1;
                 
             }
-            addToMatching=1;///FOR DEBUGGING ONLY
+            //addToMatching=1;///FOR DEBUGGING ONLY
             console.log("UzmiSve detected as:"+UzmiSve);
             console.log("addToMatching detected as:"+addToMatching);
            
@@ -665,13 +665,9 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                                            if(err)console.log(err);
                                            finish();
                                         });
-<<<<<<< HEAD
-                                        
-=======
                                         pointer++;
                                         updateDebug();
-                                        finish();
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
+                                        //finish();
 
                                         
 
@@ -700,13 +696,9 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                                             if(err)console.log(err);
                                             
                                         });
-<<<<<<< HEAD
-                                    
-=======
                                     pointer++;
                                     updateDebug();
-                                    finish();
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
+                                   // finish();
                                     
                                 }
 
@@ -746,7 +738,7 @@ function poziv()
     {
         console.log("Aborting this call for a crawler because there is two instances");
     }
-    else if(numberOfCrawlers<1)
+    else /*if(numberOfCrawlers<1)*/
     {
         numberOfCrawlers++;
         console.log("Calling Crawler...");

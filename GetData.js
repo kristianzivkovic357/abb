@@ -1,7 +1,7 @@
 var exec=require('child_process').exec;
 var request=require('request');
 var fs=require('fs');
-var DEBUG="STANDARD_DEBUG";
+var DEBUG="None";
 var MAX_REQUEST_RETRY=3;
 var MIN_CHARS_RESPONSE=100;
 function clone(obj) {
@@ -42,6 +42,7 @@ var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,uzmiSve,callback)
 		object.url=url;
 		object.callback=callback;
 		object.phantomSupport=phantomSupport;
+		console.log(uzmiSve)
 		if(uzmiSve==0)
 		{
 			hashesOfEveryWebsite[nameOfRemoteWebsite].arrayForAlerts.push(clone(object));
@@ -62,11 +63,7 @@ function timeControlledRequests()
 			if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 			{
 				//alreadySent=1;
-<<<<<<< HEAD
 				console.log("sent to alerts "+i)
-=======
-				console.log("sent to alerts on "+i);
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 				hashesOfEveryWebsite[i].lastSent++;
 				var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
 				hashesOfEveryWebsite[i].arrayForAlerts.shift();
@@ -77,14 +74,9 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 				{
-<<<<<<< HEAD
-				//console.log("sent to getall "+i)
-				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
+				console.log("sent to getall "+i)
+				//console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
 					var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
-=======
-					console.log("sent to getall on "+i)
-					takeRequest(clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]));
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 					hashesOfEveryWebsite[i].arrayForTakingAll.shift();
 					takeRequest(temp);
 					
@@ -96,12 +88,8 @@ function timeControlledRequests()
 		{
 			if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 			{
-<<<<<<< HEAD
-				//console.log("sent to getall "+i)
-				console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
-=======
-				console.log("sent to getall on "+i)
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
+				console.log("sent to getall "+i)
+				//console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
 				hashesOfEveryWebsite[i].lastSent++;
 				var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
 				hashesOfEveryWebsite[i].arrayForTakingAll.shift();
@@ -112,13 +100,8 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForAlerts.length)
 				{
-<<<<<<< HEAD
 					console.log("sent to alerts "+i)
 					var temp=clone(hashesOfEveryWebsite[i].arrayForAlerts[0]);
-=======
-					console.log("sent to alerts on "+i)
-					takeRequest(clone(hashesOfEveryWebsite[i].arrayForAlerts[0]));
->>>>>>> 50a5243c7b99b5063d6fbe1e3e361cb34ff5db6c
 					hashesOfEveryWebsite[i].arrayForAlerts.shift();
 					takeRequest(temp);
 					
@@ -136,7 +119,7 @@ function takeRequest(requestInfo)
 	if(!requestInfo)console.log("nema request info");
 	
 	//process.exit();
-	balance++;
+	//balance++;
 	if(requestInfo.phantomSupport=='true')
 		{
 			//console.log("Phantom pozvan!")
@@ -174,8 +157,8 @@ function regulatePhantomJSCall(requestInfo,countOfCalls)
 		}
 		else
 		{
-			balance--;
-			console.log("BALANCE:"+balance);
+			//balance--;
+			//console.log("BALANCE:"+balance);
 			requestInfo.callback(err,stderr,stdout);
 		}
 	})

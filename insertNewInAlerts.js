@@ -128,6 +128,8 @@ var insert=function(Advert)
 											{
 												console.log(err);
 											}
+											
+											//users.update({email:alert.email},{$inc:{}})
 										})
 								   	
 								})(allDatabaseAlerts[j]);
@@ -141,4 +143,40 @@ var insert=function(Advert)
 	             }
           
 }
+var oglas={
+    "_id": {
+        "$oid": "59c1011614802f2304e2c6c2"
+    },
+    "type": "stan",
+    "nacinkupovine": "prodaja",
+    "images": [
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/3dd48ab31d016ffcbf3314df2b3cb9ce/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/21c3134ee5edcb618c4f9aae358d73a7/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/9b7da66eb5bb0e80c82e88fd2bfde5ce/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/caaa29eab72b231b0af62fbdff89bfce/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/c37f36800219dcb5960c40d1d4bade55/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/1e1d184167ca7676cf665225e236a3d2/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/073b00ab99487b74b63c9a6d2b962ddc/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/53f0d7c537d99b3824f0f99d62ea2428/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/42e77b63637ab381e8be5f8318cc28a2/generala-horvatovica-1920x1080.jpeg",
+        "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/310dcbbf4cce62f762a2aaa148d556bd/generala-horvatovica-1920x1080.jpeg"
+    ],
+    "slika": "https://api.4zida.rs/resize/59c0ed4f70baeb6e866fa849/max/3dd48ab31d016ffcbf3314df2b3cb9ce/generala-horvatovica-1920x1080.jpeg",
+    "naslov": "GENERALA HORVATOVICA",
+    "brojsoba": 3.5,
+    "lokacija": [
+        "Vračar",
+        "Beograd",
+        "Srbija"
+    ],
+    "datum": {
+        "$date": "2017-09-19T10:11:28.000Z"
+    },
+    "websitename": "4zida",
+    "kvadratura": 74,
+    "link": "https://www.4zida.rs/prodaja/stanovi/beograd/oglas/generala-horvatovica/59c0ed4f70baeb6e866fa849",
+    "opis": "AG. PROV 2% STAN SE NALAZI U KOMPLEKSU NOVIH ZGRADA. ZGRADA IMA SVOJ PARKING. OBEZBEDJENO PARKING MESTO ZA OVAJ STAN. IZUZETNO SVETAO, TROSTRA. IZUZETNO FUNKCIONALAN. CINE GA: ULAZNO PREDSOBLJE, DVA KUPATILA, KUHINJA SA TRPEZARIJOM, DNEVNA SOBA, TRI SPAVACE SOBE, TRI TERASE. UKNJIZEN. www.favoritnekretnine.co.rs UKNJIZEN 2/3 GENERALA HORVATOVICA",
+    "cena": 125000
+}
+insert(oglas)
 module.exports={insert}

@@ -111,7 +111,7 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 		var req=Sajt.host+Sajt.path+pageNum;
 		//console.log(req);process.exit();
 		
-		getData.GetRawData(Sajt.host+Sajt.path+req,Sajt.phantomSupport,Sajt.websitename,0,function(err,resp,data)//ne treba nula za prioritet
+		getData.GetRawData(Sajt.host+Sajt.path+req,Sajt.phantomSupport,Sajt.websitename,UzmiSve,function(err,resp,data)//ne treba nula za prioritet
 		{
 			//console.log(Sajt);process.exit();
 			var response=[];
