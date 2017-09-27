@@ -143,7 +143,7 @@ var insert=function(Advert)
 	             }
           
 }
-var oglas={
+/*var oglas={
     "_id": {
         "$oid": "59c1011614802f2304e2c6c2"
     },
@@ -178,5 +178,5 @@ var oglas={
     "opis": "AG. PROV 2% STAN SE NALAZI U KOMPLEKSU NOVIH ZGRADA. ZGRADA IMA SVOJ PARKING. OBEZBEDJENO PARKING MESTO ZA OVAJ STAN. IZUZETNO SVETAO, TROSTRA. IZUZETNO FUNKCIONALAN. CINE GA: ULAZNO PREDSOBLJE, DVA KUPATILA, KUHINJA SA TRPEZARIJOM, DNEVNA SOBA, TRI SPAVACE SOBE, TRI TERASE. UKNJIZEN. www.favoritnekretnine.co.rs UKNJIZEN 2/3 GENERALA HORVATOVICA",
     "cena": 125000
 }
-insert(oglas)
+insert(oglas)*/
 module.exports={insert}
