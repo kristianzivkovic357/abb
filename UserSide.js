@@ -579,7 +579,8 @@ if(req.session&&req.session.user&& req.session.user.email)
     console.log(req.session);
     alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
     {
-
+      console.log('ODGOVOR:');
+      console.log(odg);
       if(odg.length)
       {
         matching=db.collection(odg[0].userId.toString());
