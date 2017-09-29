@@ -572,43 +572,54 @@ app.post('/getalerts', function(req,res)
   var alerts=db.collection('alerts');
   var matching
   var responseToUser={};
-
-alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
-{
-
-  if(odg.length)
+  
+if(req.session&&req.session.user&& req.session.user.email)
   {
-    matching=db.collection(odg[0].userId.toString());
+    console.log('IMA SESIJU');
+    console.log(req.session);
+    alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
+    {
+
+      if(odg.length)
+      {
+        matching=db.collection(odg[0].userId.toString());
+        if(!odg)console.log('odg ne vaja');
+        async.each(odg,function(alert,callb)
+        {
+          responseToUser[alert.nazivAlerta]=alert;
+          matching.find({idalert:new ObjectId(alert._id),seen:0}).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
+          {
+            if(!matchings.length)console.log('Nije nadjen nijedan matching');
+            console.log(matchings.length)
+            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
+            callb();
+          })
+
+        },function(err)
+        {
+          res.send(responseToUser);
+          res.end();
+        })
+      }
+      else
+      {
+        console.log("No alerts added");
+        res.send("-1");
+        res.end();
+      } 
+    /*
+    OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
+    ---JEDE PRENOS PODATAKA---
+    */
+      
+
+      });
   }
   else
   {
-    console.log("No alerts added");
-    res.send("-1");
+    res.send('0');
     res.end();
-  } 
-/*
-OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
----JEDE PRENOS PODATAKA---
-*/
-  if(!odg)console.log('odg ne vaja');
-      async.each(odg,function(alert,callb)
-      {
-        responseToUser[alert.nazivAlerta]=alert;
-        matching.find({idalert:new ObjectId(alert._id),seen:0}).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
-        {
-          if(!matchings.length)console.log('Nije nadjen nijedan matching');
-          console.log(matchings.length)
-           responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
-           callb();
-        })
-
-      },function(err)
-      {
-        res.send(responseToUser);
-        res.end();
-      })
-
-  });
+  }
 })
   app.post('/deletealert', function(req,res)
   {
