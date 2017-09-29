@@ -325,7 +325,7 @@ app.post('/register',function(req,res)
                 {
                     try
                     {
-                      sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+"obj.code"+'\">Confirm your account</a>');
+                      mail.sendMail('homehunterestates@gmail.com',req.session.user.email,'Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+obj.code+'\">Confirm your account</a>');
                     }
                     catch(error)
                     {
