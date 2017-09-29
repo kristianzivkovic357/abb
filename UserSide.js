@@ -313,7 +313,7 @@ app.post('/register',function(req,res)
               //generating confirmation hash
               obj.code=generateHash(75);
               obj.timeOfCreation=new Date();
-              if(maxUserId.length)obj.id=maxUserId[0].userId;
+              if(maxUserId.length)obj.id=maxUserId[0].userId+1;
               else obj.id=1;
               req.session.user = obj;
               console.log(obj)
@@ -597,6 +597,7 @@ if(req.session&&req.session.user&& req.session.user.email)
 
         },function(err)
         {
+          console.log(responseToUser);
           res.send(responseToUser);
           res.end();
         })
