@@ -6,7 +6,7 @@ var mongo=require('./mongo');
 var async=require('async')
 var ObjectId = require('mongodb').ObjectId;
 var exec=require('child_process').exec;
-var email=require("./mail");
+var mail=require("./mail");
 //var sender=require('./sender.js');
 //var sql=require('./sql.js');
 /*
