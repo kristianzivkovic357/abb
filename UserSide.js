@@ -122,8 +122,7 @@ app.use(function(req, res, next)
   }*/
   if((req.url!='/')&&(req.url!='/login')&&(req.url!='images/no-image.jpg')&&(req.url!='/register')&&(req.url!='/css')&&(req.url!='/endpoint')&&(req.url!='/landing')&&(req.url.indexOf('/home'))&&(req.url!='/radio'))
   {
-    console.log('u middle');
-    console.log(req.session.user)
+
     if(req.session.user)
     {
       console.log('ima sesiju');
@@ -296,7 +295,6 @@ app.post('/register',function(req,res)
             console.log('IMA TAKVOG USERA');
             if(req.headers.aplikacija) 
               {
-              console.log('aplikacija')
               res.send('-1');
             }
             else 
@@ -310,7 +308,7 @@ app.post('/register',function(req,res)
             if(validateEmail(req.body.email))
             {
               //send email here
-              console.log('Nema usera');
+              console.log('Nema takvog usera i bice kreiran');
               var obj={};obj.email=req.body.email;obj.password=req.body.password;
               //generating confirmation hash
               obj.code=generateHash(75);
@@ -323,8 +321,10 @@ app.post('/register',function(req,res)
               {
                 if(!err)
                 {
+                    console.log('mail tobe sent');
                     try
                     {
+                      console.log('')
                       mail.sendMail('homehunterestates@gmail.com',req.session.user.email,'Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+obj.code+'\">Confirm your account</a>');
                     }
                     catch(error)
