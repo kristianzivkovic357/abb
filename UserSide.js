@@ -570,8 +570,8 @@ app.post('/alertpoint',function(req,res)
 app.post('/getalerts', function(req,res)
 {
   var alerts=db.collection('alerts');
-  var matching
-  var responseToUser={};
+  var matching;
+  var responseToUser=[];
   
 if(req.session&&req.session.user&& req.session.user.email)
   {
@@ -587,12 +587,13 @@ if(req.session&&req.session.user&& req.session.user.email)
         if(!odg)console.log('odg ne vaja');
         async.each(odg,function(alert,callb)
         {
-          responseToUser[alert.nazivAlerta]=alert;
+          
           matching.find({idalert:new ObjectId(alert._id),seen:0}).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
           {
             if(!matchings.length)console.log('Nije nadjen nijedan matching');
             console.log(matchings.length)
-            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
+            alert.numberOfUnseenAds=matchings.length;
+            responseToUser.push(alert);
             callb();
           })
 
