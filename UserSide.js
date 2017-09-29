@@ -6,6 +6,7 @@ var mongo=require('./mongo');
 var async=require('async')
 var ObjectId = require('mongodb').ObjectId;
 var exec=require('child_process').exec;
+var email=require("./mail");
 //var sender=require('./sender.js');
 //var sql=require('./sql.js');
 /*
@@ -125,14 +126,20 @@ app.use(function(req, res, next)
     console.log(req.session.user)
     if(req.session.user)
     {
+      console.log('ima sesiju');
       next();
     }
     else
     {
-      console.log('Nema sesiju')
-      if(req.headers.aplikacija) {
-        res.end('NO_SESSION');
+      console.log('nema sesiju');
+      if((req.headers.aplikacija)||(req.url=='/getalerts')) {
+        console.log("NO_SESS");
+        var obj={};
+        obj.session="NO_SESSION";
+        res.send(obj);
+        res.end();
       } else {
+        console.log("redirect to home");
         res.writeHead(302,{'Location':'/'})
       }
     }
@@ -196,9 +203,30 @@ app.get("/json",function(req,res)
 
 
 })
+/*app.post('/reset',function(req,res)
+{
+   var password=req.body.password;
+   var email= req.body.email
+   var users=db.collection("users");
+   users.findOne({email:email},function(err,user)
+   {
+      if(user)
+      {
+        try
+        {
+          sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Promena Lozinke','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+"obj.code"+'\">Confirm your account</a>');
+        }
+        catch(error)
+        {
+          console.log(error);
+        }
+      }
+   })
+
+})*/
 app.post('/registrationId',function(req,res)
 {
-
+    
     if(req.session.user)
     {
       console.log('REGISTRATION  ID');
@@ -227,7 +255,7 @@ app.get('/confirmation/:code',function(req,res)
 {
     var code=req.params.code;
     var users=db.collection('users');
-    users.findOne({code:code},{id:1,email:1},function(err,res)
+    users.findOne({code:code},{id:1,email:1,time:1},function(err,res)
     {
         if(res.length)
         {
@@ -286,6 +314,7 @@ app.post('/register',function(req,res)
               var obj={};obj.email=req.body.email;obj.password=req.body.password;
               //generating confirmation hash
               obj.code=generateHash(75);
+              obj.timeOfCreation=new Date();
               if(maxUserId.length)obj.id=maxUserId[0].userId;
               else obj.id=1;
               req.session.user = obj;
@@ -294,15 +323,27 @@ app.post('/register',function(req,res)
               {
                 if(!err)
                 {
-                console.log('create user:'+req.body.email);
-                if(req.headers.aplikacija) {
-                  console.log('aplikacija')
-                  res.send('1');
-                } else {
-                  res.writeHead(302,{'Location':'/home'})
+                    try
+                    {
+                      sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+"obj.code"+'\">Confirm your account</a>');
+                    }
+                    catch(error)
+                    {
+                      console.log(error);
+                    }
+                    finally
+                    {
+                      console.log('create user:'+req.body.email);
+                      if(req.headers.aplikacija) {
+                        console.log('aplikacija')
+                        res.send('1');
+                      } else {
+                        res.writeHead(302,{'Location':'/home'})
+                      }
+                      res.end();
+                    }
+                
                 }
-                res.end();
-              }
               else console.log(err);
             });
           }
@@ -334,7 +375,6 @@ app.post("/login",function(req,res)
 {
 	if((req.body.email)&&(req.body.password))
 	{
-    console.log('USO')
     var users=db.collection('users');
     users.findOne({"email":req.body.email,"password":req.body.password},{},function(err,r)
     {
@@ -370,7 +410,6 @@ app.post("/login",function(req,res)
         }
       }
     })
-
   }
 })
 app.get('/home',function(req,res)
@@ -396,13 +435,11 @@ app.post('/endpoint', function(req, res){
       req.body.vrsta='stan';
     }
   var oglasi=db.collection('oglasi');
-  oglasi.find({"ime":new RegExp(req.body.namena+'stan')}).toArray(function(err,r)
+  oglasi.find({"ime":new RegExp(req.body.namena+req.body.vrsta)}).toArray(function(err,r)
   {
-
-      console.log(req.body);
-
       if(r.length)
       {
+        console.log(req.body)
         var sortOptions={};
         if(req.body.sort=="ascPrice")
         {
@@ -444,6 +481,14 @@ app.post('/endpoint', function(req, res){
         {
           queryObject.kvadratura={$gte:req.body.kvadratura[0],$lte:req.body.kvadratura[1]};//isto za kvadraturu
         }
+        if(req.body.lokacija)
+        {
+            console.log(req.body.lokacija)
+            if(req.body.lokacija.length)
+            {
+               if(req.body.lokacija[0]!='')queryObject.lokacija={$all:req.body.lokacija};
+            }
+        }
         if(req.body.roomNumber)
         {
            if(req.body.roomNumber.length>0){
@@ -456,8 +501,8 @@ app.post('/endpoint', function(req, res){
 
         queryy.count(function (e, count)
         {
-          queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re){
-
+          queryy.skip(req.body.scroll*18-18).limit(18).toArray(function(err,re)
+          {
               var solv = {};
               solv.count = count;
               solv.oglasi = re;
@@ -476,7 +521,7 @@ app.post('/endpoint', function(req, res){
 app.post('/alertpoint',function(req,res)
 {
   res.header('Access-Control-Allow-Credentials', 'true');
-  console.log(req.session);
+ 
   if(req.session.user.email)
   {
     var users=db.collection("users");
@@ -486,11 +531,19 @@ app.post('/alertpoint',function(req,res)
     {
       var obj={}
       obj.email=req.session.user.email;
-      obj.userId=resp.id;
-      if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
-      if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
-      if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
-      if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+      if(resp.id)obj.userId=resp.id;
+      if(req.body.cena)obj.cenalow=Number(req.body.cena[0]);
+      if(req.body.cena)//
+      {
+        if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
+        if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
+      }
+      if(req.body.kvadratura)
+      {
+        if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
+        if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+      }
+      
       if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
       obj.vrsta=req.body.vrsta;
       obj.lokacija=req.body.lokacija;
@@ -508,16 +561,31 @@ app.post('/alertpoint',function(req,res)
       })
     })
   }
-  else console.log('ALERTPOINTU FALI SESIJA KORISNIKA');
+  else
+  {
+    console.log('ALERTPOINTU FALI SESIJA KORISNIKA');
+    res.end();
+  }
 })
 app.post('/getalerts', function(req,res)
 {
   var alerts=db.collection('alerts');
-  var matching=db.collection('matching');
+  var matching
   var responseToUser={};
 
 alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
 {
+
+  if(odg.length)
+  {
+    matching=db.collection(odg[0].userId.toString());
+  }
+  else
+  {
+    console.log("No alerts added");
+    res.send("-1");
+    res.end();
+  } 
 /*
 OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
 ---JEDE PRENOS PODATAKA---
@@ -526,9 +594,10 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
       async.each(odg,function(alert,callb)
       {
         responseToUser[alert.nazivAlerta]=alert;
-        matching.find({idalert:new ObjectId(odg.id),"seen":0}).limit(18).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
+        matching.find({idalert:new ObjectId(alert._id),seen:0}).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
         {
-          if(!matchings)console.log('matcg ne valja');
+          if(!matchings.length)console.log('Nije nadjen nijedan matching');
+          console.log(matchings.length)
            responseToUser[alert.nazivAlerta].numberOfUnseenAds=matchings.length;
            callb();
         })
@@ -536,6 +605,7 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
       },function(err)
       {
         res.send(responseToUser);
+        res.end();
       })
 
   });
@@ -574,9 +644,9 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
         var cursor=matching.find({"idalert":new ObjectId(req.body.idOfAlert)});
         cursor.count(function(e,count)
         {
-          cursor.sort({datum:-1,naslov:1}).skip(pageNum*18-18).limit(18).toArray(function(err,odg)
+          cursor.sort({seen:1}).skip(pageNum*18-18).limit(18).toArray(function(err,odg)
           {
-            console.log(odg);
+            //console.log(odg);
   
             if(odg.length)
             {
@@ -584,26 +654,31 @@ OPTIMIZACIJA BRISANJE PODATAKA KOJIH NE TREBA NA FRONTU
               respObj.numberOfAdverts=count;
               var data=[];
                 
-                async.each(odg,function(match,callback)
+                async.eachSeries(odg,function(match,callback)
                 {
-                  var oglasi= db.collection(match.websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA
-                  oglasi.find({"link":match.idogl}).toArray(function(err,objToSend)
+                  var oglasi= db.collection(match.websitename);//OOV JE USTVARI KOJA TABELA SE UZIMA prodajazemljiste i to, u bazi je polje websitename zapravo to
+                  oglasi.findOne({"link":match.idogl},function(err,objToSend)
                   {
-                    data.push({"seen":match.seen,"contentOfAdvert":objToSend[0]});
+
+                    data.push({"seen":match.seen,"contentOfAdvert":objToSend});
                     callback();
                     //samo gledam kad je kraj
                   })
-                  match.seen=1;
-                  matching.update({"_id":new ObjectId(match._id)},match,function(err,resp)
-                  {
-                    if(err)console.log(err);
-                  })
+                 
               
               },function(err)
               {
                 respObj.data=data;
                 res.send(respObj);
                 res.end();
+                async.each(odg,function(oneMatch,end)
+                {
+                oneMatch.seen=1;
+                matching.update({"_id":new ObjectId(oneMatch._id)},oneMatch,function(err,r)
+                {
+                  if(r){console.log("ERROOR:");console.log(r);}
+                })
+              })
               })
             }
             else
@@ -631,3 +706,4 @@ app.get('/logout',function(req,res)
 app.get('/css',function(req,res){
  res.sendFile('css/style.css',{root:__dirname});
 });
+
