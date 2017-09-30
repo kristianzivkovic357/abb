@@ -206,6 +206,7 @@ app.post('/passwordchange',function(req,res)
 {
   if(req.session&&req.session.user&&req.session.user.email)
   {
+    console.log("ima sesiju za sifru")
     var oldPassword=req.body.oldPassword;
     var newPassword=req.body.newPassword;
     var newPasswordRepeat=req.body.newPasswordRepeat;
@@ -222,6 +223,7 @@ app.post('/passwordchange',function(req,res)
               {
                 try
                 {
+                  console.log('Zavrsena promena sifre');
                   user.password=newPassword;
                   users.update({email:email},{$set:{password:newPassword}},function(err,res)
                   {
@@ -244,6 +246,7 @@ app.post('/passwordchange',function(req,res)
               }
               else
               {
+                console.log('pogresni kredencijali');
                 response.status=-1;
                 response.message='Wrong credentials entered.'
                 res.send(response);
@@ -253,6 +256,7 @@ app.post('/passwordchange',function(req,res)
         }
         else
         {
+
           response.status=0;
           response.message='Passwords are the same.';
           res.send(response);
@@ -261,6 +265,7 @@ app.post('/passwordchange',function(req,res)
       }
       else
       {
+        console.log('sifre nisu iste');
           response.status=-1;
           response.message='Passwords doesn\'t match.';
           res.send(response);
