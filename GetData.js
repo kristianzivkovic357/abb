@@ -134,7 +134,7 @@ function takeRequest(requestInfo)
 }
 function regulatePhantomJSCall(requestInfo,countOfCalls)
 {
-	exec('phantomjs ./phantom.js '+requestInfo.url,{maxBuffer:1024*10000},function(err,stdout,stderr)
+	exec('phantomjs --ssl-protocol=any --ignore-ssl-errors=true ./phantom.js '+requestInfo.url,{maxBuffer:1024*10000},function(err,stdout,stderr)
 	{
 		if((!stdout)||(stdout.length<=5000))
 		{
