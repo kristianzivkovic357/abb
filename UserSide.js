@@ -237,7 +237,7 @@ app.post('/passwordchange',function(req,res)
                       res.end();
                     }
                   })
-                  sendMail('homehunterestates@gmail.com',email,'Promena Lozinke','Uspesno ste promenili svoju lozinku!');
+                  mail.sendMail('homehunterestates@gmail.com',email,'Promena Lozinke','Uspesno ste promenili svoju lozinku!');
                 }
                 catch(error)
                 {
