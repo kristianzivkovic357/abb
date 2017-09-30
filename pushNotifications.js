@@ -10,30 +10,33 @@ function sendNotification(user,alert)
     var timeDifference;
     if(users[user.email])timeDifference=currentDate-users[user.email];
     else timeDifference=currentDate;
-    var message = 
+    if(user && user.userId)
     {
-        to: user.userId,
-        data: 
+        var message = 
         {
-            title: "Savrsena nekretnina za vas!",
-            message: "Upravo se pojavila nova nekretnina koja odgovara vasim potrebama!",
-            alertId:alert._id,
-            alertName:alert.nazivAlerta
-        }
-    };
+            to: user.userId,
+            data: 
+            {
+                title: "Savrsena nekretnina za vas!",
+                message: "Upravo se pojavila nova nekretnina koja odgovara vasim potrebama!",
+                alertId:alert._id,
+                alertName:alert.nazivAlerta
+            }
+        };
 
-    console.log(message);
-    fcm.send(message, function(err, response)
-    {
-        if(err) 
+        console.log(message);
+        fcm.send(message, function(err, response)
         {
-            console.log(err);
-            console.log("Something has gone wrong!");
-        } 
-        else 
-        {
-            console.log("Successfully sent with response: ",response);
-        }
-    });
+            if(err) 
+            {
+                console.log(err);
+                console.log("Something has gone wrong!");
+            } 
+            else 
+            {
+                console.log("Successfully sent with response: ",response);
+            }
+        });
+    }   
 }
 module.exports={sendNotification}
