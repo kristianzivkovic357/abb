@@ -378,13 +378,13 @@ mongo.MongoWrapper(function(db)
                                             obj.nacinkupovine=Route.nacinkupovine;
                                             /*if(obj.websitename!='halooglasi')*/arr.push(clone(obj));
                                             //console.log('AAA')
-                                            if(!obj.cena)
+                                            if((!obj.cena)&&(obj.cena!=0))
                                                 {
                                                     console.log('ne valja cena:'+obj.link);
                                                     console.log("cena string:"+velikitemp);
                                                     process.exit();
                                                 }
-                                                if(!obj.kvadratura)
+                                                if(!(obj.kvadratura)&&(obj.kvadratura!=0))
                                                 {
                                                     console.log('ne valja kvadratura:'+obj.link);
                                                     console.log("kvadratura str:"+malitemp);
