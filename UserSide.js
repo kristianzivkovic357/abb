@@ -226,7 +226,7 @@ app.post('/passwordchange',function(req,res)
                 {
                   console.log('Zavrsena promena sifre');
                   user.password=newPassword;
-                  users.update({email:email},{$set:{password:newPassword}},function(err,res)
+                  users.update({email:email},{$set:{password:newPassword}},function(err,odgovor)
                   {
                     if(err)console.log(err)
                     else
