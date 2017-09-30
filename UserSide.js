@@ -202,27 +202,70 @@ app.get("/json",function(req,res)
 
 
 })
-/*app.post('/reset',function(req,res)
+app.post('/reset',function(req,res)
 {
-   var password=req.body.password;
-   var email= req.body.email
-   var users=db.collection("users");
-   users.findOne({email:email},function(err,user)
-   {
-      if(user)
+  if(req.session&&req.session.user&&req.session.user.email)
+  {
+    var oldPassword=req.body.oldPassword;
+    var newPassword=req.body.newPassword;
+    var newPasswordRepeat=req.body.newPasswordRepeat;
+    var email= req.session.user.email;
+    var response={};
+      if(newPassword===newPasswordRepeat)
       {
-        try
+        var users=db.collection("users");
+        users.findOne({email:email,password:oldPassword},function(err,user)
         {
-          sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Promena Lozinke','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+"obj.code"+'\">Confirm your account</a>');
-        }
-        catch(error)
-        {
-          console.log(error);
-        }
+            if(user)
+            {
+              try
+              {
+                user.password=newPassword;
+                users.update({email:email},{$set:{password:newPassword}},function(err,res)
+                {
+                  if(err)console.log(err)
+                  else
+                  {
+                    response.status=1;
+                    response.message='Successfull password change.'
+                    res.send(response);
+                    res.end();
+                  }
+                })
+                sendMail('homehunterestates@gmail.com',email,'Promena Lozinke','Uspesno ste promenili svoju lozinku!');
+              }
+              catch(error)
+              {
+                console.log(error);
+                res.end();
+              }
+            }
+            else
+            {
+              response.status=-1;
+              response.message='Wrong credentials entered.'
+              res.send(response);
+              res.end();
+            }
+        })
       }
-   })
+      else
+      {
+          response.status=-1;
+          response.message='Passwords doesn\'t match.';
+          res.send(response);
+          res.end();
+      }
+  }
+  else
+  {
+    response.status=-1;
+    response.message='Not logged in.';
+    res.send(response);
+    res.end();
+  }
 
-})*/
+})
 app.post('/registrationId',function(req,res)
 {
     
