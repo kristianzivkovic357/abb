@@ -109,9 +109,8 @@ var insert=function(Advert)
 			                    //console.log(obj)
 			                    delete obj._id;
 								obj.seen=0;
-								console.log("userid"+allDatabaseAlerts[j].userId);
+								//console.log("userid"+allDatabaseAlerts[j].userId);
 								var collection=dbCon.collection(allDatabaseAlerts[j].userId.toString());
-								
 				                collection.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
 				                {
 				                    console.log('UBACIO U TABELU');
@@ -122,14 +121,23 @@ var insert=function(Advert)
 											
 										users.findOne({email:alert.email},function(err,result)
 										{
-											//console.log('DOSAO DO SLANJA ALERTOVA')
-											if((!err)&&result)notifications.sendNotification(result,alert);
-											else
+											if(result)
 											{
-												console.log(err);
+												var currentTime= new Date();
+												if((!result.lastNotificationPushed)||(currentTime-result.lastNotificationPushed>1000*60*2))//dva sata
+												{
+														//console.log('DOSAO DO SLANJA ALERTOVA')
+														if((!err)&&result)notifications.sendNotification(result,alert);
+														else
+														{
+															console.log(err);
+														}
+													
+														users.update({email:alert.email},{$set:{lastNotificationPushed:currentTime}})
+												}
+												
 											}
 											
-											//users.update({email:alert.email},{$inc:{}})
 										})
 								   	
 								})(allDatabaseAlerts[j]);

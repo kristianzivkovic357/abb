@@ -5,13 +5,11 @@ var mongo=require('./mongo');
 var users=[];
 function sendNotification(user,alert)
 {
-    /*
+    
     var currentDate=new Date();
     var timeDifference;
     if(users[user.email])timeDifference=currentDate-users[user.email];
     else timeDifference=currentDate;
-
-    
     var message = 
     {
         to: user.userId,
@@ -36,6 +34,6 @@ function sendNotification(user,alert)
         {
             console.log("Successfully sent with response: ",response);
         }
-    });*/
+    });
 }
 module.exports={sendNotification}
