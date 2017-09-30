@@ -13,7 +13,7 @@ function initialize()
             priceUnits=data.priceUnits;
             kvadraturaUnits=data.kvadraturaUnits;
             console.log(priceUnits);
-            console.log("kvadrati:"+getKvadraturaInDefaultUnit("65 m2"));
+            //console.log("kvadrati:"+getKvadraturaInDefaultUnit("65 m2"));
 
         }
     })
