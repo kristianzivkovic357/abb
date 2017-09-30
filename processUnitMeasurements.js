@@ -13,7 +13,7 @@ function initialize()
             priceUnits=data.priceUnits;
             kvadraturaUnits=data.kvadraturaUnits;
             console.log(priceUnits);
-            getKvadraturaInDefaultUnit('0 m2');
+            //getKvadraturaInDefaultUnit('0 m2');
             //console.log("kvadrati:"+getKvadraturaInDefaultUnit("65 m2"));
 
         }
@@ -60,22 +60,22 @@ function getKvadraturaInDefaultUnit(value)
     var unit=value.trim();//diferent from price match
     
     var kvadraturaNumber=null;
-    console.log(unit)
+    //console.log(unit)
     for(var i in kvadraturaUnits)
     {
         
         for(var j in kvadraturaUnits[i].possibleMarks)
         {
-            console.log(kvadraturaUnits[i].possibleMarks[j]);
+           // console.log(kvadraturaUnits[i].possibleMarks[j]);
             if(unit.indexOf(kvadraturaUnits[i].possibleMarks[j])!=-1)
             {
-                console.log('aaa')
+                //console.log('aaa')
                 value=value.replace(kvadraturaUnits[i].possibleMarks[j],'');
                 var kvadraturaRatio=kvadraturaUnits[i].convertRatio;
                var digits=leaveOnlyDigitsAndDots(value);
                
                digits=digits.replace(new RegExp(/\,/g),".");
-               console.log(digits)
+               //console.log(digits)
                 var kvadraturaNumber=Number(digits);
 
                 kvadraturaNumber*=kvadraturaRatio;
