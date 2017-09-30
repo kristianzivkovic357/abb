@@ -202,7 +202,7 @@ app.get("/json",function(req,res)
 
 
 })
-app.post('/reset',function(req,res)
+app.post('/passwordchange',function(req,res)
 {
   if(req.session&&req.session.user&&req.session.user.email)
   {
@@ -213,41 +213,51 @@ app.post('/reset',function(req,res)
     var response={};
       if(newPassword===newPasswordRepeat)
       {
-        var users=db.collection("users");
-        users.findOne({email:email,password:oldPassword},function(err,user)
+        if(newPassword!=oldPassword)
         {
-            if(user)
-            {
-              try
+          var users=db.collection("users");
+          users.findOne({email:email,password:oldPassword},function(err,user)
+          {
+              if(user)
               {
-                user.password=newPassword;
-                users.update({email:email},{$set:{password:newPassword}},function(err,res)
+                try
                 {
-                  if(err)console.log(err)
-                  else
+                  user.password=newPassword;
+                  users.update({email:email},{$set:{password:newPassword}},function(err,res)
                   {
-                    response.status=1;
-                    response.message='Successfull password change.'
-                    res.send(response);
-                    res.end();
-                  }
-                })
-                sendMail('homehunterestates@gmail.com',email,'Promena Lozinke','Uspesno ste promenili svoju lozinku!');
+                    if(err)console.log(err)
+                    else
+                    {
+                      response.status=1;
+                      response.message='Successfull password change.'
+                      res.send(response);
+                      res.end();
+                    }
+                  })
+                  sendMail('homehunterestates@gmail.com',email,'Promena Lozinke','Uspesno ste promenili svoju lozinku!');
+                }
+                catch(error)
+                {
+                  console.log(error);
+                  res.end();
+                }
               }
-              catch(error)
+              else
               {
-                console.log(error);
+                response.status=-1;
+                response.message='Wrong credentials entered.'
+                res.send(response);
                 res.end();
               }
-            }
-            else
-            {
-              response.status=-1;
-              response.message='Wrong credentials entered.'
-              res.send(response);
-              res.end();
-            }
-        })
+          })
+        }
+        else
+        {
+          response.status=0;
+          response.message='Passwords are the same.';
+          res.send(response);
+          res.end();
+        }
       }
       else
       {
