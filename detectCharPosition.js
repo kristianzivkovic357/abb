@@ -13,5 +13,5 @@ fs.readFile("q.txt",{encoding:"utf8"},function(err,data)
             ans+=data[i];
         }
     }
-    console.log(ans);
+    //console.log(ans);
 })

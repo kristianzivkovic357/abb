@@ -42,7 +42,7 @@ var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,uzmiSve,callback)
 		object.url=url;
 		object.callback=callback;
 		object.phantomSupport=phantomSupport;
-		console.log(uzmiSve)
+		
 		if(uzmiSve==0)
 		{
 			hashesOfEveryWebsite[nameOfRemoteWebsite].arrayForAlerts.push(clone(object));

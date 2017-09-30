@@ -384,7 +384,7 @@ mongo.MongoWrapper(function(db)
                                                     console.log("cena string:"+velikitemp);
                                                     process.exit();
                                                 }
-                                                if(!(obj.kvadratura)&&(obj.kvadratura!=0))
+                                                if(!obj.kvadratura&&(obj.kvadratura!=0))
                                                 {
                                                     console.log('ne valja kvadratura:'+obj.link);
                                                     console.log("kvadratura str:"+malitemp);
