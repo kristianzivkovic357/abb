@@ -204,6 +204,7 @@ app.get("/json",function(req,res)
 })
 app.post('/passwordchange',function(req,res)
 {
+  console.log('usaoje');
   if(req.session&&req.session.user&&req.session.user.email)
   {
     console.log("ima sesiju za sifru")
