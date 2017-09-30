@@ -43,8 +43,8 @@ function getPriceInDefaultUnit(value)
                 priceNumber=Number(leaveOnlyDigits(value));
                 
                 priceNumber*=priceRatio;
-                if(!priceNumber)console.log("Cena je NaN za value:"+value);
-                if(priceNumber)return (Math.round(priceNumber*10)/10);
+                //if(!priceNumber)console.log("Cena je NaN za value:"+value);
+                if((priceNumber)||(priceNumber==0))return (Math.round(priceNumber*10)/10);
                  
             }
         }
@@ -73,7 +73,7 @@ function getKvadraturaInDefaultUnit(value)
                 var kvadraturaNumber=Number(digits);
 
                 kvadraturaNumber*=kvadraturaRatio;
-                if(kvadraturaNumber)return (Math.round(kvadraturaNumber*10)/10);
+                if((kvadraturaNumber)||(kvadraturaNumber==0))return (Math.round(kvadraturaNumber*10)/10);
                 
             }
         }
@@ -82,6 +82,7 @@ function getKvadraturaInDefaultUnit(value)
     return undefined;
 
 }
+console.log(getKvadraturaInDefaultUnit('0 m2'));
 
 
 
