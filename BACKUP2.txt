@@ -73,7 +73,7 @@
 "images":{"field":"images","parameter":"url"},
 "class":{"1":".row.clearfix.item.featured-ad-style","2":".row.clearfix.item"},
 "vrsta":{"putanja":"attr(class)","UkupanBroj":"2"},
-"path":[{"FiksniBrojStrana":500,"nacin":"prodaja","tip":"plac","put":"/v3/lots?for=sale&sort=createdAt&page="},{"FiksniBrojStrana":500,"nacin":"Izdavanje","tip":"stan","put":"/v3/apartments?for=rent&sort=createdAt&page="},{"FiksniBrojStrana":500,"nacin":"prodaja","tip":"stan","put":"/v3/apartments?for=sale&sort=createdAt&page="}],
+"path":[{"FiksniBrojStrana":500,"nacin":"prodaja","tip":"zemljiste","put":"/v3/lots?for=sale&sort=createdAt&page="},{"FiksniBrojStrana":500,"nacin":"Izdavanje","tip":"stan","put":"/v3/apartments?for=rent&sort=createdAt&page="},{"FiksniBrojStrana":500,"nacin":"prodaja","tip":"stan","put":"/v3/apartments?for=sale&sort=createdAt&page="}],
 "data":{"1":"class(col-lg-12 col-md-12 col-sm-12 col-xs-12 ad-other-specs).html()","1":"class(col-lg-12 col-md-12 col-sm-12 col-xs-12 ad-description).html()"},
 "host":"https://api.4zida.rs",
 "binders":{"a":"kvadratura","url":"link","desc":"opis","price":"cena","m2":"kvadratura","inhabitable":{"addTo":"bottom_row*","addLike":"useljivo"}},
@@ -81,5 +81,6 @@
 "vrsta":{"UkupanBroj":1},
 "shouldCrawl":0
 }
+
 
 
