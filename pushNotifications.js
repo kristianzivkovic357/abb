@@ -8,8 +8,8 @@ function sendNotification(user,alert)
     
     var currentDate=new Date();
     var timeDifference;
-    if(users[user.email])timeDifference=currentDate-users[user.email];
-    else timeDifference=currentDate;
+    //if(users[user.email])timeDifference=currentDate-users[user.email];
+    //else timeDifference=currentDate;
     if(user && user.userId)
     {
         var message = 
@@ -24,7 +24,7 @@ function sendNotification(user,alert)
             }
         };
 
-        console.log(message);
+        //console.log(message);
         fcm.send(message, function(err, response)
         {
             if(err) 
@@ -34,7 +34,7 @@ function sendNotification(user,alert)
             } 
             else 
             {
-                console.log("Successfully sent with response: ",response);
+                //console.log("Successfully sent with response: ",response);
             }
         });
     }   

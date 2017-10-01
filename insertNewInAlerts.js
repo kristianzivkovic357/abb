@@ -87,6 +87,7 @@ function parametersFit(advert,alert)
 	}
 	return 1;
 }
+var lastNotificationPushed=[];
 var insert=function(Advert)
 {
 		//console.log(Advert);
@@ -124,7 +125,11 @@ var insert=function(Advert)
 											if(result)
 											{
 												var currentTime= new Date();
-												if((!result.lastNotificationPushed)||(currentTime-result.lastNotificationPushed>1000*60*2))//dva sata
+												/*console.log(currentTime);
+												console.log(result.lastNotificationPushed);
+												console.log(currentTime-result.lastNotificationPushed)
+												console.log("razlika intervala:"+(currentTime-result.lastNotificationPushed));process.exit();*/
+												if((!lastNotificationPushed[alert.userId.toString()])||((currentTime-lastNotificationPushed[alert.userId.toString()])>1000*60*2))//dva sata
 												{
 														//console.log('DOSAO DO SLANJA ALERTOVA')
 														if((!err)&&result)notifications.sendNotification(result,alert);
@@ -132,8 +137,13 @@ var insert=function(Advert)
 														{
 															console.log(err);
 														}
-													
-														users.update({email:alert.email},{$set:{lastNotificationPushed:currentTime}})
+														lastNotificationPushed[alert.userId.toString()]=currentTime;
+														/*users.update({email:alert.email},{$set:{lastNotificationPushed:currentTime}},function(err,res)
+														{
+															if(err)console.log(err);
+															console.log(res);
+															process.exit();
+														})*/
 												}
 												
 											}

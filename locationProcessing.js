@@ -89,7 +89,7 @@ function processLocationOfAdvert(Advert)
 {
     if(!Advert.lokacija)
     {
-        console.log('NemA LOKACIJA ZA OGLAS:');
+        console.log('NEMA LOKACIJA ZA OGLAS:');
         console.log(Advert);
         return -1;
     }
