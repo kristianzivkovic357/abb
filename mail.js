@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-//var fs=require('fs')
+var fs=require('fs')
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -24,7 +24,7 @@ function sendMail(from,to,subject,html)
     }
   }); 
 }
-/*
+
 var registerHtmlString;
 fs.readFile('public/template.html',function(err,res)
 {
@@ -32,6 +32,6 @@ fs.readFile('public/template.html',function(err,res)
   else registerHtmlString=res.toString();
   //console.log(registerHtmlString.toString())
 
-sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Uspesna Registracija!',registerHtmlString);
-})*/
+sendMail('homehunterestates@gmail.com','filip.petroviccc@gmail.com','Uspesna Registracija!',registerHtmlString);
+})
 module.exports={sendMail}
