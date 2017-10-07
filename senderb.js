@@ -325,6 +325,12 @@ mongo.MongoWrapper(function(db)
                             
                             GetData.GetRawData('http://'+options.host+options.path,Route.phantomSupport,Route.websitename,UzmiSve,function(err,resp,body)
                             {
+                                if(body==-1)
+                                {
+                                    console.log('website wont respond finishing route');
+                                    krajRute();
+                                    return;
+                                }
                                 
                                 var data=body;
                                 var obj={}
@@ -353,7 +359,18 @@ mongo.MongoWrapper(function(db)
                                                 obj[j]=crawl.FindData(sm,this,obj.pickInList[j]).replace(new RegExp(/\s\s+/g), ' ');
                                                 
                                             }
-                                            if(obj.slika)if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
+                                            if(obj.slika)
+                                            {
+                                                if(obj.slika==obj.defaultImage)
+                                                {
+                                                    obj.doesntHaveImage=1;
+                                                }
+                                                else
+                                                {
+                                                    obj.doesntHaveImage=0;
+                                                }
+                                                if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
+                                            }
                                             
                                             delete obj.class;
                                             obj.websitename=Route.websitename;
@@ -491,7 +508,7 @@ mongo.MongoWrapper(function(db)
                                         obj.websitename=Route.websitename;
                                         stateCollection.update({websitename:obj.websitename},obj,{upsert:true},function(err,res)
                                         {
-
+                                            if(err)console.log(err);
                                         })
                                             
                                         if((PageNum>=Number(Route.FiksniBrojStrana))/*||(!numOfInsertedInDb)*/)

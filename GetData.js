@@ -74,8 +74,7 @@ function timeControlledRequests()
 			{
 				if(hashesOfEveryWebsite[i].arrayForTakingAll.length)
 				{
-				console.log("sent to getall "+i)
-				//console.log("sent to ");console.log(hashesOfEveryWebsite[i].arrayForTakingAll[0])
+					console.log("sent to getall "+i)
 					var temp=clone(hashesOfEveryWebsite[i].arrayForTakingAll[0]);
 					hashesOfEveryWebsite[i].arrayForTakingAll.shift();
 					takeRequest(temp);
@@ -134,34 +133,41 @@ function takeRequest(requestInfo)
 }
 function regulatePhantomJSCall(requestInfo,countOfCalls)
 {
-	exec('phantomjs --ssl-protocol=any --ignore-ssl-errors=true ./phantom.js '+requestInfo.url,{maxBuffer:1024*10000},function(err,stdout,stderr)
+	if((countOfCalls % MAX_REQUEST_RETRY)==0)
 	{
-		if((!stdout)||(stdout.length<=5000))
+		requestInfo.callback(err,stderr,-1);
+	}
+	else
+	{
+		exec('phantomjs --ssl-protocol=any --ignore-ssl-errors=true ./phantom.js '+requestInfo.url,{maxBuffer:1024*10000},function(err,stdout,stderr)
 		{
-			if((countOfCalls % MAX_REQUEST_RETRY)==0)
-				{
-					console.log("***PHANTOMJS will delay for 60 seconds on: "+requestInfo.url+" because returned NO data***");
-					setTimeout(function()
+			if((!stdout)||(stdout.length<=5000))
+			{
+				if((countOfCalls % MAX_REQUEST_RETRY)==0)
 					{
-						regulatePhantomJSCall(requestInfo,countOfCalls+1);
-					},1000*60);
-					return;
-				}
-				else
-				{
-					console.log("Request returned INVALID webpage for "+countOfCalls+" times "+"on object:");
-					console.log(JSON.stringify(requestInfo));
-					console.log("Sending request again");
-					regulatePhantomJSCall(requestInfo,countOfCalls+1);	
-				}	
-		}
-		else
-		{
-			//balance--;
-			//console.log("BALANCE:"+balance);
-			requestInfo.callback(err,stderr,stdout);
-		}
-	})
+						console.log("***PHANTOMJS will delay for 60 seconds on: "+requestInfo.url+" because returned NO data***");
+						setTimeout(function()
+						{
+							regulatePhantomJSCall(requestInfo,countOfCalls+1);
+						},1000*60);
+						return;
+					}
+					else
+					{
+						console.log("Request returned INVALID webpage for "+countOfCalls+" times "+"on object:");
+						console.log(JSON.stringify(requestInfo));
+						console.log("Sending request again");
+						regulatePhantomJSCall(requestInfo,countOfCalls+1);	
+					}	
+			}
+			else
+			{
+				//balance--;
+				//console.log("BALANCE:"+balance);
+				requestInfo.callback(err,stderr,stdout);
+			}
+		})
+	}
 
 }
 function regulateRequestCall(requestInfo,countOfCalls)

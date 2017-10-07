@@ -132,7 +132,15 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 					obj.naslov=data[j].title; 
 					obj.brojsoba=data[j].structureName;
 					if(obj.slika)obj.slika=obj.slika[0];
-					if(!obj.slika)obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
+					if(!obj.slika)
+					{
+						obj.doesntHaveImage=1;
+						obj.slika="https://www.4zida.rs/images/placeholders/image-placeholder.jpg";
+					}
+					else
+					{
+						obj.doesntHaveImage=0;
+					}
 					if((!obj.images)||(!obj.images.length))obj.images=["https://www.4zida.rs/images/placeholders/image-placeholder.jpg"];
 					obj.lokacija='';
 

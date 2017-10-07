@@ -7,6 +7,14 @@ var async=require('async')
 var ObjectId = require('mongodb').ObjectId;
 var exec=require('child_process').exec;
 var mail=require("./mail");
+var fs=require('fs');
+var registerHtmlString;
+fs.readFile('public/template.html',function(err,res)
+{
+  if(err)console.log(err);
+  else registerHtmlString=res.toString();
+  //console.log(registerHtmlString.toString())
+})
 //var sender=require('./sender.js');
 //var sql=require('./sql.js');
 /*
@@ -109,7 +117,7 @@ function quickSort(sta,items, left, right) {
   return items;
 }
 
-
+app.use(express.static('public'));
 
 app.use(function(req, res, next)
 {/*
@@ -384,7 +392,7 @@ app.post('/register',function(req,res)
                     try
                     {
                       console.log(req.session.user.email);
-                      mail.sendMail('homehunterestates@gmail.com',req.session.user.email,'Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"http://173.249.1.30/confirmation/'+obj.code+'\">Confirm your account</a>');
+                      mail.sendMail('homehunterestates@gmail.com',req.session.user.email,'Uspesna Registracija!',registerHtmlString);
                     }
                     catch(error)
                     {
@@ -483,7 +491,8 @@ app.get('/stari',function(req,res)
   console.log(req.session.user);
   res.sendFile('views/index1.html',{root:__dirname});
 })
-app.post('/endpoint', function(req, res){
+app.post('/endpoint', function(req, res)
+{
 
     if(!req.body.namena)
       {
@@ -499,7 +508,7 @@ app.post('/endpoint', function(req, res){
       if(r.length)
       {
         console.log(req.body)
-        var sortOptions={};
+        var sortOptions={doesntHaveImage:1};
         if(req.body.sort=="ascPrice")
         {
           sortOptions.cena=1;

@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-
+//var fs=require('fs')
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -24,5 +24,14 @@ function sendMail(from,to,subject,html)
     }
   }); 
 }
-//sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Uspesna Registracija!','<p>Uspeli ste da napravite svoj nalog za aplikaciju HomeHunter. Sada mozete da napravite alarme i da dobijate nove oglase po kriterijumima koje ste zadali cim se pojave bilo gde na internetu! Zar to nije sjajno? Molimo vas da potvrdite nalog klikom na link:</p> '+'<a href=\"173.249.1.30/confirmation/'+"obj.code"+'\">Confirm your account</a>');
+/*
+var registerHtmlString;
+fs.readFile('public/template.html',function(err,res)
+{
+  if(err)console.log(err);
+  else registerHtmlString=res.toString();
+  //console.log(registerHtmlString.toString())
+
+sendMail('homehunterestates@gmail.com','kristiano9611@gmail.com','Uspesna Registracija!',registerHtmlString);
+})*/
 module.exports={sendMail}

@@ -1,3 +1,3 @@
-var a=[];
-a['/!!__/kk12@gmail.com']=1;
-console.log(a['/!!__/kk12@gmail.com']);
+var a={kvadratura:1}
+a.zzz=-1;
+console.log(a);
