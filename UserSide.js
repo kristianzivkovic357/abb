@@ -9,7 +9,7 @@ var exec=require('child_process').exec;
 var mail=require("./mail");
 var fs=require('fs');
 var registerHtmlString;
-fs.readFile('public/template.html',function(err,res)
+fs.readFile('public/register.html',function(err,res)
 {
   if(err)console.log(err);
   else registerHtmlString=res.toString();
@@ -495,9 +495,9 @@ app.post('/endpoint', function(req, res)
 {
 
     if(!req.body.namena)
-      {
-        req.body.namena='Izdavanje';
-      }
+    {
+      req.body.namena='Izdavanje';
+    }
     if(!req.body.vrsta)
     {
       req.body.vrsta='stan';

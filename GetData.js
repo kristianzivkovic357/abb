@@ -135,7 +135,7 @@ function regulatePhantomJSCall(requestInfo,countOfCalls)
 {
 	if((countOfCalls % MAX_REQUEST_RETRY)==0)
 	{
-		requestInfo.callback(err,stderr,-1);
+		requestInfo.callback(null,null,-1);
 	}
 	else
 	{
@@ -172,32 +172,39 @@ function regulatePhantomJSCall(requestInfo,countOfCalls)
 }
 function regulateRequestCall(requestInfo,countOfCalls)
 {
-	request(requestInfo.url,function(err,resp,body)
+	if((countOfCalls % MAX_REQUEST_RETRY)==0)
 	{
-		if((!body)||(body.length<MIN_CHARS_RESPONSE))
+		requestInfo.callback(null,null,-1);
+	}
+	else
+	{
+		request(requestInfo.url,function(err,resp,body)
 		{
-			if((countOfCalls % MAX_REQUEST_RETRY)==0)
+			if((!body)||(body.length<MIN_CHARS_RESPONSE))
 			{
-				console.log("***Request will delay for 60 seconds on: "+requestInfo.url+" because returned NO data***");
-				setTimeout(function()
+				if((countOfCalls % MAX_REQUEST_RETRY)==0)
 				{
-					regulateRequestCall(requestInfo,countOfCalls+1);
-				},1000*60);
-				return;
+					console.log("***Request will delay for 60 seconds on: "+requestInfo.url+" because returned NO data***");
+					setTimeout(function()
+					{
+						regulateRequestCall(requestInfo,countOfCalls+1);
+					},1000*60);
+					return;
+				}
+				else
+				{
+					console.log("Request returned INVALID webpage for "+countOfCalls+" times "+"on object:");
+					console.log(JSON.stringify(requestInfo));
+					console.log("Sending request again");
+					regulateRequestCall(requestInfo,countOfCalls+1);	
+				}	
 			}
 			else
 			{
-				console.log("Request returned INVALID webpage for "+countOfCalls+" times "+"on object:");
-				console.log(JSON.stringify(requestInfo));
-				console.log("Sending request again");
-				regulateRequestCall(requestInfo,countOfCalls+1);	
-			}	
-		}
-		else
-		{
-			requestInfo.callback(err,resp,body);
-		}
-	})
+				requestInfo.callback(err,resp,body);
+			}
+		})
+	}
 }
 setInterval(timeControlledRequests,2500);
 module.exports={GetRawData};

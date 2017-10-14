@@ -21,8 +21,10 @@
 "existingPromoClasses":["icon icon_t topPonuda","012"],
 "vrsta":{"putanja":"children().eq(0).children().eq(1).attr(class)","UkupanBroj":2},
 "phantomSupport":"false",
-"shouldCrawl":1
+"shouldCrawl":1,
+"defaultImage":"/resources/images/search/no_image_2x.png"
 }
+&&||
 &&||
 
 {
@@ -81,6 +83,7 @@
 "vrsta":{"UkupanBroj":1},
 "shouldCrawl":0
 }
+
 
 
 

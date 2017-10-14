@@ -327,9 +327,8 @@ mongo.MongoWrapper(function(db)
                             {
                                 if(body==-1)
                                 {
-                                    console.log('website wont respond finishing route');
-                                    krajRute();
-                                    return;
+                                    //console.log('website wont respond finishing route');
+                                    return krajRute('WEBSITE '+Sajt.websitename+' WONT RESPOND'); 
                                 }
                                 
                                 var data=body;
@@ -448,7 +447,7 @@ mongo.MongoWrapper(function(db)
                                     return;
                                 }
                                 if(!UzmiSve) 
-                                {
+                                {        
                                     if(Route.isJSON)// it is set that JSON sites have only one class ('1'), that might not be true for every website
                                     {
                                         if(!BrojOglasaKlase['1'])BrojOglasaKlase['1']=0;
@@ -557,29 +556,41 @@ mongo.MongoWrapper(function(db)
 
 },function(err)
 {
-     if(UzmiSve)
+    if(err)
+    {
+        console.log('ERROR OCCURED: PROABLY SOME WEBSITE HAVE CRASHED');
+        console.log(err);
+        callback();
+        return; 
+    }
+    else
+    {
+        if(UzmiSve)
         {
             websiteList.insert({'websitename':Sajt.websitename},function(err,res)
             {
                 if(err)console.log(err);
             })
+            debugObjUzmiSve[Sajt.websitename].finishedAdsOnPage='FINISHED';
         }
-    else
-    {
-        if(!addToMatching)
+        else
         {
-            var obj={}
-            obj.websitename=Sajt.websitename;
-            var previousAlertState=db.collection('previousAlertState');
-            previousAlertState.insert(obj,function(err,resp)
+            if(!addToMatching)
             {
-                if(err)console.log(err);
-            });
+                var obj={}
+                obj.websitename=Sajt.websitename;
+                var previousAlertState=db.collection('previousAlertState');
+                previousAlertState.insert(obj,function(err,resp)
+                {
+                    if(err)console.log(err);
+                });
+            }
+            debugObj[Sajt.websitename].finishedAdsOnPage='FINISHED'; 
         }
+        console.log("Zavrsene sve rute jednog Routea");
+        callback();
+        return;
     }
-    console.log("Zavrsene sve rute jednog Routea");
-    callback();
-    return;
 });
 
 });
@@ -739,6 +750,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
 }
 var KRAJ=function(err) 
 {
+    
     console.log('KRAJ CELE RUNDE');
     numberOfCrawlers--;
     //process.exit();
