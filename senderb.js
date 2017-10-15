@@ -368,7 +368,7 @@ mongo.MongoWrapper(function(db)
                                                 {
                                                     obj.doesntHaveImage=0;
                                                 }
-                                                if(obj.slika.indexOf('http')==-1)obj.slika='http://'+Route.host+obj.slika;
+                                                if(obj.slika.indexOf('http://')==-1)obj.slika='http://'+Route.host+obj.slika;
                                             }
                                             
                                             delete obj.class;

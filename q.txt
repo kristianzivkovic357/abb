@@ -51,7 +51,8 @@
 "existingPromoClasses":[" product-item product-list-item Premium real-estates my-ad-placeholder"," product-item product-list-item Top real-estates my-ad-placeholder"," product-item product-list-item Standard real-estates my-ad-placeholder"],
 "vrsta":{"putanja":"attr(class)","UkupanBroj":3},
 "phantomSupport":"true",
-"shouldCrawl":1
+"shouldCrawl":1,
+"defaultImage":"/Content/Quiddita/Widgets/Product/Stylesheets/img/no-image.jpg"
 }
 &&||
 {
