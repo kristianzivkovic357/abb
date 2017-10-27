@@ -650,7 +650,7 @@ if(req.session&&req.session.user&& req.session.user.email)
       console.log(odg);
       if(odg.length)
       {
-        matching=db.collection(odg[0].userId.toString());
+        matching=db.collection(odg[0].id.toString());
         if(!odg)console.log('odg ne vaja');
         async.each(odg,function(alert,callb)
         {
