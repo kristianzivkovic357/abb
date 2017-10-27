@@ -1,22 +1,9 @@
-var async=require('async');
-var a=['a','b','c']
-var checker=0;
-async.eachSeries(a,function(letter,callback)
+var request=require('request');
+var os=require('os');
+console.log(os.totalmem());
+request({url:'https://img.halooglasi.com/slike/oglasi/Thumbs/171023/m/blok-63-novodnja-odlican-id-1967-5425599238876-71783789094.jpg"',timeout:2000},function(err,res,body)
 {
-
-        if(letter=='b'){callback('WRONG LETTER');}
-        else
-        {
-            checker++;
-            callback();
-        }
-    
-   
-    
-    
-
-},function(err)
-{
-    console.log(checker);
-    console.log(err);
+    if(err)console.log(err);
+    console.log(res.statusCode)
+    console.log(body);
 })

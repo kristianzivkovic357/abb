@@ -25,10 +25,7 @@ function debug()
 if(DEBUG=="STANDARD_DEBUG")setInterval(debug,6000)
 var GetRawData=function(url,phantomSupport,nameOfRemoteWebsite,uzmiSve,callback)
 {
-	//console.log('dobio request');
-	if(!nameOfRemoteWebsite){console.log('GetRawData no parameter name');}
-	//if(!phantomSupport)console.log('phantomSupport no parameter name');
-	//console.log(phantomSupport,nameOfRemoteWebsite)
+		if(!nameOfRemoteWebsite){console.log('GetRawData no parameter name');}
 	
 		if(!hashesOfEveryWebsite[nameOfRemoteWebsite])
 		{

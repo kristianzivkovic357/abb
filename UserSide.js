@@ -84,7 +84,8 @@ function partition(items, left, right,sta) {
       break;
     }
 
-    if (i <= j) {
+    if (i <= j) 
+    {
       swap(items, i, j);
       i++;
       j--;
@@ -120,14 +121,8 @@ function quickSort(sta,items, left, right) {
 app.use(express.static('public'));
 
 app.use(function(req, res, next)
-{/*
-  if (req.url=='/') {
-    if(req.session.user)
-    {
-      res.writeHead(302,{'Location':'home'})
-      next();
-    }
-  }*/
+{
+
   if((req.url!='/')&&(req.url!='/login')&&(req.url!='images/no-image.jpg')&&(req.url!='/register')&&(req.url!='/css')&&(req.url!='/endpoint')&&(req.url!='/landing')&&(req.url.indexOf('/home'))&&(req.url!='/radio'))
   {
 
@@ -145,7 +140,9 @@ app.use(function(req, res, next)
         obj.session="NO_SESSION";
         res.send(obj);
         res.end();
-      } else {
+      } 
+      else 
+      {
         console.log("redirect to home");
         res.writeHead(302,{'Location':'/'})
       }
@@ -162,7 +159,8 @@ mongo.MongoWrapper(function(d)
 
 app.set('port', (process.env.PORT || 5000));
 
-app.listen(app.get('port'), function() {
+app.listen(app.get('port'), function() 
+{
   console.log('Node app is running on port', app.get('port'));
 });
 app.use(bodyParser());
@@ -380,7 +378,7 @@ app.post('/register',function(req,res)
               //generating confirmation hash
               obj.code=generateHash(75);
               obj.timeOfCreation=new Date();
-              if(maxUserId.length)obj.id=maxUserId[0].userId+1;
+              if(maxUserId.length)obj.id=maxUserId[0].id+1;
               else obj.id=1;
               req.session.user = obj;
               console.log(obj)
@@ -758,7 +756,7 @@ if(req.session&&req.session.user&& req.session.user.email)
                 oneMatch.seen=1;
                 matching.update({"_id":new ObjectId(oneMatch._id)},oneMatch,function(err,r)
                 {
-                  if(r){console.log("ERROOR:");console.log(r);}
+                  if(err){console.log("ERROOR:");console.log(err);}
                 })
               })
               })
