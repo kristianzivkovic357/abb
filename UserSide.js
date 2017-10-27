@@ -352,9 +352,9 @@ app.post('/register',function(req,res)
 
       users.find({"email":req.body.email,"password":req.body.password},{}).toArray(function(err,re)
       {
-        users.find().sort({userId:1}).limit(1).toArray(function(err,maxUserId)
+        users.find().sort({id:-1}).limit(1).toArray(function(err,maxUserId)
         {
-          console.log(maxUserId);
+          //console.log(maxUserId);
           if(re.length)
           {
             console.log('IMA TAKVOG USERA');
@@ -373,7 +373,7 @@ app.post('/register',function(req,res)
             if(validateEmail(req.body.email))
             {
               //send email here
-              console.log('Nema takvog usera i bice kreiran');
+              //console.log('Nema takvog usera i bice kreiran');
               var obj={};obj.email=req.body.email;obj.password=req.body.password;
               //generating confirmation hash
               obj.code=generateHash(75);
@@ -381,15 +381,16 @@ app.post('/register',function(req,res)
               if(maxUserId.length)obj.id=maxUserId[0].id+1;
               else obj.id=1;
               req.session.user = obj;
+              console.log('USER INSERTED');
               console.log(obj)
               users.insert(obj,function(err,r)
               {
                 if(!err)
                 {
-                    console.log('mail tobe sent');
+                    //console.log('mail tobe sent');
                     try
                     {
-                      console.log(req.session.user.email);
+                      //console.log(req.session.user.email);
                       mail.sendMail('homehunterestates@gmail.com',req.session.user.email,'Uspesna Registracija!',registerHtmlString);
                     }
                     catch(error)
