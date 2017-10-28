@@ -593,39 +593,50 @@ app.post('/alertpoint',function(req,res)
   {
     var users=db.collection("users");
     var alerts=db.collection('alerts');
-    console.log(req.body)
+    //console.log(req.body)
     users.findOne({email:req.session.user.email},function(err,resp)//THISmight be stored in session so reqeust from database is not necessary
     {
-      var obj={}
-      obj.email=req.session.user.email;
-      if(resp.id)obj.userId=resp.id;
-      if(req.body.cena)obj.cenalow=Number(req.body.cena[0]);
-      if(req.body.cena)//
+      if(resp)
       {
-        if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
-        if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
+          var obj={}
+          obj.email=req.session.user.email;
+          if(resp.id)obj.userId=resp.id;
+          if(req.body.cena)obj.cenalow=Number(req.body.cena[0]);
+          if(req.body.cena)//
+          {
+            if(req.body.cena[0])obj.cenalow=Number(req.body.cena[0]);
+            if(req.body.cena[1])obj.cenahigh=Number(req.body.cena[1]);
+          }
+          if(req.body.kvadratura)
+          {
+            if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
+            if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+          }
+          
+          if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
+          obj.vrsta=req.body.vrsta;
+          obj.lokacija=req.body.lokacija;
+          obj.namena=req.body.namena;
+          obj.nazivAlerta=req.body.ime;
+          //console.log(obj);
+         // console.log('ovde sam');
+          alerts.insert(obj,function(err)
+          {
+            if(err) 
+            {
+              console.log(err)
+            } else 
+            {
+              res.end('1')
+            }
+          })
       }
-      if(req.body.kvadratura)
+      else
       {
-        if(req.body.kvadratura[0])obj.kvadraturalow=Number(req.body.kvadratura[0]);
-        if(req.body.kvadratura[1])obj.kvadraturahigh=Number(req.body.kvadratura[1]);
+        req.session.user=null;
+        res.end('-1');
       }
       
-      if(req.body.roomNumber)obj.brojsoba=Number(req.body.roomNumber);
-      obj.vrsta=req.body.vrsta;
-      obj.lokacija=req.body.lokacija;
-      obj.namena=req.body.namena;
-      obj.nazivAlerta=req.body.ime;
-      console.log(obj);
-      console.log('ovde sam');
-      alerts.insert(obj,function(err)
-      {
-        if(err) {
-          console.log(err)
-        } else {
-          res.end('1')
-        }
-      })
     })
   }
   else

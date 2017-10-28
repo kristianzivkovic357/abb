@@ -110,6 +110,7 @@ var insert=function(Advert)
 			                    //console.log(obj)
 			                    delete obj._id;
 								obj.seen=0;
+								obj.timestamp=new Date();
 								//console.log("userid"+allDatabaseAlerts[j].userId);
 								var collection=dbCon.collection(allDatabaseAlerts[j].userId.toString());
 				                collection.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid

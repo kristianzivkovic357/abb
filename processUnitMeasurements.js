@@ -13,7 +13,7 @@ function initialize()
             priceUnits=data.priceUnits;
             kvadraturaUnits=data.kvadraturaUnits;
             console.log(priceUnits);
-            //getKvadraturaInDefaultUnit('0 m2');
+            console.log(getPriceInDefaultUnit('Od 990 EUR/m2'));
             //console.log("kvadrati:"+getKvadraturaInDefaultUnit("65 m2"));
 
         }
@@ -29,7 +29,12 @@ function getPriceInDefaultUnit(value)
     var shouldBreak=0;
     if(unit.length==0)
     {
-        return (Math.round(Number(leaveOnlyDigits(value))*10)/10);
+        var temporary=Math.round(Number(leaveOnlyDigits(value))*10)/10
+        if(typeof temporary ==='number')
+        {
+            return temporary
+        }
+        else return 'Po Dogovoru';
     }
     for(var i in priceUnits)
     {

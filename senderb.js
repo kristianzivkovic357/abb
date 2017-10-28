@@ -368,7 +368,8 @@ mongo.MongoWrapper(function(db)
                                                 {
                                                     obj.doesntHaveImage=0;
                                                 }
-                                                if(obj.slika.indexOf('http://')==-1)obj.slika='http://'+Route.host+obj.slika;
+                                                if((obj.slika.indexOf('http://')==-1)&&((obj.slika.indexOf('https://')==-1)))obj.slika='http://'+Route.host+obj.slika;
+
                                             }
                                             
                                             delete obj.class;
@@ -792,7 +793,7 @@ function getDbConnection()
 }
 function changeDataType(Advert)
 { 
-	Advert.cena=Number(Advert.cena);
+    if(Advert.cena!='Po Dogovoru')Advert.cena=Number(Advert.cena);
 	Advert.kvadratura=Number(Advert.kvadratura);
 	if(!Advert.brojsoba)
 	{
