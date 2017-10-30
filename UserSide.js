@@ -128,6 +128,15 @@ app.use(function(req, res, next)
 
     if(req.session.user)
     {
+      var currentTime=new Date();
+      if(req.session.user.timestamp)
+      {
+          if(currentTime-req.session.user.timestamp>)
+      }
+      else
+      {
+
+      }
       console.log('ima sesiju');
       next();
     }
