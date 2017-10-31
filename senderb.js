@@ -346,7 +346,7 @@ mongo.MongoWrapper(function(db)
                                         {
                                             obj=clone(Route);
                                             var vrsta=crawl.FindData(sm,this,Route.vrsta.putanja);
-                                            if(vrsta==undefined)vrsta='012';
+                                            if((!vrsta)||(vrsta)=='')vrsta='012';
                                             if(BrojOglasaKlase[vrsta]==undefined)BrojOglasaKlase[vrsta]=0;
                                             BrojOglasaKlase[vrsta]++;
                                             //if(!UzmiSve){console.log(vrsta+' '+BrojOglasaKlase[vrsta]);}
@@ -485,6 +485,9 @@ mongo.MongoWrapper(function(db)
                                         {
                                             check=0;//nastavi
                                         }
+                                        console.log(BrojOglasaKlase[fromClassToString(zadnjaKlasa)]);
+                                        console.log(check);
+                                        console.log(BrojOglasaKlase);
                                        /* else
                                         {
                                             console.log(BrojOglasaKlase);
