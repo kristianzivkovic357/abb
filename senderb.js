@@ -83,8 +83,8 @@ function standardDebugging()
             console.log(debugObjPrevious);
     }
     var a= new Date();
-    a.getMonth+a.getDay+a.getFullYear
-    console.log('currentTime'+a.getDay+'/'+a.getMonth+'/'+a.getFullYear);
+    //a.getMonth+a.getDay+a.getFullYear
+    console.log('Current Time: '+a.getFullYear()+'/'+a.getMonth()+'/'+a.getDay()+' in '+a.getHours()+':'+a.getMinutes());
     
 }
 if((DEBUG_MODE==='STANDARD_DEBUG')||(DEBUG_MODE==='FULL_DEBUG'))
