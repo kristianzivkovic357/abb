@@ -115,7 +115,7 @@ var insert=function(Advert)
 								var collection=dbCon.collection(allDatabaseAlerts[j].userId.toString());
 				                collection.update({idalert:obj.idalert,idogl:obj.idogl},obj,{upsert:true},function(err,result)// ne valja Objectid
 				                {
-				                    console.log('UBACIO U TABELU');
+				                    //console.log('UBACIO U TABELU');
 				                    if(err)console.log(err);
 				                });
 								(function(alert)
@@ -156,7 +156,7 @@ var insert=function(Advert)
 	               		}
 						else
 						{
-							console.log('Parameters dont fit.');
+							//console.log('Parameters dont fit.');
 						}
 	                    
 	             }

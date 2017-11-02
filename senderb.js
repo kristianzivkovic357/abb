@@ -82,6 +82,9 @@ function standardDebugging()
             console.log(debugObj);
             console.log(debugObjPrevious);
     }
+    var a= new Date();
+    a.getMonth+a.getDay+a.getFullYear
+    console.log('currentTime'+a.getDay+'/'+a.getMonth+'/'+a.getFullYear);
     
 }
 if((DEBUG_MODE==='STANDARD_DEBUG')||(DEBUG_MODE==='FULL_DEBUG'))
@@ -410,7 +413,7 @@ mongo.MongoWrapper(function(db)
                                         })
                                     }
                                  //console.log(BrojOglasaKlase);//process.exit();
-                                 //if(!UzmiSve)console.log(BrojOglasaKlase);
+                                 if(!UzmiSve)console.log(BrojOglasaKlase);
                                     ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,trackCurrentState);
 
                             }
@@ -485,9 +488,9 @@ mongo.MongoWrapper(function(db)
                                         {
                                             check=0;//nastavi
                                         }
-                                        console.log(BrojOglasaKlase[fromClassToString(zadnjaKlasa)]);
+                                       /* console.log(BrojOglasaKlase[fromClassToString(zadnjaKlasa)]);
                                         console.log(check);
-                                        console.log(BrojOglasaKlase);
+                                        console.log(BrojOglasaKlase);*/
                                        /* else
                                         {
                                             console.log(BrojOglasaKlase);
@@ -630,6 +633,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
      * and inserting into the database. Also calling insertIntoAlerts
      */
             //console.log(BrojOglasaKlase);
+            ///if(!UzmiSve)console.log(arr[0].link)
             var oglasi=GLOB.collection('oglasi');
             var pointer=0;
             var numOfInsertedInDb=0;
@@ -754,7 +758,6 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
 }
 var KRAJ=function(err) 
 {
-    
     console.log('KRAJ CELE RUNDE');
     numberOfCrawlers--;
     //process.exit();
