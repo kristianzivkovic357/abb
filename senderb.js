@@ -422,12 +422,15 @@ mongo.MongoWrapper(function(db)
                         
                         }
                 })
-                function trackCurrentState(brObradjenihOglasa,numOfInsertedInDb,BrojOglasaKlase)
+                function trackCurrentState(brObradjenihOglasa,numOfInsertedInDb,BrojOglasaKlase,websiteWontRespond)
                             {
                                 arr=[];
                                 var stateCollection=db.collection('previousState');
                                 console.log("trackCurrentState je pozvan");
-                                if(!PageNum)console.log("PageNum: "+PageNum);
+                                
+                                if(websiteWontRespond)return krajRute('error');
+                                
+                                    if(!PageNum)console.log("PageNum: "+PageNum);
                                 if(PageNum>Route.FiksniBrojStrana)
                                 {
                                     console.log(Route.websitename+' '+Route.nacinkupovine+' '+Route.type+"has exceeded max number of pages");
@@ -634,6 +637,9 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
      */
             //console.log(BrojOglasaKlase);
             ///if(!UzmiSve)console.log(arr[0].link)
+            
+            var websiteWontRespond=0;
+
             var oglasi=GLOB.collection('oglasi');
             var pointer=0;
             var numOfInsertedInDb=0;
@@ -679,31 +685,39 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                                     crawl.find(i,UzmiSve,function(resp)
                                     {
                                         
-                                        if(resp==-1)return;
-                                        changeDataType(resp);
-                                        locations.processLocationOfAdvert(resp);
-                                        resp.datum=dateFunctions.fixDate(resp.datum,resp.datumSetup)//datum
-                                        deleteUnecessaryFields(resp);
-
-                                        
-                                        if(DEBUG_MODE=="FULL_DEBUG")console.log(resp);
-                                        if(addToMatching)insertNewInAlerts.insert(resp);
-                                        
-                                        oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
+                                        if(resp==-1)
                                         {
-                                            if(err)console.log(err);
-                                            //else console.log(res);
-                                            //callback3();
-                                        });
-                                        
-                                        collection.insert(resp,function(err,res)
+                                            websiteWontRespond=1;
+                                            finish()
+                                        }
+                                        else
                                         {
-                                           if(err)console.log(err);
-                                           finish();
-                                        });
-                                        pointer++;
-                                        updateDebug();
-                                        //finish();
+                                            changeDataType(resp);
+                                            locations.processLocationOfAdvert(resp);
+                                            resp.datum=dateFunctions.fixDate(resp.datum,resp.datumSetup)//datum
+                                            deleteUnecessaryFields(resp);
+    
+                                            
+                                            if(DEBUG_MODE=="FULL_DEBUG")console.log(resp);
+                                            if(addToMatching)insertNewInAlerts.insert(resp);
+                                            
+                                            oglasi.update({"ime":(nacin+tip)},{"ime":(nacin+tip)},{upsert:true},function(err,res)
+                                            {
+                                                if(err)console.log(err);
+                                                //else console.log(res);
+                                                //callback3();
+                                            });
+                                            
+                                            collection.insert(resp,function(err,res)
+                                            {
+                                               if(err)console.log(err);
+                                               finish();
+                                            });
+                                            pointer++;
+                                            updateDebug();
+                                            //finish();
+                                        }
+                                        
 
                                         
 
@@ -752,7 +766,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                     })
          },function()
         {
-            pozoviKraj(pointer,numOfInsertedInDb,BrojOglasaKlase)
+            pozoviKraj(pointer,numOfInsertedInDb,BrojOglasaKlase,websiteWontRespond)
         })
        
 }

@@ -37,8 +37,9 @@ function loadAllLocations()
                 }
                 allLocations[i]=arr;
             }
-           // console.log(allLocations)
-            //start();
+            var a={"lokacijaOptions":{"format":"$ulica;,$oblast;,$grad;,$drzava;", "charsToDelete":"()-_"},"lokacija":"Jovana Avakumovića,29. Novembra,11060 Beograd,Srbija"};
+            processLocationOfAdvert(a); 
+            console.log(a);
         }
         else
         {
@@ -200,6 +201,7 @@ function processLocationOfAdvert(Advert)
     //console.log(tempDataArray);
     //handleLocationError(finalDataObject);
 }
+
 function match(locationA,locationB)
 {
     //console.log(locationB);

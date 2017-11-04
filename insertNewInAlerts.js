@@ -80,10 +80,16 @@ function parametersFit(advert,alert)
 	}
 	if(alert.lokacija)
 	{
+		if(alert.lokacija.length>advert.lokacija.length)
+		{
+			return 0;
+		}
 		for(var i=alert.lokacija.length-1,j=advert.lokacija.length-1;(i>=0)&&(j>=0);i--,j--)
 		{
 			if(alert.lokacija[i]!=advert.lokacija[j])return 0;
 		}
+		
+		
 	}
 	return 1;
 }

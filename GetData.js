@@ -147,7 +147,7 @@ function regulatePhantomJSCall(requestInfo,countOfCalls)
 						{
 							regulatePhantomJSCall(requestInfo,countOfCalls+1);
 						},1000*60);
-						return;
+						//return;
 					}
 					else
 					{
