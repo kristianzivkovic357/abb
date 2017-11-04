@@ -25,6 +25,9 @@ var debugObjPrevious={}
 var debugObjUzmiSvePrevious={}
 var lastid=0;
 var globalProcessTracker=[];
+
+var db;
+
 function standardDebugging()
 {
     //console.log('\033[2J');//clrscr
@@ -161,11 +164,9 @@ function wrapper() {
         
         data=data.substr(1,data.length);
         NizRouteova=[];
-      var bin=data.split("&&||");
-      var tempa=[]
-mongo.MongoWrapper(function(db)
-{ 
-    var websites=db.collection('websites');
+        var bin=data.split("&&||");
+        var tempa=[]
+        var websites=db.collection('websites');
     
        // console.log(result);process.exit();
 
@@ -607,7 +608,7 @@ mongo.MongoWrapper(function(db)
  })
 
 },KRAJ)//drugi async
-});
+
 })
 }
 function compare (a,b)
@@ -627,7 +628,7 @@ function compare (a,b)
     }
 }
 
-var GLOB;
+
 
 function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
 {
@@ -637,10 +638,10 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
      */
             //console.log(BrojOglasaKlase);
             ///if(!UzmiSve)console.log(arr[0].link)
-            
+
             var websiteWontRespond=0;
 
-            var oglasi=GLOB.collection('oglasi');
+            var oglasi=db.collection('oglasi');
             var pointer=0;
             var numOfInsertedInDb=0;
             var len=arr.length;
@@ -667,7 +668,7 @@ function ubaci(arr,UzmiSve,BrojOglasaKlase,addToMatching,pozoviKraj)
                         debugObj[i.websitename].finishedAdsOnPage=pointer; 
                     }
                 }
-             var collection=GLOB.collection(i.nacinkupovine+i.type);
+             var collection=db.collection(i.nacinkupovine+i.type);
 
             if((!i.nacinkupovine)||(!i.type)||(!i.websitename)){console.log('Ne postoji tip ili nacinkupovine');process.exit(0);}
                 var nacin=i.nacinkupovine;
@@ -796,19 +797,20 @@ function poziv()
     }
     
 }
-poziv();
+
 setInterval(poziv,1000*20);
 var pq=0;
 function getDbConnection()
 {
-    mongo.MongoWrapper(function(db)
+    mongo.MongoWrapper(function(dbCon)
     {
-        if(!pq){GLOB=db;pq=1;}
+        if(!pq){db=dbCon;pq=1;poziv();}
         else
         {
-            GLOB.close();
-            GLOB=db;
+            db.close();
+            db=dbCon;
         }
+       
     })
 }
 function changeDataType(Advert)
@@ -824,5 +826,5 @@ function changeDataType(Advert)
 
 }
 getDbConnection();
-//setInterval(getDbConnection,1000*60);
+setInterval(getDbConnection,1000*60*5);
 
