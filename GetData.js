@@ -2,7 +2,7 @@ var exec=require('child_process').exec;
 var request=require('request');
 var fs=require('fs');
 var DEBUG="None";
-var MAX_REQUEST_RETRY=3;
+var MAX_REQUEST_RETRY=4;
 var MIN_CHARS_RESPONSE=100;
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;

@@ -123,7 +123,8 @@ var insert=function(Advert)
 				                {
 				                    //console.log('UBACIO U TABELU');
 				                    if(err)console.log(err);
-				                });
+								});
+								collection.ensureIndex( { "timestamp": 1 }, { expireAfterSeconds: 60*60*24*10 } );//10 days
 								(function(alert)
 									{
 											

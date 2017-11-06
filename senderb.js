@@ -826,5 +826,5 @@ function changeDataType(Advert)
 
 }
 getDbConnection();
-setInterval(getDbConnection,1000*60*5);
+//setInterval(getDbConnection,1000*60*5);
 
