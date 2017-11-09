@@ -690,7 +690,7 @@ app.post('/endpoint', function(req, res)
                   //5+
                   if(!roomFivePlus)roomFivePlus={};
                   req.body.roomNumber[i]=-1;//setting roomNumber to -1 because it wont affect the query
-                  roomFivePlus.brojsoba={$gte:5};
+                  roomFivePlus={$gte:5};
                   
                 }
                 else
@@ -699,20 +699,26 @@ app.post('/endpoint', function(req, res)
                 }
 
               }
-
               if(roomList&&roomFivePlus)
               {
-                roomNumberQuery['$or'].push(roomFivePlus);
-                roomNumberQuery['$or'].push({brojsoba:{$in:roomList}})
+                queryObject['$or']=[];
+                queryObject['$or'].push({brojsoba:roomFivePlus});
+                queryObject['$or'].push({brojsoba:{$in:roomList}});
+
               }
               else
               {
-                  roomNumberQuery={};
-                  if(roomList)queryObject.brojsoba={$in:roomList}
-                  else if(roomFivePlus)queryObject.brojsoba={$gte:5};
+                  if(roomList)
+                  {
+                    queryObject.brojsoba={$in:roomList}
+                  }
+                  else
+                  {
+                    queryObject.brojsoba=roomFivePlus;
+                  }
               }
-              queryObject.brojsoba=roomNumberQuery//brojsoba
-              console.log(roomNumberQuery);
+
+              //console.log(roomNumberQuery);
             }
           }
           
