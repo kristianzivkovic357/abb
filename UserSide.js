@@ -122,9 +122,10 @@ app.use(express.static('public'));
 function checkIfUserExists(email)
 {
   try{
-    if(req.session && req.session.user){
+    if(email)
+    {
       var users=db.collection('users');
-      users.findOne({email:req.session.user.email},{},function(err,res)
+      users.findOne({email:email},{},function(err,res)
       {
         if(!res)
         {
@@ -133,7 +134,7 @@ function checkIfUserExists(email)
         return 1;
       })
     }else{
-      console.log("Error - checkIfUserExists()");
+      console.log("Error - checkIfUserExists()- no mail");
       return 0;
     }
   }
@@ -152,7 +153,7 @@ app.use(function(req, res, next)
         var currentTime=new Date();
         if(req.session.user.timestamp)
         {
-          if(currentTime-req.session.user.timestamp>1000*60*5)//5 minutes
+          if((currentTime-req.session.user.timestamp)>1000*60*5)//5 minutes
           {
             var users=db.collection('users');
             if(!checkIfUserExists(req.session.user.email))
