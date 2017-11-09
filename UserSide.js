@@ -158,7 +158,7 @@ app.use(function(req, res, next)
             var users=db.collection('users');
             checkIfUserExists(req.session.user.email,function(userExists)
             {
-              if(userExists)
+              if(!userExists)
               {
                 delete req.session.user;
                 if((req.headers.aplikacija)||(req.url=='/getalerts')) 
@@ -183,12 +183,10 @@ app.use(function(req, res, next)
         }
         else
         {
-          console.log('User:')
-          console.log(checkIfUserExists(req.session.user.email));
-
           checkIfUserExists(req.session.user.email,function(userExists)
           {
-            if(userExists)
+            console.log('userExists:'+userExists);
+            if(!userExists)
             {
               delete req.session.user;
               if((req.headers.aplikacija)||(req.url=='/getalerts')) 
