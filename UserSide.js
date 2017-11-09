@@ -673,23 +673,39 @@ app.post('/endpoint', function(req, res)
             if(req.body.roomNumber.length>0) 
             {
               var roomNumberQuery={$or:[]}
-              var roomList=[];
+              var roomList=undefined;
+              var roomFivePlus=undefined;
               for(var i in req.body.roomNumber)
               {
                 var temporary=Number(req.body.roomNumber[i]);
+                
                 if(temporary)
                 {
+                    if(!roomList)roomList=[];
                     req.body.roomNumber[i]=temporary;
+                }
+                else if(req.body.roomNumber[i]=='5+')
+                {
+                  //5+
+                  if(!roomFivePlus)roomList={};
+                  req.body.roomNumber[i]=-1;//setting roomNumber to -1 because it wont affect the query
+                  roomFivePlus.brojsoba={$gte:5};
+                  
                 }
                 else
                 {
-                  //5+
-                  req.body.roomNumber[i]=-1;//setting roomNumber to -1 because it wont affect the query
-                  roomNumberQuery['$or'].push({brojsoba:{$gte:5}});
+                    //ostalo, should not exist
                 }
 
               }
-              roomNumberQuery['$or'].push({$in:req.body.roomNumber})
+
+              if(roomList&&roomFivePlus){roomNumberQuery['$or'].push(roomFivePlus);roomNumberQuery['$or'].push({brojsoba:{$in:roomList}})}
+              else
+              {
+                  roomNumberQuery={};
+                  if(roomList)roomNumberQuery.brojsoba={$in:roomList}
+                  else if(roomFivePlus)roomNumberQuery=roomFivePlus;
+              }
               queryObject.brojsoba=roomNumberQuery//brojsoba
               console.log(roomNumberQuery);
             }
