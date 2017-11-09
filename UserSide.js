@@ -683,11 +683,12 @@ app.post('/endpoint', function(req, res)
                 {
                     if(!roomList)roomList=[];
                     req.body.roomNumber[i]=temporary;
+                    roomList.push(temporary);
                 }
                 else if(req.body.roomNumber[i]=='5+')
                 {
                   //5+
-                  if(!roomFivePlus)roomList={};
+                  if(!roomFivePlus)roomFivePlus={};
                   req.body.roomNumber[i]=-1;//setting roomNumber to -1 because it wont affect the query
                   roomFivePlus.brojsoba={$gte:5};
                   
@@ -699,7 +700,11 @@ app.post('/endpoint', function(req, res)
 
               }
 
-              if(roomList&&roomFivePlus){roomNumberQuery['$or'].push(roomFivePlus);roomNumberQuery['$or'].push({brojsoba:{$in:roomList}})}
+              if(roomList&&roomFivePlus)
+              {
+                roomNumberQuery['$or'].push(roomFivePlus);
+                roomNumberQuery['$or'].push({brojsoba:{$in:roomList}})
+              }
               else
               {
                   roomNumberQuery={};
