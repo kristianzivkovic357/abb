@@ -653,6 +653,7 @@ app.post('/endpoint', function(req, res)
           if(req.body.lokacija)
           {
             console.log(req.body.lokacija)
+            console.log(typeof req.body.lokacija);
             if(req.body.lokacija.length)
             {
               if(req.body.lokacija[0]!='')queryObject.lokacija={$all:req.body.lokacija};
@@ -665,7 +666,8 @@ app.post('/endpoint', function(req, res)
             }
           }
           
-          
+          console.log('query object:');
+          console.log(JSON.stringify(queryObject));
           var queryy = kolekcija.find(queryObject).sort(sortOptions);
           
           queryy.count(function (e, count)
@@ -676,7 +678,8 @@ app.post('/endpoint', function(req, res)
               solv.count = count;
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
-              //console.log(solv);
+              console.log('RESPONSE:');
+              console.log(re);
               res.send(JSON.stringify(solv))
               
             })
