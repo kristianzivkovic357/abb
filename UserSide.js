@@ -119,7 +119,7 @@ function quickSort(sta,items, left, right) {
 }
 
 app.use(express.static('public'));
-function checkIfUserExists(email)
+function checkIfUserExists(email,callback)
 {
   try{
     if(email)
@@ -129,13 +129,13 @@ function checkIfUserExists(email)
       {
         if(!res)
         {
-          return 0;
+          callback(0);
         }
-        return 1;
+        else callback(1);
       })
     }else{
       console.log("Error - checkIfUserExists()- no mail");
-      return 0;
+      callback(0);
     }
   }
   catch(err){
@@ -156,25 +156,29 @@ app.use(function(req, res, next)
           if((currentTime-req.session.user.timestamp)>1000*60*5)//5 minutes
           {
             var users=db.collection('users');
-            if(!checkIfUserExists(req.session.user.email))
+            checkIfUserExists(req.session.user.email,function(userExists)
             {
-              delete req.session.user;
-              if((req.headers.aplikacija)||(req.url=='/getalerts')) 
+              if(userExists)
               {
-                console.log("NO_SESS1");
-                var obj={};
-                obj.session="NO_SESSION";
-                res.send(obj);
-                res.end();
+                delete req.session.user;
+                if((req.headers.aplikacija)||(req.url=='/getalerts')) 
+                {
+                  console.log("NO_SESS1");
+                  var obj={};
+                  obj.session="NO_SESSION";
+                  res.send(obj);
+                  res.end();
+                }
               } 
-              
-            }
-            else
-            {
-              req.session.user.timestamp=new Date();
-              next()
-            }
+                
+              else
+              {
+                req.session.user.timestamp=new Date();
+                next()
+              }
+              })
           }
+
           else next();
         }
         else
@@ -182,24 +186,27 @@ app.use(function(req, res, next)
           console.log('User:')
           console.log(checkIfUserExists(req.session.user.email));
 
-          if(!checkIfUserExists(req.session.user.email))
+          checkIfUserExists(req.session.user.email,function(userExists)
           {
-            delete req.session.user;
-            if((req.headers.aplikacija)||(req.url=='/getalerts')) 
+            if(userExists)
             {
-              console.log("NO_SESS2");
-              var obj={};
-              obj.session="NO_SESSION";
-              res.send(obj);
-              res.end();
+              delete req.session.user;
+              if((req.headers.aplikacija)||(req.url=='/getalerts')) 
+              {
+                console.log("NO_SESS2");
+                var obj={};
+                obj.session="NO_SESSION";
+                res.send(obj);
+                res.end();
+              }
             } 
-            
-          }
-          else
-          {
-            req.session.user.timestamp=new Date();
-            next()
-          }
+              
+            else
+            {
+              req.session.user.timestamp=new Date();
+              next()
+            }
+          })
         }
       }
       else
