@@ -708,8 +708,8 @@ app.post('/endpoint', function(req, res)
               else
               {
                   roomNumberQuery={};
-                  if(roomList)roomNumberQuery.brojsoba={$in:roomList}
-                  else if(roomFivePlus)roomNumberQuery=roomFivePlus;
+                  if(roomList)queryObject.brojsoba={$in:roomList}
+                  else if(roomFivePlus)queryObject.brojsoba={$gte:5};
               }
               queryObject.brojsoba=roomNumberQuery//brojsoba
               console.log(roomNumberQuery);
