@@ -661,8 +661,8 @@ app.post('/endpoint', function(req, res)
           }
           if(req.body.lokacija)
           {
-            console.log(req.body.lokacija)
-            console.log(typeof req.body.lokacija);
+            //console.log(req.body.lokacija)
+            //console.log(typeof req.body.lokacija);
             if(req.body.lokacija.length)
             {
               if(req.body.lokacija[0]!='')queryObject.lokacija={$all:req.body.lokacija};
@@ -722,8 +722,8 @@ app.post('/endpoint', function(req, res)
             }
           }
           
-          console.log('query object:');
-          console.log(JSON.stringify(queryObject));
+          //console.log('query object:');
+          //console.log(JSON.stringify(queryObject));
           var queryy = kolekcija.find(queryObject).sort(sortOptions);
           
           queryy.count(function (e, count)
@@ -734,9 +734,9 @@ app.post('/endpoint', function(req, res)
               solv.count = count;
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
-              console.log('RESPONSE:');
-              console.log(count);
-              console.log(re);
+              //console.log('RESPONSE:');
+              //console.log(count);
+              //console.log(re);
               res.send(JSON.stringify(solv))
               res.end();
               
@@ -830,17 +830,17 @@ app.post('/getalerts', function(req,res)
     
     if(req.session && req.session.user && req.session.user.email)
     {
-      console.log('IMA SESIJU');
-      console.log(req.session);
-      alerts.find({"email":req.session.user.email}).toArray(function(err,odg)
+      //console.log('IMA SESIJU');
+      ///console.log(req.session);
+      alerts.find({"email":req.session.user.email}).sort({nazivAlerta:1}).toArray(function(err,odg)
       {
-        console.log('ODGOVOR:');
-        console.log(odg);
+        //console.log('ODGOVOR:');
+        //console.log(odg);
         if(odg.length)
         {
           if(odg[0].userId)matching=db.collection(odg[0].userId.toString());
           if(!odg)console.log('odg ne vaja');
-          async.each(odg,function(alert,callb)
+          async.eachSeries(odg,function(alert,callb)
           {
             
             matching.find({idalert:new ObjectId(alert._id),seen:0}).toArray(function(err,matchings)//DODAVANJE SKIPA OBAVEZNO
