@@ -670,8 +670,28 @@ app.post('/endpoint', function(req, res)
           }
           if(req.body.roomNumber)
           {
-            if(req.body.roomNumber.length>0){
-              queryObject.brojsoba={$in:req.body.roomNumber};//brojsoba
+            if(req.body.roomNumber.length>0) 
+            {
+              var roomNumberQuery={$or:[]}
+              var roomList=[];
+              for(var i in req.body.roomNumber)
+              {
+                var temporary=Number(req.body.roomNumber[i]);
+                if(temporary)
+                {
+                    req.body.roomNumber[i]=temporary;
+                }
+                else
+                {
+                  //5+
+                  req.body.roomNumber[i]=-1;//setting roomNumber to -1 because it wont affect the query
+                  roomNumberQuery['$or'].push({brojsoba:{$gte:5}});
+                }
+
+              }
+              roomNumberQuery['$or'].push({$in:req.body.roomNumber})
+              queryObject.brojsoba=roomNumberQuery//brojsoba
+              console.log(roomNumberQuery);
             }
           }
           
