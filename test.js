@@ -24,12 +24,13 @@ function poziv()
     var coll= db.collection('Izdavanjestan');
     var obj={$all:arr}
     var query={};
-    query.lokacija=obj;
+    query={lokacija:{$all:["Petlovo Brdo","Rakovica","Beograd","Srbija"]}}
     console.log(query)
     coll.find(query).toArray(function(err,res)
     {
         if(err)console.log(err)
         console.log(res);
+        db.close();
     })
 }
 

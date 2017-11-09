@@ -161,7 +161,7 @@ app.use(function(req, res, next)
               delete req.session.user;
               if((req.headers.aplikacija)||(req.url=='/getalerts')) 
               {
-                console.log("NO_SESS");
+                console.log("NO_SESS1");
                 var obj={};
                 obj.session="NO_SESSION";
                 res.send(obj);
@@ -179,12 +179,15 @@ app.use(function(req, res, next)
         }
         else
         {
+          console.log('User:')
+          console.log(checkIfUserExists(req.session.user.email));
+
           if(!checkIfUserExists(req.session.user.email))
           {
             delete req.session.user;
             if((req.headers.aplikacija)||(req.url=='/getalerts')) 
             {
-              console.log("NO_SESS");
+              console.log("NO_SESS2");
               var obj={};
               obj.session="NO_SESSION";
               res.send(obj);
@@ -203,7 +206,7 @@ app.use(function(req, res, next)
       {
         console.log('nema sesiju');
         if((req.headers.aplikacija)||(req.url=='/getalerts')) {
-          console.log("NO_SESS");
+          console.log("NO_SESS3");
           var obj={};
           obj.session="NO_SESSION";
           res.send(obj);
