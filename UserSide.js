@@ -595,7 +595,7 @@ app.get('/stari',function(req,res)
 app.post('/endpoint', function(req, res)
 { 
   try{ 
-    if(req.session && req.session.user){
+    //if(req.session && req.session.user){
       if(!req.body.namena)
       {
         req.body.namena='Izdavanje';
@@ -689,11 +689,11 @@ app.post('/endpoint', function(req, res)
         }
         
       });
-    }else{
+    /*}else{
       console.log("/endpoint - Greska - Session, User");
       res.send("0");
       res.end();
-    }
+    }*/
   }
   catch(err){
     console.log("Error - /endpoint :" + err);
