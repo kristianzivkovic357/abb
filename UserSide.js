@@ -680,8 +680,10 @@ app.post('/endpoint', function(req, res)
               solv.oglasi = re;
               solv.session = req.session.user ? 1:0;
               console.log('RESPONSE:');
+              console.log(count);
               console.log(re);
               res.send(JSON.stringify(solv))
+              res.end();
               
             })
             
