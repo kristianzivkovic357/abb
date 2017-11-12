@@ -896,16 +896,26 @@ app.post('/deletealert', function(req,res)
       console.log(req.body);
       var id = req.body.id;
       var o_id = new ObjectId(id);
-      alerts.deleteOne({"email":req.session.user.email,"_id":o_id},function(err,odg)
+      alerts.findOne({"email":req.session.user.email,"_id":o_id},{},function(err,obj)
       {
-        if(err)console.log(err)
-        else
-        {
-          console.log('deleted');
-          res.send(odg);
-          res.end();
-        }
-      });
+          alerts.deleteOne({"email":req.session.user.email,"_id":o_id},function(err,odg)
+          { 
+            if(err)console.log(err)
+            else
+            {
+              console.log('deleted');
+              res.send(odg);
+              res.end();
+            }
+          });
+          var matchings=db.collection(obj.userId.toString());
+          matchings.remove({"idalert":o_id},function(err,r)
+          {
+            if(err)console.log(err);
+            console.log(r.result);
+            
+          })
+      })
     }else{
       console.log("/deletealert  - Greska - Session,User,Email,Body,Id");
       res.end()

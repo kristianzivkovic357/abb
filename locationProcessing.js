@@ -37,9 +37,9 @@ function loadAllLocations()
                 }
                 allLocations[i]=arr;
             }
-            var a={"lokacijaOptions":{"format":"$ulica;,$oblast;,$grad;,$drzava;", "charsToDelete":"()-_"},"lokacija":"Jovana Avakumovića,29. Novembra,11060 Beograd,Srbija"};
+            var a={"lokacijaOptions":{"format":"$ulica;-$oblast;-$grad;-$drzava;", "charsToDelete":"()-_"},"lokacija":"Vracar -  Beograd  - Srbija"};
             processLocationOfAdvert(a); 
-            console.log(a);
+            console.log(a.lokacija);
         }
         else
         {
@@ -142,7 +142,7 @@ function processLocationOfAdvert(Advert)
             wasWrittenToThisType=1;
 
     }
-   // console.log(tempDataArray);
+// console.log(tempDataArray);
     
     
     for(var i in tempDataArray)
@@ -161,7 +161,7 @@ function processLocationOfAdvert(Advert)
     var sortedDataArray=tempDataArray.sort();*/
     //console.log(tempDataArray);return;
     
-    for(var i in allLocations)
+    /*for(var i in allLocations)
     {
         var completeLocation=[];
         completeLocation.push(allLocations[i].accentLessTitle);
@@ -169,7 +169,7 @@ function processLocationOfAdvert(Advert)
         {
             completeLocation.push(allLocations[i].parents[j].accentLessTitle)
         }
-    }
+    }*/
    /* fs.writeFile('allLocShort.txt',JSON.stringify(allLocations),function(err,resp)
 {
     if(err)console.log(err);
@@ -193,6 +193,7 @@ function processLocationOfAdvert(Advert)
             }
         
         }
+        //console.log(maximumMatchings)
         //console.log(maximumMatchings)
         Advert.lokacija=finalDataObject;
         return finalDataObject;// NE MORA;
@@ -249,13 +250,14 @@ function match(locationA,locationB)
             {
                 
                 
-                /*if(locationA[0]=='Djeram')
+                /*if(locationA[locationA.length-2]=='Novi Sad')
                 {
                         console.log(locationA);
-                        console.log(locationB)
-                        console.log(smaller[i]+'---'+bigger[j]+'---'+answer);
                         //console.log(locationB)
-            }*/
+                        console.log(smaller[i]+'---'+bigger[j]+'---'+answer);
+                        //console.log(answer)
+                        //console.log(locationB)
+                }*/
                 
                 if(!hadFoundThisSublocation)
                 {
@@ -275,6 +277,10 @@ function match(locationA,locationB)
                         matched+=answer;
                         maxAnswer=answer;
                     }
+                    else
+                    {
+                        matched+=(answer/10);
+                    }
                     
                 }
                 hadFoundThisSublocation=1;
@@ -293,6 +299,7 @@ function match(locationA,locationB)
         }
 
     }
+    //console.log(matched);
     return matched;
 }
 
