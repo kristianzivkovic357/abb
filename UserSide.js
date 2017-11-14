@@ -617,7 +617,7 @@ app.post('/endpoint', function(req, res)
       {
         if(r.length)
         {
-          console.log(req.body)
+          //console.log(req.body)
           var sortOptions={doesntHaveImage:1};
           if(req.body.sort=="ascPrice")
           {
@@ -645,7 +645,7 @@ app.post('/endpoint', function(req, res)
           }
           else
           {
-            sortOptions.cena=1;
+            sortOptions.datum=-1;
           }
           var databaseIndex=req.body.namena+req.body.vrsta;
           var kolekcija=db.collection(databaseIndex);
@@ -912,7 +912,7 @@ app.post('/deletealert', function(req,res)
           matchings.remove({"idalert":o_id},function(err,r)
           {
             if(err)console.log(err);
-            console.log(r.result);
+            //console.log(r.result);
             
           })
       })

@@ -37,7 +37,7 @@ function loadAllLocations()
                 }
                 allLocations[i]=arr;
             }
-            var a={"lokacijaOptions":{"format":"$ulica;-$oblast;-$grad;-$drzava;", "charsToDelete":"()-_"},"lokacija":"Vracar -  Beograd  - Srbija"};
+            var a={"lokacijaOptions":{"format":"$ulica;-$oblast;-$grad;-$drzava;", "charsToDelete":"()-_"},"lokacija":" Beograd  -  Opština Novi Beograd  -  Blok 67 (Belvil)  -  Jurija Gagarina "};
             processLocationOfAdvert(a); 
             console.log(a.lokacija);
         }
@@ -193,7 +193,7 @@ function processLocationOfAdvert(Advert)
             }
         
         }
-        //console.log(maximumMatchings)
+        console.log(maximumMatchings)
         //console.log(maximumMatchings)
         Advert.lokacija=finalDataObject;
         return finalDataObject;// NE MORA;
@@ -224,12 +224,14 @@ function match(locationA,locationB)
 
                         //console.log(locationB)
                     }*/
+    var multiplyCoef=0.5;
     for(var i in smaller)
     {
         var hadFoundThisSublocation=0;
         var indexOfMatched=0;
         var indexInsideStringOfMatched=-1;
         var maxAnswer=0;
+        
         for(var j in bigger)//here "bigger"means bigger array of sublocations, but down it means string length of one single sublocation
         {
             var greaterStringLength,smallerStringLength;
@@ -261,8 +263,8 @@ function match(locationA,locationB)
                 
                 if(!hadFoundThisSublocation)
                 {
-                    matched+=answer;
-                    maxAnswer=answer;
+                    matched+=(answer*multiplyCoef);
+                    maxAnswer=(answer*multiplyCoef);
                     indexOfMatched=j;
                     indexInsideStringOfMatched=answer;
                 }
@@ -274,8 +276,8 @@ function match(locationA,locationB)
                         indexOfMatched=j;
                         indexInsideStringOfMatched=answer;
                         matched-=maxAnswer;
-                        matched+=answer;
-                        maxAnswer=answer;
+                        matched+=(answer*multiplyCoef);
+                        maxAnswer=(answer*multiplyCoef);
                     }
                     else
                     {
@@ -297,6 +299,7 @@ function match(locationA,locationB)
                 bigger[indexOfMatched]='';
             }
         }
+        multiplyCoef+=0.2;
 
     }
     //console.log(matched);
