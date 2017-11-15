@@ -2,6 +2,7 @@ var request=require('request')
 var async=require('async');
 var getData=require("./GetData");
 var db=require('./mongo');
+var location=require('./locationProcessing.js');
 var indexOfReturnAll=require('./crawl').indexOfReturnAll;
 function add(arr,Sajt,callback)
 {
@@ -168,12 +169,16 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 
 					var w=0;
 					//console.log(data[j].placeNames);
-					obj.lokacija=[];
+					obj.lokacija='';
 					for(var kl in data[j].placeNames)
 					{
-						obj.lokacija.push(data[j].placeNames[kl]);
+						obj.lokacija+=(data[j].placeNames[kl]+',');
 					}
-					//console.log(obj.lokacija)
+					obj.lokacija[obj.lokacija.length-1]='';//remove ,
+					console.log(obj.lokacija);
+					
+					obj.lokacija=location.processLocationOfAdvert({'lokacija':obj.lokacija,'lokacijaOptions':Sajt.lokacijaOptions});
+					console.log(obj.lokacija)
 					obj.websitename=Sajt.websitename;
 					obj.shouldCrawl=Sajt.shouldCrawl;
 					//console.log('.')

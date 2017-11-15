@@ -37,7 +37,7 @@ function loadAllLocations()
                 }
                 allLocations[i]=arr;
             }
-            var a={"lokacijaOptions":{"format":"$ulica;-$oblast;-$grad;-$drzava;", "charsToDelete":"()-_"},"lokacija":" Beograd  -  Opština Novi Beograd  -  Blok 67 (Belvil)  -  Jurija Gagarina "};
+            var a={"lokacijaOptions":{"format":"$ulica;,$oblast;,$grad;,$drzava;", "charsToDelete":"()-_"},"lokacija":"Cvetkova pijaca , beograd"};
             processLocationOfAdvert(a); 
             console.log(a.lokacija);
         }
@@ -94,6 +94,7 @@ function processLocationOfAdvert(Advert)
         console.log(Advert);
         return -1;
     }
+    //console.log(Advert)
     var variables=locateAllCharsInString(Advert.lokacijaOptions.format,"$");
     //console.log(variables);
     var finalDataObject={};
@@ -176,8 +177,10 @@ function processLocationOfAdvert(Advert)
 })*/
        // console.log(allLocations)
         var maximumMatchings=0;
+        var biggestLocLength=0;
         for(var m in allLocations)
         {
+            //if(allLocations[m].length>biggestLocLength)biggestLocLength=allLocations[m].length
             //console.log(allLocations[m]);break;
 
             var splitedLoc=tempDataArray;
@@ -193,7 +196,8 @@ function processLocationOfAdvert(Advert)
             }
         
         }
-        console.log(maximumMatchings)
+       // console.log(biggestLocLength)
+        //console.log(maximumMatchings)
         //console.log(maximumMatchings)
         Advert.lokacija=finalDataObject;
         return finalDataObject;// NE MORA;
