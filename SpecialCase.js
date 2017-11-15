@@ -175,10 +175,10 @@ function addEveryTime(Sajt,pageNum,UzmiSve,callback)
 						obj.lokacija+=(data[j].placeNames[kl]+',');
 					}
 					obj.lokacija[obj.lokacija.length-1]='';//remove ,
-					console.log(obj.lokacija);
+					//console.log(obj.lokacija);
 					
 					obj.lokacija=location.processLocationOfAdvert({'lokacija':obj.lokacija,'lokacijaOptions':Sajt.lokacijaOptions});
-					console.log(obj.lokacija)
+					//console.log(obj.lokacija)
 					obj.websitename=Sajt.websitename;
 					obj.shouldCrawl=Sajt.shouldCrawl;
 					//console.log('.')
